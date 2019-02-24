@@ -25,4 +25,3 @@ Proposed API design and rationale:
     also in making our code more predictable (we do not know that the
     different libraries handle nonstandard PGN or illegal moves in the
     same way)
-* Frontend detects win condition
