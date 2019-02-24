@@ -113,3 +113,47 @@ Extended Position Description is needed." EPD doesn't seem either
 popular or well-documented. See
 <http://portablegamenotation.com/EPD.html> but it seems not worth
 pursuing.
+
+---
+
+Important API questions:
+
+* Should we try to prevent the user from cheating?
+* Should we keep track of the entire game history?
+  * Save entire history
+    * Advantage: allows us to undo moves and display history
+    * Disadvantage: potentially involves more data transfer via API
+  * Save only current state
+    * Advantage: minimal data transfer and storage
+    * Disadvantage: we cannot implement all official chess rules
+      (threefold repetition) without history
+* How should moves be communicated between the frontend and backend?
+  * Send the move in AN
+    * Advantage: very minimal data transfer
+    * Disadvantage: both frontend and backend need to keep track of
+      the game state (or history)
+    * Disadvantage: if server is restarted, we cannot continue the
+      game
+  * Send the game state in FEN
+    * Advantage: only moderate data transfer
+    * Advantage: neither frontend nor backend needs to keep track of
+      the game state
+      * Counter: if we don't keep track of the history, we can't
+        implement all chess rules
+    * Disadvantage: backend cannot keep the frontend from cheating
+  * Send the game history in PGN
+    * Advantage: simplest way to communicate all relevant information
+    * Disadvantage: checking for cheating is a little tricky,
+      requiring a diff of two PGNs
+    * Disadvantage: larger data transfer
+      * Counter: with additional code complexity, we could send only
+        AN normally, with fallback to PGN on server restart (avoid
+        premature optimization)
+  * Send both FEN and PGN
+  * Send both FEN and AN
+* What transfer format should the API use?
+  * HTTP
+  * WebSocket
+
+... this is not finished; I used it to generate ideas and explore the
+design space.
