@@ -157,3 +157,11 @@ Important API questions:
 
 ... this is not finished; I used it to generate ideas and explore the
 design space.
+
+Notes for pitch:
+
+- Use WebSockets
+- We need the whole history
+- We don't want to persist games
+- We don't need validation
+- We can optimize data transfer later
