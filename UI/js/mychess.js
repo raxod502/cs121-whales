@@ -1,6 +1,35 @@
 // board: chessboard.js
 // game: chess.js
 
+/*****************************************
+ * Turn King's square red while in check * 
+ *****************************************/
+var removeRedSquares = function() {
+  $('#board .square-55d63').css('background', '');
+};
+
+var redSquare = function(square) {
+  var squareEl = $('#board .square-' + square);
+  
+  var background = '#ff0000';
+  // if (squareEl.hasClass('black-3c85d') === true) {
+  //   background = '#696969';
+  // }
+
+  squareEl.css('background', background);
+};
+
+var findPiece = function(piece) {
+  const entries = Object.entries(board.position());
+  for (const [sq, pc] of entries) {
+    if (pc === piece) {
+      return sq;
+    }
+  }  
+
+  return null;
+}
+
 /*************************
  * Highlight legal moves * 
  *************************/
@@ -100,6 +129,7 @@ var onSnapEnd = function() {
  * Update board * 
  ****************/
 var updateStatus = function() {
+  removeRedSquares();
   var status = '';
 
   var moveColor = 'White';
@@ -124,6 +154,8 @@ var updateStatus = function() {
     // check?
     if (game.in_check() === true) {
       status += ', ' + moveColor + ' is in check';
+      // Turn King's square red
+      redSquare(findPiece(game.turn() + 'K'));
     }
   }
 
@@ -185,7 +217,7 @@ var undo = function() {
   game.undo(); // Undo computer's move
   board.position(game.fen());
   updateStatus();
-}
+} 
 
 /********
  * Main * 
