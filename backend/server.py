@@ -4,6 +4,9 @@ import flask
 
 app = flask.Flask(__name__)
 
+class APIError(Exception):
+    pass
+
 
 @app.route("/")
 def hello():

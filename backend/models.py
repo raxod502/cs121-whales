@@ -1,5 +1,6 @@
-import chess
 import functools
+import random
+import util.chess
 
 
 class NoSuchModelError(Exception):
@@ -13,7 +14,10 @@ def model_random(pgn):
     """
     Model that makes random moves.
     """
-    raise NotImplementedError
+    board = util.chess.pgn_to_board(pgn)
+    move = random.choice(list(board.legal_moves))
+    board.push(move)
+    return util.chess.board_to_pgn(board)
 
 
 MODELS = {
