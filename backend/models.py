@@ -1,4 +1,4 @@
-import functools
+import operator
 import random
 import util.chess
 
@@ -41,7 +41,7 @@ def get_model_info():
             "displayName": info["display_name"],
             "description": info["description"],
         })
-    info_list.sort(key=functools.attrgetter("internalName"))
+    info_list.sort(key=operator.itemgetter("internalName"))
     return info_list
 
 
