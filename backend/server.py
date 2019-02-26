@@ -9,11 +9,17 @@ app = flask.Flask(__name__)
 
 
 class APIError(Exception):
+    """
+    Exception that indicates user error while processing API request.
+    """
     pass
 
 
 @app.route("/api/v1")
 def api():
+    """
+    Main API endpoint.
+    """
     try:
         response = []
         json = flask.request.get_json(silent=True)
