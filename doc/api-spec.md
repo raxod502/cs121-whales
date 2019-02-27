@@ -2,8 +2,11 @@
 ## Summary
 
 The frontend and backend communicate over a single WebSocket API
-endpoint at `/api/v1`. The format is JSON. No authentication or
+endpoint at `/api/v1/ws`. The format is JSON. No authentication or
 session management is required, and the API is stateless.
+
+For quick testing, the same API is exposed over HTTP at the endpoint
+`/api/v1/http`.
 
 ## Conventions
 
