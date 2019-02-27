@@ -1,61 +1,22 @@
 #!/usr/bin/env python3
 
-import models
-import util.chess
+import api
 
 import flask
 
 app = flask.Flask(__name__)
 
 
-class APIError(Exception):
+@app.route("/api/v1/http")
+def http_endpoint():
     """
-    Exception that indicates user error while processing API request.
+    HTTP endpoint for API.
     """
-    pass
-
-
-@app.route("/api/v1")
-def api():
-    """
-    Main API endpoint.
-    """
-    try:
-        response = []
-        json = flask.request.get_json(silent=True)
-        if not isinstance(json, dict):
-            raise APIError("invalid or missing JSON")
-        if "command" not in json:
-            raise APIError("no command specified")
-        command = json["command"]
-        if command == "list_models":
-            info = models.get_model_info()
-            response = {
-                "models": info,
-            }
-        elif command == "get_move":
-            for param in ["model", "pgn"]:
-                if param not in json:
-                    raise APIError("missing required parameter {}"
-                                   .format(repr(param)))
-            model_name = json["model"]
-            old_pgn = json["pgn"]
-            try:
-                new_pgn = models.run_model(model_name, old_pgn)
-            except models.NoSuchModelError:
-                raise APIError("unknown model {}".format(repr(model_name)))
-            except util.chess.InvalidPGNError:
-                raise APIError("invalid PGN")
-            response = {
-                "pgn": new_pgn,
-            }
-        else:
-            raise APIError("unknown command {}".format(repr(command)))
-        response["error"] = None
-    except APIError as e:
-        response = {
-            "error": str(e),
-        }
+    request = flask.request.get_json(silent=True)
+    if request is not None:
+        response = api.query(request)
+    else:
+        response = api.error_response("invalid or missing JSON")
     return flask.jsonify(response)
 
 
