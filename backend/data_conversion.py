@@ -6,15 +6,15 @@ import numpy as np
 def file_to_arrays(filename):
     """
     Reads in a .pgn file and returns a NumPy array with dimensions
-    nx7x8x8 where n is the total number of board positions in all of 
+    nx7x8x8 where n is the total number of board positions in all of
     the games in the .pgn file.
     """
-    # Initialize the data to contain a single empty set of placeholder 
+    # Initialize the data to contain a single empty set of placeholder
     # 'boards', to set the size of the NumPy array.
     data = np.zeros((1, 7, 8, 8))
 
     with open(filename) as chess_file:
-        # Continually read games and write to the NumPy arrays until 
+        # Continually read games and write to the NumPy arrays until
         # there are no more games to read.
         game = chess.pgn.read_game(chess_file)
         while game is not None:
@@ -27,15 +27,15 @@ def file_to_arrays(filename):
 
 def game_to_arrays(game, data):
     """
-    Appends a nx7x8x8x numpy array, where n is the number of board 
-    positions that occurred during that game, to the passed in data. 
+    Appends a nx7x8x8x numpy array, where n is the number of board
+    positions that occurred during that game, to the passed in data.
     The modified array is returned.
     """
     # Until the entire game has been processed, use Python lists,
     # because they're easier to work with.
     new_data = []
     board = game.board()
-    
+
     # Every board position in the game gets added to the data.
     for move in game.mainline_moves():
         board.push(move)
@@ -49,10 +49,10 @@ def game_to_arrays(game, data):
 
 def board_to_arrays(board):
     """
-    Creates a 7x8x8 Python list representing a chess board. The first 
+    Creates a 7x8x8 Python list representing a chess board. The first
     6 8x8 arrays represent the board for a different piece type, with 1
     indicating a white piece of that type, -1 indicating a black piece
-    of that type, and 0 indicating empty. The final 8x8 board 
+    of that type, and 0 indicating empty. The final 8x8 board
     represents which color moves next, with all 1s being white and all
     -1s being black.
     The boards are in the following order:
@@ -67,8 +67,8 @@ def board_to_arrays(board):
     # Create the empty 8x8x6 array
     data = [[[0]*8 for i in range(8)] for j in range(6)]
 
-    board_from_type = {chess.PAWN: 0, 
-                       chess.KNIGHT: 1, 
+    board_from_type = {chess.PAWN: 0,
+                       chess.KNIGHT: 1,
                        chess.BISHOP: 2,
                        chess.ROOK: 3,
                        chess.QUEEN: 4,
