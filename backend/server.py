@@ -6,13 +6,18 @@ import flask
 
 app = flask.Flask(__name__)
 
+@app.route("/")
+def hello():
+    return flask.render_template('chess.html')
 
-@app.route("/api/v1/http")
+@app.route("/api/v1/http", methods=['GET', 'POST'])
 def http_endpoint():
     """
     HTTP endpoint for API.
     """
     request = flask.request.get_json(silent=True)
+    print(request)
+
     if request is not None:
         response = api.query(request)
     else:
