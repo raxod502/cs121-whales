@@ -4,15 +4,20 @@ import api
 
 import flask
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_folder=None)
 
 
 @app.route("/")
-def begin():
-    return flask.render_template('chess.html')
+def index():
+    return flask.send_from_directory("static", "index.html")
 
 
-@app.route("/api/v1/http", methods=['POST'])
+@app.route("/<path:path>")
+def static(path):
+    return flask.send_from_directory("static", path)
+
+
+@app.route("/api/v1/http", methods=["GET", "POST"])
 def http_endpoint():
     """
     HTTP endpoint for API.

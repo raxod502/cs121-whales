@@ -5,7 +5,7 @@ var model = '';
 var myColor = 'w'
 
 /*****************************************
- * Turn King's square red while in check * 
+ * Turn King's square red while in check *
  *****************************************/
 
 var redSq = '';
@@ -30,7 +30,7 @@ var removeRedSquare = function() {
   //     $('#board .square-' + sq).css('background', '');
   //     break;
   //   }
-  // }  
+  // }
   console.log("remove red square");
   // redSq = '';
 };
@@ -48,13 +48,13 @@ var findPiece = function(piece) {
     if (pc === piece) {
       return sq;
     }
-  }  
+  }
 
   return null;
 }
 
 /*************************
- * Highlight legal moves * 
+ * Highlight legal moves *
  *************************/
 
 // CHANGE THIS FUNCTION TO ONLY RESET GREY SQUARES ???
@@ -66,13 +66,13 @@ var removeGreySquares = function() {
   //     console.log(sq);
   //     $('#board .square-' + sq).css('background', '');
   //   }
-  // } 
+  // }
   // console.log("remove gray squares");
 };
 
 var greySquare = function(square) {
   var squareEl = $('#board .square-' + square);
-  
+
   var background = '#a9a9a9';
   if (squareEl.hasClass('black-3c85d') === true) {
     background = '#696969';
@@ -105,7 +105,7 @@ var onMouseoutSquare = function(square, piece) {
 };
 
 /*******************
- * AI random moves * 
+ * AI random moves *
  *******************/
 
 var makeAIMove = function(msg) {
@@ -117,13 +117,13 @@ var makeAIMove = function(msg) {
 };
 
 /**************
- * User moves * 
+ * User moves *
  **************/
 var board,
-  game = new Chess(),
-  statusEl = $('#status'),
-  fenEl = $('#fen'),
-  pgnEl = $('#pgn');
+    game = new Chess(),
+    statusEl = $('#status'),
+    fenEl = $('#fen'),
+    pgnEl = $('#pgn');
 
 // do not pick up pieces if the game is over
 // only pick up pieces for the side to move
@@ -151,14 +151,14 @@ var onDrop = function(source, target) {
   updateStatus();
 };
 
-// update the board position after the piece snap 
+// update the board position after the piece snap
 // for castling, en passant, pawn promotion
 var onSnapEnd = function() {
   board.position(game.fen());
 };
 
 /****************
- * Update board * 
+ * Update board *
  ****************/
 var updateStatus = function() {
   // removeRedSquares();
@@ -224,7 +224,7 @@ var cfg = {
 };
 
 /**************
- * UI buttons * 
+ * UI buttons *
  **************/
 var restart = function() {
   board.start();
@@ -251,12 +251,12 @@ var load = function() {
   $('#uploadPgn').on('change', function () {
     var fileReader = new FileReader();
     fileReader.onload = function () {
-      var gamePgn = fileReader.result; 
+      var gamePgn = fileReader.result;
       game.load_pgn(gamePgn);
       board.position(game.fen());
       updateStatus();
     };
-    
+
     fileReader.readAsText($('#uploadPgn').prop('files')[0]);
   });
 }
@@ -268,30 +268,29 @@ var undo = function() {
     board.position(game.fen());
     updateStatus();
   }
-} 
+}
 
 var sendRequest = function(request, callBack) {
-  $.ajax
-    ({
-        type: "POST",
-        //the url where you want to sent the userName and password to
-        url: '/api/v1/http',
-        dataType: 'json',
-        contentType: 'application/json',
-        //json object to sent to the authentication url
-        data: JSON.stringify(request),
-        success: function(msg) {
-          callBack(msg);
-        },
-        error: function (msg) {
-          console.log(msg);
-        }
-    });
+  $.ajax({
+    method: 'GET',
+    //the url where you want to sent the userName and password to
+    url: '/api/v1/http',
+    dataType: 'json',
+    contentType: 'application/json',
+    //json object to sent to the authentication url
+    data: JSON.stringify(request),
+    success: function(msg) {
+      callBack(msg);
+    },
+    error: function (msg) {
+      console.log(msg);
+    }
+  });
 }
 
 var onModelRequestComplete = function(msg) {
   model = msg.models[0].internalName; // RANDOM FOR NOW !!!
-  console.log(model); 
+  console.log(model);
   board = ChessBoard('board', cfg);
   updateStatus();
   $('#restartBtn').on('click', restart);
@@ -303,14 +302,11 @@ var onModelRequestComplete = function(msg) {
 }
 
 /********
- * Main * 
+ * Main *
  ********/
 
 var modelRequest = {
   "command": "list_models"
-} 
+}
 
 sendRequest(modelRequest, onModelRequestComplete);
-
-
-
