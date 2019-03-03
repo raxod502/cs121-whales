@@ -6,9 +6,11 @@ import flask
 
 app = flask.Flask(__name__)
 
+
 @app.route("/")
 def begin():
     return flask.render_template('chess.html')
+
 
 @app.route("/api/v1/http", methods=['POST'])
 def http_endpoint():
