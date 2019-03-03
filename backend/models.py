@@ -19,7 +19,6 @@ def model_random(pgn):
     board.push(move)
     return util.chess.board_to_pgn(board)
 
-
 MODELS = {
     "random": {
         "display_name": "Random",

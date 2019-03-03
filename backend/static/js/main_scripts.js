@@ -1,19 +1,23 @@
 // board: chessboard.js
 // game: chess.js
 
+var model = '';
+var myColor = 'w'
+
 /*****************************************
  * Turn King's square red while in check * 
  *****************************************/
 
 var redSq = '';
-var allSquares = ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
-                  'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8',
-                  'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8',
-                  'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8',
-                  'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8',
-                  'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
-                  'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8',
-                  'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8'];
+var allSquares = ['a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1',
+                  'a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2',
+                  'a3', 'b3', 'c3', 'd3', 'e3', 'f3', 'g3', 'h3',
+                  'a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4',
+                  'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5',
+                  'a6', 'b6', 'c6', 'd6', 'e6', 'f6', 'g6', 'h6',
+                  'a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7',
+                  'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8'];
+
 // CHANGE THIS FUNCTION TO ONLY RESET RED SQUARES ???
 // LOOP THROUGH A1 THRU H8 AND USE squareEl EXAMPLE
 // Check bg color and reset if not red
@@ -63,7 +67,7 @@ var removeGreySquares = function() {
   //     $('#board .square-' + sq).css('background', '');
   //   }
   // } 
-  console.log("remove gray squares");
+  // console.log("remove gray squares");
 };
 
 var greySquare = function(square) {
@@ -104,10 +108,10 @@ var onMouseoutSquare = function(square, piece) {
  * AI random moves * 
  *******************/
 
-var makeRandomMove = function() {
-  var possibleMoves = game.moves();
-  var randomIndex = Math.floor(Math.random() * possibleMoves.length);
-  game.move(possibleMoves[randomIndex]);
+var makeAIMove = function(msg) {
+
+  console.log(msg);
+  game.load_pgn(msg.pgn);
   board.position(game.fen());
   updateStatus();
 };
@@ -145,7 +149,6 @@ var onDrop = function(source, target) {
   if (move === null) return 'snapback';
 
   updateStatus();
-  window.setTimeout(makeRandomMove, 500);
 };
 
 // update the board position after the piece snap 
@@ -160,6 +163,7 @@ var onSnapEnd = function() {
 var updateStatus = function() {
   // removeRedSquares();
   var status = '';
+  var gameOver = false;
 
   var moveColor = 'White';
   if (game.turn() === 'b') {
@@ -169,11 +173,15 @@ var updateStatus = function() {
   // checkmate?
   if (game.in_checkmate() === true) {
     status = 'Game over, ' + moveColor + ' is in checkmate.';
+    gameOver = true;
+    console.log("CHECKMATE");
   }
 
   // draw?
   else if (game.in_draw() === true) {
     status = 'Game over, drawn position';
+    gameOver = true;
+    console.log("DRAW");
   }
 
   // game still on
@@ -184,13 +192,25 @@ var updateStatus = function() {
     if (game.in_check() === true) {
       status += ', ' + moveColor + ' is in check';
       // Turn King's square red
-      redSquare(findPiece(game.turn() + 'K'));
+      // redSquare(findPiece(game.turn() + 'K'));
     }
   }
 
   statusEl.html(status);
   fenEl.html(game.fen());
   pgnEl.html(game.pgn());
+
+  if (!gameOver && game.turn() !== myColor) {
+    var moveRequest = {
+      "command": "get_move",
+      "model": model,
+      "pgn": game.pgn()
+    }
+
+    sendRequest(moveRequest, function(msg) {
+      window.setTimeout(makeAIMove, 500, msg);
+    });
+  }
 };
 
 var cfg = {
@@ -242,50 +262,55 @@ var load = function() {
 }
 
 var undo = function() {
-  game.undo(); // Undo my move
-  game.undo(); // Undo computer's move
-  board.position(game.fen());
-  updateStatus();
+  if (game.turn() === myColor) {
+    game.undo(); // Undo my move
+    game.undo(); // Undo computer's move
+    board.position(game.fen());
+    updateStatus();
+  }
 } 
+
+var sendRequest = function(request, callBack) {
+  $.ajax
+    ({
+        type: "POST",
+        //the url where you want to sent the userName and password to
+        url: '/api/v1/http',
+        dataType: 'json',
+        contentType: 'application/json',
+        //json object to sent to the authentication url
+        data: JSON.stringify(request),
+        success: function(msg) {
+          callBack(msg);
+        },
+        error: function (msg) {
+          console.log(msg);
+        }
+    });
+}
+
+var onModelRequestComplete = function(msg) {
+  model = msg.models[0].internalName; // RANDOM FOR NOW !!!
+  console.log(model); 
+  board = ChessBoard('board', cfg);
+  updateStatus();
+  $('#restartBtn').on('click', restart);
+  $('#saveBtn').on('click', function() {
+    save("saved_game.pgn", game.pgn());
+  });
+  $('#loadBtn').on('click', load);
+  $('#undoBtn').on('click', undo);
+}
 
 /********
  * Main * 
  ********/
-console.log("hello");
-var request = {
+
+var modelRequest = {
   "command": "list_models"
-}
+} 
 
-console.log("hey");
+sendRequest(modelRequest, onModelRequestComplete);
 
-$.ajax
-  ({
-      type: "POST",
-      //the url where you want to sent the userName and password to
-      url: '/api/v1/http',
-      dataType: 'json',
-      contentType: 'application/json',
-      //json object to sent to the authentication url
-      data: JSON.stringify(request),
-      success: function (msg) {
-          console.log(msg)
-          console.log("SUCCESS!")
-      },
-      error: function (msg) {
-        console.log(msg);
-        console.log("ERROR")
-      }
-  });
 
-  // $.post("/api/v1/http", JSON.stringify(request), function(){
-  //   console.log("done");
-  // })
 
-board = ChessBoard('board', cfg);
-updateStatus();
-$('#restartBtn').on('click', restart);
-$('#saveBtn').on('click', function() {
-  save("saved_game.pgn", game.pgn());
-});
-$('#loadBtn').on('click', load);
-$('#undoBtn').on('click', undo);
