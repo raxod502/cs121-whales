@@ -2,13 +2,7 @@
 
 ## Current Action Items
 
-As of 3/2:
-* Finish converting from .pgn files to numpy tensors
-* Decide whether to use .csv intermediaries to store processed data
-  * Measure the speed of converting from .pgn to numpy array
-  * Write initial code to read/write numpy arrays to .csv
-  * Measure the speed of reading data from .csv file
-  * Make decision
+As of 3/5:
 * Set up Keras
 * Write initial convolutional neural network in Keras (should be
 ~10-15 loc)
@@ -74,15 +68,16 @@ definitely works with numpy arrays, and I haven't seen an alternate
 beyond using a pandas dataframe, which is a pretty similar idea. So, we
 need to convert the chess board data into numpy arrays that are 7x8x8,
 and stack them together into a dataset of nx7x8x8 (with n total board positions)
-and another n dataset of the labels. As of 3/2, I have implemented an
-initial conversion from .pgn files to a numpy array of this sort, but it 
-needs testing. More importantly, it looks like the conversion from .pgn
-to numpy is going to be a slow one, especially for processing large amounts
-of data. I am currently looking into whether it is possible/worth it to
-create the numpy array and save it to a .csv file, at which point in the 
-neural net code we can read the data from the .csv file without having to
-re-process it. This would potentially save time and reduce repeated computation,
-or it might be an extra unnecessary step.
+and another n dataset of the labels. This processing is done in ``data_conversion.py``
+in ``file_to_arrays()``. However, it is a somewhat slow process
+(ie, ~30 seconds to process 500 games on my laptop), so it would be nice
+to not repeat it more than is needed. Originally, we discussed storing this
+data in a .csv file, but numpy provides its own functions ``np.save()`` and
+``np.load()`` which serve the purpose of saving and loading the numpy arrays
+once they have been computed. This is also implemented in ``data_conversion.py``.
+To process in every game in a .pgn file, run ``pgn_to_npy(pgn_file, x_file_name, y_file_name)``
+with the desired input file, and the names of the files that you would like to
+store the x and y data in. The x and y files should use the '.npy' extension.
 
 ## Neural Network
 
