@@ -1,12 +1,69 @@
 import chess.pgn
 import chess
 import numpy as np
+import os
+import sys
+from timeit import default_timer as timer
 
-tiny_file = 'tiny.pgn'
-big_file = 'lichess_db_standard_rated_2013-01.pgn'
+
+def pgn_to_npy(pgn_file, x_file_name, y_file_name):
+    """
+    Reads in all of the chess games in pgn_file, converts them to
+    numpy arrays, and save those arrays to x_file_name and
+    y_file_name.
+    """
+    x, y = file_to_arrays(pgn_file)
+    arrays_to_file(x, y, x_file_name, y_file_name)
 
 
-def file_to_arrays(filename, max_games):
+def compare_times(num_games, pgn_file):
+    """
+    Computes the time it takes to process the given number of games
+    from a .pgn file into numpy arrays, writes those arrays to files,
+    and computes the time it takes to read the arrays back out of the
+    files.
+    """
+    x_test_file_name = 'x_test.npy'
+    y_test_file_name = 'y_test.npy'
+
+    print("Comparing the time to process or read " + str(num_games)
+          + " games...")
+
+    process_start_time = timer()
+    x, y = file_to_arrays(pgn_file, num_games)
+    process_end_time = timer()
+    process_total_time = process_end_time - process_start_time
+
+    arrays_to_file(x,
+                   y,
+                   x_file_name=x_test_file_name,
+                   y_file_name=y_test_file_name)
+
+    read_start_time = timer()
+    x_read = np.load(x_test_file_name)
+    y_read = np.load(y_test_file_name)
+    read_end_time = timer()
+    read_total_time = read_end_time - read_start_time
+
+    print("processing data time: " + str(process_total_time))
+    print("reading data time: " + str(read_total_time))
+
+    os.remove(x_test_file_name)
+    os.remove(y_test_file_name)
+
+
+def arrays_to_file(x_data,
+                   y_data,
+                   x_file_name='x_data.npy',
+                   y_file_name='y_data.npy'):
+    """
+    Writes the two input numpy arrays to .npy files.
+    """
+    np.save(x_file_name, x_data)
+    np.save(y_file_name, y_data)
+
+
+def file_to_arrays(filename, max_games=sys.maxsize):
     """
     Reads in a .pgn file and returns two NumPy arrays, one with
     dimensions nx7x8x8 where n is the total number of board
