@@ -6,13 +6,14 @@ import sys
 from timeit import default_timer as timer
 
 
-def pgn_to_npy(pgn_file, x_file_name, y_file_name):
+def pgn_to_npy(pgn_file, x_file_name, y_file_name, max_games=sys.maxsize):
     """
-    Reads in all of the chess games in pgn_file, converts them to
+    Reads in max_games of the chess games in pgn_file, converts them to
     numpy arrays, and save those arrays to x_file_name and
-    y_file_name.
+    y_file_name. Note that the .npy files are much faster to read numpy
+    arrays from, but are also MUCH bigger.
     """
-    x, y = file_to_arrays(pgn_file)
+    x, y = file_to_arrays(pgn_file, max_games)
     arrays_to_file(x, y, x_file_name, y_file_name)
 
 
@@ -20,8 +21,8 @@ def compare_times(num_games, pgn_file):
     """
     Computes the time it takes to process the given number of games
     from a .pgn file into numpy arrays, writes those arrays to files,
-    and computes the time it takes to read the arrays back out of the
-    files.
+    computes the time it takes to read the arrays back out of the
+    files, and prints these times.
     """
     x_test_file_name = 'x_test.npy'
     y_test_file_name = 'y_test.npy'
@@ -29,16 +30,19 @@ def compare_times(num_games, pgn_file):
     print("Comparing the time to process or read " + str(num_games)
           + " games...")
 
+    # Measure how long it takes to process the pgn file
     process_start_time = timer()
     x, y = file_to_arrays(pgn_file, num_games)
     process_end_time = timer()
     process_total_time = process_end_time - process_start_time
 
+    # Save the newly processed data to the test files
     arrays_to_file(x,
                    y,
                    x_file_name=x_test_file_name,
                    y_file_name=y_test_file_name)
 
+    # Measure how long it takes to read the data from the files
     read_start_time = timer()
     x_read = np.load(x_test_file_name)
     y_read = np.load(y_test_file_name)
@@ -179,3 +183,35 @@ def board_to_arrays(board):
         data.append([[-1]*8 for i in range(8)])
 
     return data
+
+
+def main(command_line_args):
+    """
+    Use command-line arguments to initiate data processing.
+    """
+    if len(command_line_args) == 5:
+        script_name, pgn_file, x_file_name, y_file_name, max_games = sys.argv
+    elif len(command_line_args) == 4:
+        script_name, pgn_file, x_file_name, y_file_name = sys.argv
+        max_games = sys.maxsize
+    else:
+        print("Please enter 3 or 4 command line arguments. Your call should"
+              " look like:\n"
+              "python data_conversion.py <pgn_file> <x_file_name>"
+              " <y_file_name> opt:<max_games> \n"
+              "  <pgn_file>: the file to read the chess data from\n"
+              "  <x_file_name>: the name of the file the x_data should be"
+              " saved in. Should end in the extension .npy\n"
+              "  <y_file_name>: the name of the file the y_data should be"
+              " saved in. Should end in the extension .npy\n"
+              "  <max_games>: an optional parameter, which constrains how many"
+              " games will be processed from the pgn file. Use this when the"
+              " pgn file is large and you don't want to process all of it.")
+        return
+
+    max_games = int(max_games)
+    pgn_to_npy(pgn_file, x_file_name, y_file_name, max_games)
+
+
+if __name__ == '__main__':
+    main(sys.argv)
