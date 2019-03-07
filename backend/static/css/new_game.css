@@ -1,0 +1,59 @@
+*{
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* h1, h2 {
+  font-family: 'Architects Daughter';
+  font-size: 40px;
+} */
+
+h1{
+  font-size: 50px;
+  color: darkred;
+}
+
+h2{
+  font-size: 30px;
+  color: gold;
+}
+
+h3 {
+  font-style: italic;
+  font-size: 20px;
+}
+
+#playBtn {
+  margin: 30px;
+  padding: 10px;
+}
+
+/*#slogan, .navigation{
+  font-family: 'Pacifico';
+  
+}
+
+.contactInfo{
+  font-size: 20px;
+}
+
+.navigation li {
+  color: darkred;
+  display: inline-block;
+  margin: 30px;
+  border-width: 2px 8px;
+  border-style: solid;
+  border-color: whitesmoke;
+  border-radius: 20%;
+  padding: 5px 10px;
+  font-size: 30px;
+  
+} */
+
+div.all{
+  /* background-image: url("/static/img/chess_background.jpg"); */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 120%;    
+}

@@ -1,9 +1,6 @@
 // board: chessboard.js
 // game: chess.js
 
-var model = '';
-var myColor = 'w'
-
 /*****************************************
  * Turn King's square red while in check *
  *****************************************/
@@ -18,21 +15,9 @@ var allSquares = ['a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1',
                   'a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7',
                   'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8'];
 
-// CHANGE THIS FUNCTION TO ONLY RESET RED SQUARES ???
-// LOOP THROUGH A1 THRU H8 AND USE squareEl EXAMPLE
-// Check bg color and reset if not red
-// alert(myDiv.style.backgroundColor);
+// THIS RESETS ALL SQUARES...CHANGE TO ONLY RESET RED SQUARE
 var removeRedSquare = function() {
   $('#board .square-55d63').css('background', '');
-  // const squares = Object.keys(board.position());
-  // for (const sq of allSquares) {
-  //   if (sq === redSq) {
-  //     $('#board .square-' + sq).css('background', '');
-  //     break;
-  //   }
-  // }
-  console.log("remove red square");
-  // redSq = '';
 };
 
 var redSquare = function(square) {
@@ -57,17 +42,8 @@ var findPiece = function(piece) {
  * Highlight legal moves *
  *************************/
 
-// CHANGE THIS FUNCTION TO ONLY RESET GREY SQUARES ???
 var removeGreySquares = function() {
   $('#board .square-55d63').css('background', '');
-  // console.log('red' + redSq);
-  // for (const sq of allSquares) {
-  //   if (sq !== redSq) {
-  //     console.log(sq);
-  //     $('#board .square-' + sq).css('background', '');
-  //   }
-  // }
-  // console.log("remove gray squares");
 };
 
 var greySquare = function(square) {
@@ -109,8 +85,6 @@ var onMouseoutSquare = function(square, piece) {
  *******************/
 
 var makeAIMove = function(msg) {
-
-  console.log(msg);
   game.load_pgn(msg.pgn);
   board.position(game.fen());
   updateStatus();
@@ -206,7 +180,11 @@ var updateStatus = function() {
       "model": model,
       "pgn": game.pgn()
     }
-
+    
+    // Eliminate errors with empty PGN, when AI is white on first turn
+    if (moveRequest.pgn === "") {
+      moveRequest.pgn = "1."
+    }
     sendRequest(moveRequest, function(msg) {
       window.setTimeout(makeAIMove, 500, msg);
     });
@@ -220,7 +198,8 @@ var cfg = {
   onDrop: onDrop,
   onSnapEnd: onSnapEnd,
   onMouseoutSquare: onMouseoutSquare,
-  onMouseoverSquare: onMouseoverSquare
+  onMouseoverSquare: onMouseoverSquare,
+  orientation: 'white'
 };
 
 /**************
@@ -270,41 +249,39 @@ var undo = function() {
   }
 }
 
-var sendRequest = function(request, callback) {
+var sendRequest = function(request, callBack) {
   $.ajax({
     method: 'POST',
+    //the url where you want to sent the userName and password to
     url: '/api/v1/http',
     dataType: 'json',
     contentType: 'application/json',
+    //json object to sent to the authentication url
     data: JSON.stringify(request),
     success: function(msg) {
-      callback(msg);
+      console.log(msg)
+      callBack(msg);
     },
     error: function (msg) {
-      console.error(msg);
+      console.log(msg);
     }
   });
-};
-
-var onModelRequestComplete = function(msg) {
-  model = msg.models[0].internalName; // RANDOM FOR NOW !!!
-  console.log(model);
-  board = ChessBoard('board', cfg);
-  updateStatus();
-  $('#restartBtn').on('click', restart);
-  $('#saveBtn').on('click', function() {
-    save("saved_game.pgn", game.pgn());
-  });
-  $('#loadBtn').on('click', load);
-  $('#undoBtn').on('click', undo);
 }
 
 /********
  * Main *
  ********/
 
-var modelRequest = {
-  "command": "list_models"
+var model = sessionStorage.getItem("modelName");
+var myColor = sessionStorage.getItem("userColor");
+if (myColor === 'b') {
+  cfg.orientation = "black";
 }
-
-sendRequest(modelRequest, onModelRequestComplete);
+board = ChessBoard('board', cfg);
+updateStatus();
+$('#restartBtn').on('click', restart);
+$('#saveBtn').on('click', function() {
+  save("saved_game.pgn", game.pgn());
+});
+$('#loadBtn').on('click', load);
+$('#undoBtn').on('click', undo);

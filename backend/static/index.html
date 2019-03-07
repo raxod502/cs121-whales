@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Chess</title>
-    <link rel="stylesheet" href="/css/chessboard-0.3.0.min.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="/js/chessboard-0.3.0.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
-  </head>
-  <body>
-    <div id="board" style="width: 400px"></div>
-    <input type="button" id="restartBtn" value="Restart" />
-    <input type="button" id="undoBtn" value="Undo" />
-    <input type="button" id="saveBtn" value="Save" />
-    <input type="button" id="loadBtn" value="Load" />
-    <input type="file" id="uploadPgn" style="display:none"/>
+    <head>        
+        <title> WHALES New Game </title>    
+        <link rel="stylesheet" type="text/css" href="/css/new_game.css">  
+        <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script src="/js/new_game.js"></script>
+    </head>
 
-    <script src="/js/main_scripts.js"></script>
-  </body>
+    <body>
+        <div class=all>
+            <h1> Welcome to W.H.A.L.E.S. </h1>
+            <h2 id="slogan"> Play chess against a powerful AI! </h2>
+
+            <h3 class="select-header">Select a Model</h3>
+            <select id="select-model"></select>
+
+            <h3 class="select-header">Select a Color</h3>
+            <select id=select-color>
+                <option value="w">White</option>
+                <option value="b">Black</option>
+            </select>
+            <br>
+
+            <input type="button" id="playBtn" value="Play Game" />
+        </div>
+    </body>
 </html>
