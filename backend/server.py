@@ -6,13 +6,16 @@ import flask
 
 app = flask.Flask(__name__, static_folder=None)
 
+
 @app.route("/")
 def index():
     return flask.send_from_directory("static", "index.html")
 
+
 @app.route("/<path:path>")
 def static(path):
     return flask.send_from_directory("static", path)
+
 
 @app.route("/api/v1/http", methods=["GET", "POST"])
 def http_endpoint():

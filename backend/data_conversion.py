@@ -24,11 +24,10 @@ def compare_times(num_games, pgn_file):
     computes the time it takes to read the arrays back out of the
     files, and prints these times.
     """
-    x_test_file_name = 'x_test.npy'
-    y_test_file_name = 'y_test.npy'
+    x_test_file_name = "x_test.npy"
+    y_test_file_name = "y_test.npy"
 
-    print("Comparing the time to process or read " + str(num_games)
-          + " games...")
+    print("Comparing the time to process or read " + str(num_games) + " games...")
 
     # Measure how long it takes to process the pgn file
     process_start_time = timer()
@@ -37,10 +36,7 @@ def compare_times(num_games, pgn_file):
     process_total_time = process_end_time - process_start_time
 
     # Save the newly processed data to the test files
-    arrays_to_file(x,
-                   y,
-                   x_file_name=x_test_file_name,
-                   y_file_name=y_test_file_name)
+    arrays_to_file(x, y, x_file_name=x_test_file_name, y_file_name=y_test_file_name)
 
     # Measure how long it takes to read the data from the files
     read_start_time = timer()
@@ -56,10 +52,7 @@ def compare_times(num_games, pgn_file):
     os.remove(y_test_file_name)
 
 
-def arrays_to_file(x_data,
-                   y_data,
-                   x_file_name='x_data.npy',
-                   y_file_name='y_data.npy'):
+def arrays_to_file(x_data, y_data, x_file_name="x_data.npy", y_file_name="y_data.npy"):
     """
     Writes the two input numpy arrays to .npy files.
     """
@@ -116,9 +109,9 @@ def game_to_arrays(game, x_data, y_data):
     # Lichess games ended in someone resigning, which is tracked
     # by the header but not by the board. Currently we treat a resign
     # as a loss.
-    if game.headers['Result'] == '1-0':
+    if game.headers["Result"] == "1-0":
         result = 1
-    elif game.headers['Result'] == '0-1':
+    elif game.headers["Result"] == "0-1":
         result = -1
     # If the game ended in a draw, throw away the new data.
     else:
@@ -150,14 +143,16 @@ def board_to_arrays(board):
     turn
     """
     # Create the empty 6x8x8 array
-    data = [[[0]*8 for i in range(8)] for j in range(6)]
+    data = [[[0] * 8 for i in range(8)] for j in range(6)]
 
-    board_from_type = {chess.PAWN: 0,
-                       chess.KNIGHT: 1,
-                       chess.BISHOP: 2,
-                       chess.ROOK: 3,
-                       chess.QUEEN: 4,
-                       chess.KING: 5}
+    board_from_type = {
+        chess.PAWN: 0,
+        chess.KNIGHT: 1,
+        chess.BISHOP: 2,
+        chess.ROOK: 3,
+        chess.QUEEN: 4,
+        chess.KING: 5,
+    }
     val_from_color = {chess.WHITE: 1, chess.BLACK: -1}
 
     # Loop through the squares by the indices they'll have in the 8x8
@@ -178,9 +173,9 @@ def board_to_arrays(board):
 
     # Add on the final 8x8 array representing which color moves next.
     if board.turn == chess.WHITE:
-        data.append([[1]*8 for i in range(8)])
+        data.append([[1] * 8 for i in range(8)])
     elif board.turn == chess.BLACK:
-        data.append([[-1]*8 for i in range(8)])
+        data.append([[-1] * 8 for i in range(8)])
 
     return data
 
@@ -195,23 +190,25 @@ def main(command_line_args):
         script_name, pgn_file, x_file_name, y_file_name = sys.argv
         max_games = sys.maxsize
     else:
-        print("Please enter 3 or 4 command line arguments. Your call should"
-              " look like:\n"
-              "python data_conversion.py <pgn_file> <x_file_name>"
-              " <y_file_name> opt:<max_games> \n"
-              "  <pgn_file>: the file to read the chess data from\n"
-              "  <x_file_name>: the name of the file the x_data should be"
-              " saved in. Should end in the extension .npy\n"
-              "  <y_file_name>: the name of the file the y_data should be"
-              " saved in. Should end in the extension .npy\n"
-              "  <max_games>: an optional parameter, which constrains how many"
-              " games will be processed from the pgn file. Use this when the"
-              " pgn file is large and you don't want to process all of it.")
+        print(
+            "Please enter 3 or 4 command line arguments. Your call should"
+            " look like:\n"
+            "python data_conversion.py <pgn_file> <x_file_name>"
+            " <y_file_name> opt:<max_games> \n"
+            "  <pgn_file>: the file to read the chess data from\n"
+            "  <x_file_name>: the name of the file the x_data should be"
+            " saved in. Should end in the extension .npy\n"
+            "  <y_file_name>: the name of the file the y_data should be"
+            " saved in. Should end in the extension .npy\n"
+            "  <max_games>: an optional parameter, which constrains how many"
+            " games will be processed from the pgn file. Use this when the"
+            " pgn file is large and you don't want to process all of it."
+        )
         return
 
     max_games = int(max_games)
     pgn_to_npy(pgn_file, x_file_name, y_file_name, max_games)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv)

@@ -6,6 +6,7 @@ class InvalidPGNError(Exception):
     """
     Error raised when parsing invalid PGN.
     """
+
     pass
 
 

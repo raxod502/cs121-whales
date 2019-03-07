@@ -7,6 +7,7 @@ class NoSuchModelError(Exception):
     """
     Exception raised when you try to use a model that doesn't exist.
     """
+
     pass
 
 
@@ -19,12 +20,13 @@ def model_random(pgn):
     board.push(move)
     return util.chess.board_to_pgn(board)
 
+
 MODELS = {
     "random": {
         "display_name": "Random",
         "description": "Make random moves",
         "callable": model_random,
-    },
+    }
 }
 
 
@@ -35,11 +37,13 @@ def get_model_info():
     """
     info_list = []
     for model, info in MODELS.items():
-        info_list.append({
-            "internalName": model,
-            "displayName": info["display_name"],
-            "description": info["description"],
-        })
+        info_list.append(
+            {
+                "internalName": model,
+                "displayName": info["display_name"],
+                "description": info["description"],
+            }
+        )
     info_list.sort(key=operator.itemgetter("internalName"))
     return info_list
 

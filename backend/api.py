@@ -6,6 +6,7 @@ class APIError(Exception):
     """
     Exception that indicates user error while processing API request.
     """
+
     pass
 
 
@@ -24,9 +25,7 @@ def error_response(message):
     Construct error response for API containing given error message.
     Return a dictionary.
     """
-    return {
-        "error": message,
-    }
+    return {"error": message}
 
 
 def query(request):
@@ -41,24 +40,20 @@ def query(request):
     command = request["command"]
     if command == "list_models":
         info = models.get_model_info()
-        return normal_response({
-            "models": info,
-        })
+        return normal_response({"models": info})
     if command == "get_move":
         for param in ["model", "pgn"]:
             if param not in request:
-                return error_response("missing required parameter {}"
-                                      .format(repr(param)))
+                return error_response(
+                    "missing required parameter {}".format(repr(param))
+                )
         model_name = request["model"]
         old_pgn = request["pgn"]
         try:
             new_pgn = models.run_model(model_name, old_pgn)
         except models.NoSuchModelError:
-            return error_response(
-                "unknown model {}".format(repr(model_name)))
+            return error_response("unknown model {}".format(repr(model_name)))
         except util.chess.InvalidPGNError:
             return error_response("invalid PGN")
-        return normal_response({
-            "pgn": new_pgn,
-        })
+        return normal_response({"pgn": new_pgn})
     return error_response("unknown command {}".format(repr(command)))
