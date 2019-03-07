@@ -270,23 +270,21 @@ var undo = function() {
   }
 }
 
-var sendRequest = function(request, callBack) {
+var sendRequest = function(request, callback) {
   $.ajax({
-    method: 'GET',
-    //the url where you want to sent the userName and password to
+    method: 'POST',
     url: '/api/v1/http',
     dataType: 'json',
     contentType: 'application/json',
-    //json object to sent to the authentication url
     data: JSON.stringify(request),
     success: function(msg) {
-      callBack(msg);
+      callback(msg);
     },
     error: function (msg) {
-      console.log(msg);
+      console.error(msg);
     }
   });
-}
+};
 
 var onModelRequestComplete = function(msg) {
   model = msg.models[0].internalName; // RANDOM FOR NOW !!!
