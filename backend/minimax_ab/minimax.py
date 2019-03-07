@@ -4,8 +4,33 @@ import random
 # chess is a 2 player game
 NUM_AGENTS = 2
 
-def minimax(board, max_plies=5, curr_depth=0,
-        alpha=float("-inf"), beta=float("inf")):
+# simple evaluation function
+def eval_material(board):
+    """
+    Counts number of pieces white has more than black and also whether
+    white or black has won the game
+    """
+
+    # will be replaced later by better evaluation function
+
+    white_won = 1 if board.result() == "1-0" else 0
+    black_won = 1 if board.result() == "0-1" else 0
+
+    pieces = [board.piece_at(x) for x in chess.SQUARES]
+    white_material = [piece for piece in pieces if piece == chess.WHITE]
+    black_material = [piece for piece in pieces if piece == chess.BLACK]
+
+    return (white_won * 100) + len(white_material) - len(black_material)
+
+
+def minimax(
+    board,
+    max_plies=2,
+    curr_depth=0,
+    alpha=float("-inf"),
+    beta=float("inf"),
+    eval_fn=eval_material,
+):
     """ Performs minimax search through board up to max_plies
     Uses alpha-beta pruning
 
@@ -21,7 +46,7 @@ def minimax(board, max_plies=5, curr_depth=0,
     max_depth = max_plies * NUM_AGENTS
 
     if curr_depth >= max_depth or board.is_game_over():
-        return (evaluation_function(board), None)
+        return (eval_fn(board), None)
 
     curr_agent = curr_depth % NUM_AGENTS
 
@@ -41,8 +66,9 @@ def minimax(board, max_plies=5, curr_depth=0,
             successor = board.copy()
             successor.push(action)
 
-            successor_val = minimax(successor, max_plies, curr_depth + 1,
-                    alpha, beta)[0]
+            successor_val = minimax(successor, max_plies, curr_depth + 1, alpha, beta)[
+                0
+            ]
 
             if successor_val > v:
                 best_action = action
@@ -64,8 +90,9 @@ def minimax(board, max_plies=5, curr_depth=0,
             successor = board.copy()
             successor.push(action)
 
-            successor_val = minimax(successor, max_plies, curr_depth + 1,
-                    alpha, beta)[0]
+            successor_val = minimax(successor, max_plies, curr_depth + 1, alpha, beta)[
+                0
+            ]
 
             if successor_val < v:
                 best_action = action
@@ -80,20 +107,3 @@ def minimax(board, max_plies=5, curr_depth=0,
 
     # return most optimized child along with action to take
     return (v, best_action)
-
-def evaluation_function(board):
-    """
-    Counts number of pieces white has more than black and also whether
-    white or black has won the game
-    """
-
-    # will be replaced later by better evaluation function
-
-    white_won = 1 if board.result() == '1-0' else 0
-    black_won = 1 if board.result() == '0-1' else 0
-
-    pieces = [ board.piece_at(x) for x in chess.SQUARES ]
-    white_material = [ piece for piece in pieces if piece == chess.WHITE ]
-    black_material = [ piece for piece in pieces if piece == chess.BLACK ]
-
-    return (white_won * 100) + len(white_material) - len(black_material)

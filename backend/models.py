@@ -1,6 +1,7 @@
 import operator
 import random
 import util.chess
+from minimax_ab import minimax
 
 
 class NoSuchModelError(Exception):
@@ -21,12 +22,28 @@ def model_random(pgn):
     return util.chess.board_to_pgn(board)
 
 
+def model_material_depth2(pgn):
+    """
+    Model that uses a depth 2 minimax tree with evaluation function
+    based on how much relative material each color has
+    """
+    board = util.chess.pgn_to_board(pgn)
+    move = minimax.minimax(board, max_plies=2, eval_fn=minimax.eval_material)[1]
+    board.push(move)
+    return util.chess.board_to_pgn(board)
+
+
 MODELS = {
     "random": {
         "display_name": "Random",
         "description": "Make random moves",
         "callable": model_random,
-    }
+    },
+    "material-depth2": {
+        "display_name": "material to depth 2",
+        "description": "Simple material evaluation function using depth 2 minimax",
+        "callable": model_material_depth2,
+    },
 }
 
 
