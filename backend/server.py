@@ -9,7 +9,7 @@ app = flask.Flask(__name__, static_folder=None)
 
 @app.route("/")
 def page_new_game():
-    return flask.send_from_directory("html", "new_game.html")
+    return flask.send_from_directory("html", "new-game.html")
 
 
 @app.route("/play")
