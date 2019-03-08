@@ -8,13 +8,17 @@ app = flask.Flask(__name__, static_folder=None)
 
 
 @app.route("/")
+def page_new_game():
+    return flask.send_from_directory("html", "new_game.html")
+
+
+@app.route("/play")
+def page_play():
+    return flask.send_from_directory("html", "play.html")
+
+
 @app.route("/<path:path>")
-def static(path=None):
-    # Quick hack to emulate a real static file server (kinda sorta).
-    if not path:
-        path = "index.html"
-    if "." not in path and path != "index":
-        path += ".html"
+def static(path):
     return flask.send_from_directory("static", path)
 
 
