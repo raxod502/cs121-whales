@@ -17,7 +17,7 @@ $(document).ready(function() {
     userColor = colorList.options[colorList.selectedIndex].value;
     sessionStorage.setItem("modelName", modelName);
     sessionStorage.setItem("userColor", userColor);
-    window.location.href = "/play.html";
+    window.location.href = "/play";
   });
 });
 
