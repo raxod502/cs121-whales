@@ -11,7 +11,6 @@
  * - moveFinishHandler
  */
 function View(params) {
-
   let board = ChessBoard("board", {
     draggable: true,
     position: "start",
@@ -27,25 +26,23 @@ function View(params) {
     onDrop: (fromSquare, toSquare) => {
       if (params.dragFinishHandler(fromSquare, toSquare)) {
         return null;
-      }
-      else {
+      } else {
         return "snapback";
       }
     },
     onSnapEnd: () => {
       params.moveFinishHandler();
     },
-    orientation: params.boardOrientation,
+    orientation: params.boardOrientation
   });
 
-  this.highlightSquare = (square) => {
+  this.highlightSquare = square => {
     const squareEl = $("#board .square-" + square);
 
     let background;
     if (squareEl.hasClass("black-3c85d")) {
       background = "#696969";
-    }
-    else {
+    } else {
       background = "#a9a9a9";
     }
 
@@ -56,12 +53,11 @@ function View(params) {
     $("#board .square-55d63").css("background", "");
   };
 
-  this.setBoardFEN = (fen) => {
+  this.setBoardFEN = fen => {
     board.position(fen);
   };
 
-  this.setStatusText = (text) => {
+  this.setStatusText = text => {
     $("#status").text(text);
   };
-
 }

@@ -7,7 +7,6 @@
  * - playerColor
  */
 function Model(params) {
-
   let game = Chess();
   let backendModel = params.backendModel;
   let playerColor = params.playerColor;
@@ -16,7 +15,7 @@ function Model(params) {
     return game.pgn();
   };
 
-  this.setGamePGN = (pgn) => {
+  this.setGamePGN = pgn => {
     game.load_pgn(pgn);
   };
 
@@ -24,10 +23,10 @@ function Model(params) {
     return game.fen();
   };
 
-  this.getAllowedMoves = (fromSquare) => {
+  this.getAllowedMoves = fromSquare => {
     return game.moves({
       square: fromSquare,
-      verbose: true,
+      verbose: true
     });
   };
 
@@ -41,7 +40,7 @@ function Model(params) {
     return game.turn() === playerColor;
   }
 
-  this.doesPlayerOwnPiece = (piece) => {
+  this.doesPlayerOwnPiece = piece => {
     return piece.search(new RegExp(`^${playerColor}`)) !== -1;
   };
 
@@ -65,19 +64,20 @@ function Model(params) {
     // We ought to be able to check if a move is legal without
     // actually making it. I can't figure out how to do this, though.
     // Do we really have to make it and then undo it?
-    return game.move({
-      from: fromSquare,
-      to: toSquare,
-      promotion: "q",
-    }) !== null;
+    return (
+      game.move({
+        from: fromSquare,
+        to: toSquare,
+        promotion: "q"
+      }) !== null
+    );
   };
 
   this.getGameStatus = () => {
     if (game.in_checkmate()) {
       if (isPlayerTurn()) {
         return "Checkmate! You have lost.";
-      }
-      else {
+      } else {
         return "Checkmate! You have won!";
       }
     }
@@ -89,22 +89,19 @@ function Model(params) {
     if (isPlayerTurn()) {
       if (game.in_check()) {
         return "Check! Your move.";
-      }
-      else {
+      } else {
         return "Your move!";
       }
-    }
-    else {
+    } else {
       if (game.in_check()) {
         return "Check! The computer is thinking...";
-      }
-      else {
+      } else {
         return "The computer is thinking...";
       }
     }
   };
 
-  this.setBackendModel = (newBackendModel) => {
+  this.setBackendModel = newBackendModel => {
     backendModel = newBackendModel;
   };
 
@@ -115,5 +112,4 @@ function Model(params) {
   if (params.pgn !== null) {
     this.setGamePGN(params.pgn);
   }
-
 }

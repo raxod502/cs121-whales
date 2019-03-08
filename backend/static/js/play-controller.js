@@ -1,7 +1,6 @@
 "use strict";
 
 function Controller() {
-
   let backendModel = sessionStorage.getItem("modelName");
   let playerColor = sessionStorage.getItem("userColor");
 
@@ -17,19 +16,17 @@ function Controller() {
   let model = new Model({
     backendModel,
     pgn: null,
-    playerColor,
+    playerColor
   });
 
   let view;
 
   function mouseoverEntryHandler(square) {
-    if (!model.canPlayerMove())
-      return;
+    if (!model.canPlayerMove()) return;
 
     const moves = model.getAllowedMoves(square);
 
-    if (moves.length === 0)
-      return;
+    if (moves.length === 0) return;
 
     // Highlight the square the user moused over, if there is a
     // movable piece there.
@@ -63,15 +60,18 @@ function Controller() {
     updateViewFromMove();
 
     if (model.canComputerMove()) {
-      apiRequest({
-        command: "get_move",
-        model: model.getBackendModel(),
-        pgn: model.getGamePGN(),
-      }, (response) => {
-        // TODO: better error handling.
-        model.setGamePGN(response.pgn);
-        updateViewFromMove();
-      });
+      apiRequest(
+        {
+          command: "get_move",
+          model: model.getBackendModel(),
+          pgn: model.getGamePGN()
+        },
+        response => {
+          // TODO: better error handling.
+          model.setGamePGN(response.pgn);
+          updateViewFromMove();
+        }
+      );
     }
   }
 
@@ -82,10 +82,9 @@ function Controller() {
     mouseoverExitHandler,
     dragStartHandler,
     dragFinishHandler,
-    moveFinishHandler,
+    moveFinishHandler
   });
   updateViewFromMove();
-
 }
 
 // Kick everything off.

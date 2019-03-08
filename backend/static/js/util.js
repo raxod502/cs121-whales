@@ -8,6 +8,6 @@ const apiRequest = function(request, callback) {
     dataType: "json",
     success: callback,
     // TODO: better error handling.
-    error: console.error,
+    error: console.error
   });
 };
