@@ -7,6 +7,7 @@ const apiRequest = function(request, callback) {
     // Parse the returned response into JSON.
     dataType: "json",
     success: callback,
+    // TODO: better error handling.
     error: console.error,
   });
 };

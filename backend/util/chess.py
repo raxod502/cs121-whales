@@ -23,7 +23,11 @@ class SilentGameCreator(chess.pgn.GameCreator):
 def pgn_to_board(pgn):
     """
     Convert a PGN string into a python-chess Board object.
+
+    Interpret an empty PGN string as a game with no moves.
     """
+    if not pgn:
+        pgn = "-"
     game = chess.pgn.read_game(io.StringIO(pgn), Visitor=SilentGameCreator)
     return game.end().board()
 
