@@ -8,16 +8,17 @@ app = flask.Flask(__name__, static_folder=None)
 
 
 @app.route("/")
-def index():
-    return flask.send_from_directory("static", "index.html")
-
-
 @app.route("/<path:path>")
-def static(path):
+def static(path=None):
+    # Quick hack to emulate a real static file server (kinda sorta).
+    if not path:
+        path = "index.html"
+    if "." not in path and path != "index":
+        path += ".html"
     return flask.send_from_directory("static", path)
 
 
-@app.route("/api/v1/http", methods=["GET", "POST"])
+@app.route("/api/v1/http", methods=["POST"])
 def http_endpoint():
     """
     HTTP endpoint for API.

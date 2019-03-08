@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html>
-    <head>        
-        <title> WHALES New Game </title>    
-        <link rel="stylesheet" type="text/css" href="/css/new_game.css">  
-        <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-        <script src="/js/new_game.js"></script>
-    </head>
+  <head>
+    <title> W.H.A.L.E.S. New Game </title>
+    <link rel="stylesheet" type="text/css" href="/css/new_game.css">
+    <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/new_game.js"></script>
+  </head>
 
-    <body>
-        <div class=all>
-            <h1> Welcome to W.H.A.L.E.S. </h1>
-            <h2 id="slogan"> Play chess against a powerful AI! </h2>
+  <body>
+    <div class=all>
+      <h1> Welcome to W.H.A.L.E.S. </h1>
+      <h2 id="slogan"> Play chess against a powerful AI! </h2>
 
-            <h3 class="select-header">Select a Model</h3>
-            <select id="select-model"></select>
+      <h3 class="select-header">Select a Model</h3>
+      <select id="select-model"></select>
 
-            <h3 class="select-header">Select a Color</h3>
-            <select id=select-color>
-                <option value="w">White</option>
-                <option value="b">Black</option>
-            </select>
-            <br>
+      <h3 class="select-header">Select a Color</h3>
+      <select id=select-color>
+        <option value="w">White</option>
+        <option value="b">Black</option>
+      </select>
+      <br>
 
-            <input type="button" id="playBtn" value="Play Game" />
-        </div>
-    </body>
+      <input type="button" id="playBtn" value="Play Game" />
+    </div>
+  </body>
 </html>

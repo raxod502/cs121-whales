@@ -10,7 +10,7 @@ $(document).ready(function() {
   modelList = document.getElementById("select-model");
   colorList = document.getElementById("select-color");
   // Get list of models from API
-  sendJsonRequest(modelRequest, onModelRequestComplete);
+  apiRequest(modelRequest, onModelRequestComplete);
   $("#playBtn").on("click", function() {
     // Get the user-selected model and color values and navigate to chess.html
     modelName = modelList.options[modelList.selectedIndex].value;
@@ -29,23 +29,4 @@ var onModelRequestComplete = function(msg) {
       model.internalName
     );
   }
-};
-
-// COPIED FROM main_scripts.js...IS IT POSSIBLE TO IMPORT ???
-var sendJsonRequest = function(request, callBack) {
-  $.ajax({
-    type: "POST",
-    //the url where you want to sent the userName and password to
-    url: "/api/v1/http",
-    dataType: "json",
-    contentType: "application/json",
-    //json object to sent to the authentication url
-    data: JSON.stringify(request),
-    success: function(msg) {
-      callBack(msg);
-    },
-    error: function(msg) {
-      console.log(msg);
-    }
-  });
 };

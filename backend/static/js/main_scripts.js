@@ -179,7 +179,7 @@ var updateStatus = function() {
     if (moveRequest.pgn === "") {
       moveRequest.pgn = "1.";
     }
-    sendRequest(moveRequest, function(msg) {
+    apiRequest(moveRequest, function(msg) {
       window.setTimeout(makeAIMove, 500, msg);
     });
   }
@@ -244,25 +244,6 @@ var undo = function() {
     board.position(game.fen());
     updateStatus();
   }
-};
-
-var sendRequest = function(request, callBack) {
-  $.ajax({
-    method: "POST",
-    //the url where you want to sent the userName and password to
-    url: "/api/v1/http",
-    dataType: "json",
-    contentType: "application/json",
-    //json object to sent to the authentication url
-    data: JSON.stringify(request),
-    success: function(msg) {
-      console.log(msg);
-      callBack(msg);
-    },
-    error: function(msg) {
-      console.log(msg);
-    }
-  });
 };
 
 /********
