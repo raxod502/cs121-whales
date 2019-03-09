@@ -33,7 +33,7 @@ function View(params) {
     onSnapEnd: () => {
       params.moveFinishHandler();
     },
-    orientation: params.boardOrientation
+    orientation: params.boardOrientation === "w" ? "white" : "black"
   });
 
   this.highlightSquare = square => {
