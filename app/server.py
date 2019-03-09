@@ -4,6 +4,8 @@ import api
 
 import flask
 
+import os
+
 app = flask.Flask(__name__, static_folder=None)
 
 
@@ -38,4 +40,12 @@ def http_endpoint():
 
 
 if __name__ == "__main__":
-    app.run()
+    port = os.environ.get("PORT")
+    if port:
+        try:
+            port = int(port)
+        except ValueError:
+            port = None
+    if not port:
+        port = 5000
+    app.run(port=port)
