@@ -22,7 +22,6 @@ Clone this repository:
 
 Create a virtual environment for the backend:
 
-    $ cd backend
     $ pipenv install
 
 Run the server:
