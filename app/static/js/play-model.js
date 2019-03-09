@@ -7,7 +7,8 @@
  * - playerColor
  */
 function Model(params) {
-  let game = Chess();
+  // Initialized down below using this.setGamePgn().
+  let game;
   let backendModel = params.backendModel;
   let playerColor = params.playerColor;
 
@@ -16,7 +17,11 @@ function Model(params) {
   };
 
   this.setGamePGN = pgn => {
-    game.load_pgn(pgn);
+    if (pgn !== null) {
+      game.load_pgn(pgn);
+    } else {
+      game = Chess();
+    }
   };
 
   this.getGameFEN = () => {
@@ -117,7 +122,5 @@ function Model(params) {
     return backendModel;
   };
 
-  if (params.pgn !== null) {
-    this.setGamePGN(params.pgn);
-  }
+  this.setGamePGN(params.pgn);
 }

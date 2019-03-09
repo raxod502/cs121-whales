@@ -51,7 +51,7 @@ function Controller() {
     return model.tryMakingMove(fromSquare, toSquare);
   }
 
-  function updateViewFromMove() {
+  function updateViewWithMove() {
     view.setBoardFEN(model.getGameFEN());
     view.setStatusText(model.getGameStatus());
   }
@@ -67,14 +67,14 @@ function Controller() {
         response => {
           // TODO: better error handling.
           model.setGamePGN(response.pgn);
-          updateViewFromMove();
+          updateViewWithMove();
         }
       );
     }
   }
 
   function moveFinishHandler() {
-    updateViewFromMove();
+    updateViewWithMove();
     tryMakeComputerMove();
   }
 
@@ -89,12 +89,18 @@ function Controller() {
       // If we are at the initial game state, this doesn't do
       // anything.
       model.undoLastMove();
-      updateViewFromMove();
+      updateViewWithMove();
     }
   }
 
   function newGameHandler() {
-    view.newGame();
+    model.setGamePGN(null);
+    updateViewWithMove();
+    tryMakeComputerMove();
+  }
+
+  function changeSettingsHandler() {
+    view.changeSettings();
   }
 
   view = new View({
@@ -106,9 +112,10 @@ function Controller() {
     dragFinishHandler,
     moveFinishHandler,
     undoHandler,
-    newGameHandler
+    newGameHandler,
+    changeSettingsHandler
   });
-  updateViewFromMove();
+  updateViewWithMove();
   tryMakeComputerMove();
 }
 

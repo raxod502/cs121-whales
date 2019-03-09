@@ -11,6 +11,7 @@
  * - moveFinishHandler
  * - undoHandler
  * - newGameHandler
+ * - changeSettingsHandler
  */
 function View(params) {
   let board = ChessBoard("board", {
@@ -40,6 +41,7 @@ function View(params) {
 
   $("#undoBtn").on("click", params.undoHandler);
   $("#newGameBtn").on("click", params.newGameHandler);
+  $("#changeSettingsBtn").on("click", params.changeSettingsHandler);
 
   this.highlightSquare = square => {
     const squareEl = $("#board .square-" + square);
@@ -66,7 +68,7 @@ function View(params) {
     $("#status").text(text);
   };
 
-  this.newGame = () => {
+  this.changeSettings = () => {
     window.location.href = "/";
   };
 }
