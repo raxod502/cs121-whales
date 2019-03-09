@@ -1,9 +1,12 @@
-var modelName = null;
-var modelList = null;
-var userColor = null;
+let modelName = null;
+let modelList = null;
+let userColor = null;
 var modelRequest = {
   command: "list_models"
 };
+
+const prevModelName = sessionStorage.getItem("modelName");
+const prevUserColor = sessionStorage.getItem("userColor");
 
 // Start when html has been loaded
 $(document).ready(function() {
@@ -21,12 +24,17 @@ $(document).ready(function() {
   });
 });
 
-var onModelRequestComplete = function(msg) {
-  console.log(msg);
+function onModelRequestComplete(msg) {
   for (const model of msg.models) {
     modelList.options[modelList.options.length] = new Option(
       model.displayName,
       model.internalName
     );
+    if (model.internalName === prevModelName) {
+      modelList.value = prevModelName;
+    }
+  }
+  if (prevUserColor === "b" || prevUserColor === "w") {
+    colorList.value = prevUserColor;
   }
 };
