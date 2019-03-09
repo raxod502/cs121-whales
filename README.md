@@ -26,11 +26,11 @@ Create a virtual environment for the backend:
 
 Run the server:
 
-    $ pipenv run ./server.py
+    $ make run-server-prod
 
 You can also run in development mode, which enables live-reloading:
 
-    $ FLASK_APP=server.py FLASK_DEBUG=1 pipenv run flask run
+    $ make run-server-dev
 
 The backend is now running on `localhost:5000`, or whichever port is
 printed on the command line.
