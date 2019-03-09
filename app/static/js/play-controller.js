@@ -56,9 +56,7 @@ function Controller() {
     view.setStatusText(model.getGameStatus());
   }
 
-  function moveFinishHandler() {
-    updateViewFromMove();
-
+  function tryMakeComputerMove() {
     if (model.canComputerMove()) {
       apiRequest(
         {
@@ -75,6 +73,11 @@ function Controller() {
     }
   }
 
+  function moveFinishHandler() {
+    updateViewFromMove();
+    tryMakeComputerMove();
+  }
+
   view = new View({
     boardOrientation: playerColor,
     fen: model.getGameFEN(),
@@ -85,6 +88,7 @@ function Controller() {
     moveFinishHandler
   });
   updateViewFromMove();
+  tryMakeComputerMove();
 }
 
 // Kick everything off.
