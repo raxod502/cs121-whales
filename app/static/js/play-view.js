@@ -9,6 +9,7 @@
  * - dragStartHandler
  * - dragFinishHandler
  * - moveFinishHandler
+ * - undoHandler
  */
 function View(params) {
   let board = ChessBoard("board", {
@@ -35,6 +36,8 @@ function View(params) {
     },
     orientation: params.boardOrientation === "w" ? "white" : "black"
   });
+
+  $("#undoBtn").on("click", params.undoHandler);
 
   this.highlightSquare = square => {
     const squareEl = $("#board .square-" + square);

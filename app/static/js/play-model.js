@@ -36,9 +36,9 @@ function Model(params) {
     game.undo();
   };
 
-  function isPlayerTurn() {
+  this.isPlayerTurn = () => {
     return game.turn() === playerColor;
-  }
+  };
 
   this.doesPlayerOwnPiece = piece => {
     return piece.search(new RegExp(`^${playerColor}`)) !== -1;
@@ -49,7 +49,7 @@ function Model(params) {
       return false;
     }
 
-    return isPlayerTurn();
+    return this.isPlayerTurn();
   };
 
   this.canComputerMove = () => {
@@ -57,7 +57,15 @@ function Model(params) {
       return false;
     }
 
-    return !isPlayerTurn();
+    return !this.isPlayerTurn();
+  };
+
+  this.hasPlayerMoved = () => {
+    if (playerColor === "white") {
+      return game.history().length >= 1;
+    } else {
+      return game.history().length >= 2;
+    }
   };
 
   this.tryMakingMove = (fromSquare, toSquare) => {
@@ -75,7 +83,7 @@ function Model(params) {
 
   this.getGameStatus = () => {
     if (game.in_checkmate()) {
-      if (isPlayerTurn()) {
+      if (this.isPlayerTurn()) {
         return "Checkmate! You have lost.";
       } else {
         return "Checkmate! You have won!";
@@ -86,7 +94,7 @@ function Model(params) {
       return "Draw!";
     }
 
-    if (isPlayerTurn()) {
+    if (this.isPlayerTurn()) {
       if (game.in_check()) {
         return "Check! Your move.";
       } else {
