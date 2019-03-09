@@ -93,6 +93,10 @@ function Controller() {
     }
   }
 
+  function newGameHandler() {
+    view.newGame();
+  }
+
   view = new View({
     boardOrientation: playerColor,
     fen: model.getGameFEN(),
@@ -101,7 +105,8 @@ function Controller() {
     dragStartHandler,
     dragFinishHandler,
     moveFinishHandler,
-    undoHandler
+    undoHandler,
+    newGameHandler
   });
   updateViewFromMove();
   tryMakeComputerMove();
