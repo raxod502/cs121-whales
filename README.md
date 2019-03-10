@@ -27,14 +27,15 @@ Create a virtual environment for the backend:
 
 Run the server:
 
-    $ make run-server-prod
-
-You can also run in development mode, which enables live-reloading:
-
     $ make run-server-dev
 
-The backend is now running on `localhost:5000`, or whichever port is
-printed on the command line.
+Code is live-reloaded. To test in production mode using a real WSGI
+server:
+
+    $ make run-server-prod-test
+
+In either case, the backend is now running on `localhost:5000`, or
+whichever port is printed on the command line.
 
 ### Backend usage
 
