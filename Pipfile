@@ -9,9 +9,9 @@ verify_ssl = true
 python-chess = "*"
 flask = "*"
 gunicorn = "*"
-flask-sslify = "*"
 tensorflow = "*"
 keras = "*"
+flask-talisman = "*"
 
 [requires]
 python_version = "3.6"

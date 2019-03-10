@@ -3,12 +3,12 @@
 import os
 
 import flask
-import flask_sslify
+import flask_talisman
 
 import api
 
 app = flask.Flask(__name__, static_folder=None)
-flask_sslify.SSLify(app)
+flask_talisman.Talisman(app)
 
 
 @app.route("/")
