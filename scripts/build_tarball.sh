@@ -9,7 +9,7 @@ set -e
 DEST_PATH="app/neural_net/"
 GZ_FILENAME="model.tar.gz"
 
-tar -czvf $GZ_FILENAME --transform "s|^|DEST_PATH|g" "$@"
+tar -czvf $GZ_FILENAME --transform "s|^|$DEST_PATH|g" "$@"
 
 md5=($(md5sum $GZ_FILENAME))
 

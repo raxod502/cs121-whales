@@ -1,1 +1,4 @@
 __pycache__
+*.json
+*.h5
+*.tar.gz
