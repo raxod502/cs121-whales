@@ -10,6 +10,8 @@ python-chess = "*"
 flask = "*"
 gunicorn = "*"
 flask-sslify = "*"
+tensorflow = "*"
+keras = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
