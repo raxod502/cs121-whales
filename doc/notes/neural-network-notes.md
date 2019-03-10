@@ -1,17 +1,6 @@
 # Neural Network Notes & Research Summary
 
-## Current Action Items
-
-As of 3/5:
-* Set up Keras
-* Write initial convolutional neural network in Keras (should be
-~10-15 loc)
-* Check that the neural network can read in the data
-* Run a short, proof-of-concept training session for the neural 
-network (~5 epochs)
-  * (Opt., maybe required depending on how long the training 
-  sesion takes) Set up Google Collab or similar service 
-* Determine how to get the prediction of a single board
+Last updated 3/9
 
 ## ~ Deep Learning ~ Plan 1: Board Classification
 
@@ -23,14 +12,47 @@ belonging to a game where white won, or where black won.
 To train a neural net to classify boards, we need to create a 
 dataset that contains discrete board positions labeled with who 
 ultimately won. 
- 
-However, Lichess data is stored in [pgn] format, which records the 
+
+There are a variety of online chess game databases to choose from, which 
+have various pros and cons. We will need to decide where to get our data.
+However, regardless of source, most chess data is stored in [pgn] format, which records the 
 entire sequence of moves that occurred in a game, rather than explicit 
-intermediate board positions. Thus, there are two main steps between
-downloading Lichess data and feeding data to a neural net:
+intermediate board positions. Thus, there are three main steps between
+starting out and feeding data to a neural net:
+1. Acquire pgn data
 1. Convert from pgn to board positions
 1. Convert from board positions to a data format that a neural 
  network can understand
+ 
+### Database options
+
+* [Lichess] A very large database of random people on the internet playing
+chess games against one another. It's quite large, and allows for single,
+easy downloads of large pgn files. However, it consists largely of random
+people on the internet, meaning the average skill of the players is fairly 
+low (~18% of games with both players above 1500 ELO, 0.9% above 1800, and
+effectively none above 1900), many games end in a resign rather than a strict
+checkmate, and it involves a number of 'Blitz' or 'Bullet' games (fast chess,
+which also results in poorer play).
+
+* [PGNMentor] A website with a bunch of games sorted by opening, players involved
+(so you could download all games played by Gary Kasparov, for example), or event
+(so you could download all 10-15 games played in the 2018 world championship). This
+allows you to access (presumably) very high quality games, by downloading all of the
+world championships. However, each event is a separate link, and would require some
+automatic downloading script and data collation to be useful.
+
+* [KingBase] A large databse of chess games with the strict cutoff that all ELO is
+above 2000. Similarly to LiChess, this involves relatively few links and separate
+downloads, which is convenient. The average game quality (as measured by reported 
+ELO and lack of being a blitz or bullet game) is much higher (100% above 2000, 99% 
+above 2200, 65% above 2300).
+
+I recommend we focus on using KingBase, because it best combines ease of use
+with higher-quality games. If we have extra time, it might be fun to explore
+the specifics in PGNMentor, either to just scrape for the extra-high-quality
+play in certain events, or to see what happens if you train a neural net
+exclusively on games played by Kasparov (for example).
 
 ### Convert from pgn to board positions
 The [python-chess] library provides an easy way to [convert from pgn]
@@ -100,3 +122,6 @@ better performance later.
 [convert from pgn]: https://python-chess.readthedocs.io/en/latest/pgn.html
 [chess-evaluation tutorial]: https://int8.io/chess-position-evaluation-with-convolutional-neural-networks-in-julia/
 [This tutorial]: https://adventuresinmachinelearning.com/keras-tutorial-cnn-11-lines/
+[Lichess]: https://database.lichess.org/
+[PGNMentor]: https://www.pgnmentor.com/files.html
+[KingBase]: http://www.kingbase-chess.net/

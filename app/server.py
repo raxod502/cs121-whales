@@ -1,26 +1,37 @@
 #!/usr/bin/env python3
 
-import api
-
-import flask
-
 import os
 
+import flask
+import flask_sslify
+
+import api
+
 app = flask.Flask(__name__, static_folder=None)
+flask_sslify.SSLify(app)
 
 
 @app.route("/")
 def page_new_game():
+    """
+    Serve HTML page for configuring new game of chess.
+    """
     return flask.send_from_directory("html", "new-game.html")
 
 
 @app.route("/play")
 def page_play():
+    """
+    Serve HTML page for playing chess.
+    """
     return flask.send_from_directory("html", "play.html")
 
 
 @app.route("/<path:path>")
 def static(path):
+    """
+    Serve non-HTML static files.
+    """
     return flask.send_from_directory("static", path)
 
 

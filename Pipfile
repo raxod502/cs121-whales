@@ -9,6 +9,7 @@ verify_ssl = true
 python-chess = "*"
 flask = "*"
 gunicorn = "*"
+flask-sslify = "*"
 
 [requires]
 python_version = "3.7"
