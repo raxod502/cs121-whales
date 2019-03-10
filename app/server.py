@@ -3,10 +3,12 @@
 import os
 
 import flask
+import flask_sslify
 
 import api
 
 app = flask.Flask(__name__, static_folder=None)
+flask_sslify.SSLify(app)
 
 
 @app.route("/")
