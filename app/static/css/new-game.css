@@ -3,6 +3,12 @@
   box-sizing: border-box;
 }
 
+div.all {
+    position:relative;
+  --primary-color: green;
+  --secondary-color: blanchedalmond;
+}
+
 /* h1, h2 {
   font-family: 'Architects Daughter';
   font-size: 40px;
@@ -10,12 +16,12 @@
 
 h1{
   font-size: 50px;
-  color: darkred;
+  color: var(--primary-color);
 }
 
 h2{
   font-size: 30px;
-  color: gold;
+  color: var(--secondary-color);
 }
 
 h3 {
@@ -26,6 +32,14 @@ h3 {
 #playBtn {
   margin: 30px;
   padding: 10px;
+  font-family: 'Pacifico';
+  font-size: 30px;
+  color: var(--secondary-color);
+  text-shadow: 10px;
+  background-color: var(--primary-color);
+  border-radius: 20px;
+  border: 4px solid var(--secondary-color);
+  box-shadow: 7px 7px 2px 1px gray;
 }
 
 /*#slogan, .navigation{
@@ -50,10 +64,16 @@ h3 {
   
 } */
 
-div.all{
-  /* background-image: url("/static/img/chess_background.jpg"); */
+div#bgpic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url("/img/chess_background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  height: 120%;    
+  opacity: 0.5;
+  width:120%;
+  height:120%;
+  /* height: 120%;     */
 }
