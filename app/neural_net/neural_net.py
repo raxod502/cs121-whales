@@ -166,3 +166,9 @@ correct = ((predictions > 0) & (y_validation > 0)) | (
 
 # Print the percentage of predictions that were correct
 print(sum(correct) / correct.shape[0])
+
+
+# # Predict a single specific board
+# single_board = x[:10]
+# print(single_board.shape)
+# print(model.predict(single_board))
