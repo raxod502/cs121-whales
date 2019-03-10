@@ -8,12 +8,13 @@ Chess AI web application using minimax and deep learning on backend.
 Install the following dependencies:
 
 * [Git](https://git-scm.com/)
-* [Python 3](https://www.python.org/)
+* [Python 3.6](https://www.python.org/)
 * [Pipenv](https://pipenv.readthedocs.io/en/latest/)
 
 On macOS using [Homebrew](https://brew.sh/), that looks like this:
 
-    $ brew install git python pipenv
+    $ brew install git pyenv pipenv
+    $ pyenv install 3.6.8
 
 Clone this repository:
 
@@ -22,7 +23,7 @@ Clone this repository:
 
 Create a virtual environment for the backend:
 
-    $ pipenv install
+    $ pipenv install --python "$(pyenv prefix 3.6.8)"/bin/python
 
 Run the server:
 
