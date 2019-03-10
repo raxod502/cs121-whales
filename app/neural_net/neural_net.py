@@ -1,31 +1,8 @@
 import keras
 import numpy as np
 from keras.layers import Conv2D, Dense, Flatten
-from keras.models import Sequential, model_from_json
-
-
-def save_models(models):
-    """
-    Saves a list of models to .json files and their weights to .h5
-    files.
-    """
-    for model in models:
-        with open("{}.json".format(model.name), "w") as file:
-            file.write(model.to_json())
-        model.save_weights("{}.h5".format(model.name))
-
-
-def load_models(model_names):
-    """
-    Loads a list of models from .json and .h5 files labeled with
-    the name of each model.
-    """
-    models = []
-    for index, name in enumerate(model_names):
-        with open(name + ".json", "r") as file:
-            models.append(model_from_json(file.read()))
-        models[index].load_weights(name + ".h5")
-    return models
+from keras.models import Sequential
+from neural_net_interface import save_models, load_models
 
 
 # TODO: try using Conv3D
@@ -120,55 +97,60 @@ model.compile(
 # Print out a description of the model's structure
 model.summary()
 
-# Load in the training data
-x = np.load("x_data_1000.npy")
-y = np.load("y_data_1000.npy")
+# Flag to determine whether to just load the model for use elsewhere.
+use = False
 
-# Separate into training and validation
-
-# What percent of the data to use as validation
-validation_split = 0.2
-
-# The index where the data switches from training to validation
-split_point = int(x.shape[0] * (1 - validation_split))
-
-x_training = x[:split_point]
-y_training = y[:split_point]
-x_validation = x[split_point:]
-y_validation = y[split_point:]
-
-# Flag to determine whether to train the model or just load the saved model.
+# Flag to determine whether to train the model (if not using it).
 train = False
 
-if train:
-    # Train and save the model
-    history = model.fit(
-        x=x_training,
-        y=y_training,
-        batch_size=128,
-        epochs=1,
-        verbose=1,  # Show progress bar
-        validation_data=(x_validation, y_validation),
-    )
-    save_models([model])
-else:
+# Flag to determine whether to test the model (if you not training it).
+test = True
+
+if use:
     model = load_models(["model 1"])[0]
 
-# Predict all of the data in the validation set to get an idea of how the
-# model is doing.
-predictions = model.predict(x_validation)  # Has shape nx1
-predictions = predictions.reshape(y_validation.shape)
+if train or test:
+    # Load in the training data
+    x = np.load("x_data_1000.npy")
+    y = np.load("y_data_1000.npy")
 
-# Compare predictions to the actual labels (creates an n array of booleans)
-correct = ((predictions > 0) & (y_validation > 0)) | (
-    (predictions < 0) & (y_validation < 0)
-)
+    # Separate into training and validation
 
-# Print the percentage of predictions that were correct
-print(sum(correct) / correct.shape[0])
+    # What percent of the data to use as validation
+    validation_split = 0.2
 
+    # The index where the data switches from training to validation
+    split_point = int(x.shape[0] * (1 - validation_split))
 
-# # Predict a single specific board
-# single_board = x[:10]
-# print(single_board.shape)
-# print(model.predict(single_board))
+    x_training = x[:split_point]
+    y_training = y[:split_point]
+    x_validation = x[split_point:]
+    y_validation = y[split_point:]
+
+    if train:
+        # Train and save the model
+        history = model.fit(
+            x=x_training,
+            y=y_training,
+            batch_size=128,
+            epochs=1,
+            verbose=1,  # Show progress bar
+            validation_data=(x_validation, y_validation),
+        )
+        save_models([model])
+
+    if test:
+        model = load_models(["model 1"])[0]
+
+        # Predict all of the data in the validation set to get an idea of how the
+        # model is doing.
+        predictions = model.predict(x_validation)  # Has shape nx1
+        predictions = predictions.reshape(y_validation.shape)
+
+        # Compare predictions to the actual labels (creates an n array of booleans)
+        correct = ((predictions > 0) & (y_validation > 0)) | (
+                (predictions < 0) & (y_validation < 0)
+        )
+
+        # Print the percentage of predictions that were correct
+        print(sum(correct) / correct.shape[0])
