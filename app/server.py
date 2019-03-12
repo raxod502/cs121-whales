@@ -10,7 +10,7 @@ import api
 app = flask.Flask(__name__, static_folder=None)
 
 if os.environ.get("WHALES_NO_SSL") in (None, "", "0"):
-    flask_talisman.Talisman(app)
+    flask_talisman.Talisman(app, content_security_policy=None)
 
 
 @app.route("/")
