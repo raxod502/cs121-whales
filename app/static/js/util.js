@@ -1,4 +1,4 @@
-const apiRequest = function(request, callback) {
+function apiRequest(request, callback) {
   $.ajax({
     method: "POST",
     url: "/api/v1/http",
@@ -11,3 +11,20 @@ const apiRequest = function(request, callback) {
     error: console.error
   });
 };
+
+function decodeHash(hash) {
+  const result = {};
+  for (let component of decodeURI(hash).split(",")) {
+    let [key, value] = component.split(":");
+    if (value === undefined) {
+      continue;
+    }
+    result[key] = value;
+  }
+  return result;
+}
+
+function encodeHash(hash) {
+  return encodeURI(
+    Object.entries(hash).map(mapping => mapping.join(":")).join(","));
+}

@@ -17,10 +17,9 @@ function Model(params) {
   };
 
   this.setGamePGN = pgn => {
+    game = Chess();
     if (pgn !== null) {
       game.load_pgn(pgn);
-    } else {
-      game = Chess();
     }
   };
 
@@ -39,6 +38,10 @@ function Model(params) {
     // Undo both your move and the computer's move.
     game.undo();
     game.undo();
+  };
+
+  this.getPlayerColor = () => {
+    return playerColor;
   };
 
   this.isPlayerTurn = () => {
@@ -122,5 +125,49 @@ function Model(params) {
     return backendModel;
   };
 
+  this.toHash = () => {
+    return encodeHash({
+      playerColor,
+      backendModel,
+      pgn: this.getGamePGN(),
+    });
+  };
+
   this.setGamePGN(params.pgn);
 }
+
+Model.checkPGN = pgn => {
+  const game = Chess();
+  return game.load_pgn(pgn);
+};
+
+Model.fromHash = hash => {
+  const hashData = decodeHash(hash);
+
+  let playerColor;
+  if (hashData.playerColor === "w" || hashData.playerColor === "b") {
+    playerColor = hashData.playerColor;
+  } else {
+    playerColor = "w";
+  }
+
+  let backendModel;
+  if (hashData.backendModel) {
+    backendModel = hashData.backendModel;
+  } else {
+    backendModel = "random";
+  }
+
+  let pgn;
+  if (hashData.pgn && Model.checkPGN(hashData.pgn)) {
+    pgn = hashData.pgn;
+  } else {
+    pgn = null;
+  }
+
+  return new Model({
+    playerColor,
+    backendModel,
+    pgn
+  });
+};

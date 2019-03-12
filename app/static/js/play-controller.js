@@ -1,25 +1,9 @@
 "use strict";
 
 function Controller() {
-  let backendModel = sessionStorage.getItem("modelName");
-  let playerColor = sessionStorage.getItem("userColor");
 
-  // TODO: better error handling.
-  if (!backendModel) {
-    backendModel = "random";
-  }
-
-  if (playerColor !== "w" && playerColor !== "b") {
-    playerColor = "w";
-  }
-
-  let model = new Model({
-    backendModel,
-    pgn: null,
-    playerColor
-  });
-
-  let view;
+  const view = new View();
+  const model = Model.fromHash(view.getHash());
 
   function mouseoverEntryHandler(square) {
     if (!model.canPlayerMove()) return;
@@ -51,9 +35,10 @@ function Controller() {
     return model.tryMakingMove(fromSquare, toSquare);
   }
 
-  function updateViewWithMove() {
-    view.setBoardFEN(model.getGameFEN());
+  function updateViewWithMove(params) {
+    view.setBoardFEN(model.getGameFEN(), { animate: params.animate });
     view.setStatusText(model.getGameStatus());
+    view.setHash(model.toHash());
   }
 
   function tryMakeComputerMove() {
@@ -67,14 +52,14 @@ function Controller() {
         response => {
           // TODO: better error handling.
           model.setGamePGN(response.pgn);
-          updateViewWithMove();
+          updateViewWithMove({ animate: true });
         }
       );
     }
   }
 
   function moveFinishHandler() {
-    updateViewWithMove();
+    updateViewWithMove({ animate: true });
     tryMakeComputerMove();
   }
 
@@ -89,22 +74,25 @@ function Controller() {
       // If we are at the initial game state, this doesn't do
       // anything.
       model.undoLastMove();
-      updateViewWithMove();
+      updateViewWithMove({ animate: true });
     }
   }
 
   function newGameHandler() {
     model.setGamePGN(null);
-    updateViewWithMove();
+    updateViewWithMove({ animate: false });
     tryMakeComputerMove();
   }
 
   function changeSettingsHandler() {
-    view.changeSettings();
+    view.changeSettings({
+      playerColor: model.getPlayerColor(),
+      backendModel: model.getBackendModel()
+    });
   }
 
-  view = new View({
-    boardOrientation: playerColor,
+  view.init({
+    boardOrientation: model.getPlayerColor(),
     fen: model.getGameFEN(),
     mouseoverEntryHandler,
     mouseoverExitHandler,
@@ -115,7 +103,7 @@ function Controller() {
     newGameHandler,
     changeSettingsHandler
   });
-  updateViewWithMove();
+  updateViewWithMove({ animate: false });
   tryMakeComputerMove();
 }
 
