@@ -68,3 +68,10 @@
   top: 2px;
   left: 2px;
 }
+
+@media screen and (max-width: 1020px) {
+  #container, #header, #content, #footer {
+    float: none;
+    width: auto;
+  }
+}
