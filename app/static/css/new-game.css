@@ -1,23 +1,22 @@
 *{
   text-align: center;
   box-sizing: border-box;
-}
-
-div.all {
-  position: absolute;
   --primary-color: green;
   --secondary-color: blanchedalmond;
   --tertiary-color: rgb(70, 54, 30);
   --primary-font: 'Pacifico';
   --secondary-font: 'Architects Daughter';
-  /* background-color: white; */
+}
+
+div.all {
+  position: absolute; 
   max-width: 800px;
   border-radius: 20px;
   position: absolute;
   top: 50%;
   left: 50%;
   margin-right: -50%;
-  transform: translate(-50%, -50%)
+  transform: translate(-50%, -50%);
 }
 
 h1{
@@ -48,11 +47,6 @@ h3 {
   border-radius: 5px;
 }
 
-option:checked, option:hover {
-    color: white;
-    background: #488f8f;
-}
-
 #playBtn {
   margin: 30px;
   padding: 10px;
@@ -68,14 +62,13 @@ option:checked, option:hover {
 
 div#bgpic {
   position: absolute;
+  width:100%;
+  height:100%;
   top: 0;
   left: 0;
   background-image: url("/img/chess_background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  opacity: 0.5;
-  width:120%;
-  height:120%;
-  /* height: 120%;     */
+  opacity: 0.33;
 }

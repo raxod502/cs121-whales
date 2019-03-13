@@ -3,14 +3,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
   <head>
     <title>Chess</title>
+    <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/css/vendor/chessboard-0.3.0.css">
+    <link rel="stylesheet" href="/css/play.css">
   </head>
   <body>
-    <div id="board" style="width: 400px"></div>
-    <div id="status"></div>
-    <input type="button" id="undoBtn" value="Undo">
-    <input type="button" id="newGameBtn" value="New game">
-    <input type="button" id="changeSettingsBtn" value="Change settings">
+    <div id="bgpic"></div>
+      <div id="board" style="height: 500px"></div>
+      <div id="status"></div>
+      <div id="all"></div>
+        <input type="button" class="gameplayBtn" id="undoBtn" value="Undo">
+        <input type="button" class="gameplayBtn" id="newGameBtn" value="New game">
+        <input type="button" class="gameplayBtn" id="changeSettingsBtn" value="Change settings">
+      </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/vendor/chessboard-0.3.0.min.js"></script>
