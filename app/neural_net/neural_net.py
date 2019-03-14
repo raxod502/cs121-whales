@@ -149,7 +149,7 @@ if train or test:
 
         # Compare predictions to the actual labels (creates an n array of booleans)
         correct = ((predictions > 0) & (y_validation > 0)) | (
-                (predictions < 0) & (y_validation < 0)
+            (predictions < 0) & (y_validation < 0)
         )
 
         # Print the percentage of predictions that were correct

@@ -25,7 +25,7 @@ def load_models(model_names):
     for index, name in enumerate(model_names):
         file_dir = os.path.dirname(__file__)
         file_path = os.path.join(file_dir, name)
-        with open(file_path + '.json', "r") as file:
+        with open(file_path + ".json", "r") as file:
             models.append(model_from_json(file.read()))
         models[index].load_weights(file_path + ".h5")
     return models
