@@ -30,6 +30,7 @@ def minimax(
     alpha=float("-inf"),
     beta=float("inf"),
     eval_fn=eval_material,
+    starting_player=None
 ):
     """ Performs minimax search through board up to max_plies
     Uses alpha-beta pruning
@@ -43,19 +44,22 @@ def minimax(
     beta       -- beta parameter for pruning (default inf)
     """
 
+    if starting_player is None:
+        starting_player = board.turn
+
     max_depth = max_plies * NUM_AGENTS
 
     if curr_depth >= max_depth or board.is_game_over():
         return (eval_fn(board), None)
 
-    curr_agent = curr_depth % NUM_AGENTS
+    curr_agent = board.turn
 
     legal_actions = list(board.legal_moves)
 
     best_action = None
     v = 0
 
-    if curr_agent == 0:
+    if curr_agent == starting_player:
         # maximizing layer
         v = float("-inf")
 
@@ -66,7 +70,7 @@ def minimax(
             successor = board.copy()
             successor.push(action)
 
-            successor_val = minimax(successor, max_plies, curr_depth + 1, alpha, beta)[
+            successor_val = minimax(successor, max_plies, curr_depth + 1, alpha, beta, eval_fn=eval_fn, starting_player=starting_player)[
                 0
             ]
 
@@ -90,7 +94,7 @@ def minimax(
             successor = board.copy()
             successor.push(action)
 
-            successor_val = minimax(successor, max_plies, curr_depth + 1, alpha, beta)[
+            successor_val = minimax(successor, max_plies, curr_depth + 1, alpha, beta, eval_fn=eval_fn, starting_player=starting_player)[
                 0
             ]
 

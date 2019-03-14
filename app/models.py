@@ -23,15 +23,16 @@ def model_random(pgn):
     return util.chess.board_to_pgn(board)
 
 
-def model_material_depth2(pgn):
+def model_material_depth1(pgn):
     """
-    Model that uses a depth 2 minimax tree with evaluation function
+    Model that uses a depth 1 minimax tree with evaluation function
     based on how much relative material each color has
     """
     board = util.chess.pgn_to_board(pgn)
-    move = minimax.minimax(board, max_plies=2, eval_fn=minimax.eval_material)[1]
+    move = minimax.minimax(board, max_plies=1, eval_fn=minimax.eval_material)[1]
     board.push(move)
     return util.chess.board_to_pgn(board)
+
 
 def model_neural_depth1(pgn):
     """
@@ -39,10 +40,9 @@ def model_neural_depth1(pgn):
     using neural net
     """
     board = util.chess.pgn_to_board(pgn)
-    move = minimax.minimax(board, max_plies=1, eval_fn=neural_net_eval)[1]
+    move = minimax.minimax(board, max_plies=1, eval_fn=neural_net_eval, starting_player=board.turn)[1]
     board.push(move)
     return util.chess.board_to_pgn(board)
-
 
 
 MODELS = {
@@ -51,10 +51,10 @@ MODELS = {
         "description": "Make random moves",
         "callable": model_random,
     },
-    "material-depth2": {
-        "display_name": "material to depth 2",
-        "description": "Simple material evaluation function using depth 2 minimax",
-        "callable": model_material_depth2,
+    "material-depth1": {
+        "display_name": "material to depth 1",
+        "description": "Simple material evaluation function using depth 1 minimax",
+        "callable": model_material_depth1,
     },
     "neuralnet-depth1": {
         "display_name": "neural net depth 1",

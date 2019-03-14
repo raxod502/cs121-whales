@@ -30,6 +30,10 @@ def load_models(model_names):
         models[index].load_weights(file_path + ".h5")
     return models
 
+# evil hack
+model = load_models(["model 1"])[0]
+model._make_predict_function()
+
 
 def evaluation_function(board):
     """
@@ -37,7 +41,6 @@ def evaluation_function(board):
     leading to white winning or black winning, and returns the
     classification.
     """
-    model = load_models(["model 1"])[0]
 
     # The neural net wants prediction input to be in the form nx7x8x8, so
     # wrap the 7x8x8 board arrays in another list.
