@@ -2,7 +2,7 @@ import operator
 import random
 import util.chess
 from minimax_ab import minimax
-from neural_net.neural_net_interface import evaluation_function as neural_net_eval
+from neural_net.interface import evaluation_function as neural_net_eval
 
 
 class NoSuchModelError(Exception):

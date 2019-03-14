@@ -2,7 +2,7 @@ import keras
 import numpy as np
 from keras.layers import Conv2D, Dense, Flatten
 from keras.models import Sequential
-from neural_net.neural_net_interface import save_models, load_models
+from neural_net.interface import save_models, load_models
 
 
 # TODO: try using Conv3D
