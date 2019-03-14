@@ -2,6 +2,7 @@ import operator
 import random
 import util.chess
 from minimax_ab import minimax
+from neural_net.neural_net_interface import evaluation_function as neural_net_eval
 
 
 class NoSuchModelError(Exception):
@@ -32,6 +33,17 @@ def model_material_depth2(pgn):
     board.push(move)
     return util.chess.board_to_pgn(board)
 
+def model_neural_depth1(pgn):
+    """
+    Model that uses a depth 2 minimax tree with evaluation function
+    using neural net
+    """
+    board = util.chess.pgn_to_board(pgn)
+    move = minimax.minimax(board, max_plies=1, eval_fn=neural_net_eval)[1]
+    board.push(move)
+    return util.chess.board_to_pgn(board)
+
+
 
 MODELS = {
     "random": {
@@ -43,6 +55,11 @@ MODELS = {
         "display_name": "material to depth 2",
         "description": "Simple material evaluation function using depth 2 minimax",
         "callable": model_material_depth2,
+    },
+    "neuralnet-depth1": {
+        "display_name": "neural net depth 1",
+        "description": "Neural net evaluation function using depth 1 minimax",
+        "callable": model_neural_depth1,
     },
 }
 

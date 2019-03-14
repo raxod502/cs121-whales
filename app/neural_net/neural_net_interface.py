@@ -1,6 +1,7 @@
 import numpy as np
+import os
 
-from data_conversion import board_to_arrays
+from neural_net.data_conversion import board_to_arrays
 from keras.models import model_from_json
 
 
@@ -22,9 +23,11 @@ def load_models(model_names):
     """
     models = []
     for index, name in enumerate(model_names):
-        with open(name + ".json", "r") as file:
+        file_dir = os.path.dirname(__file__)
+        file_path = os.path.join(file_dir, name)
+        with open(file_path + '.json', "r") as file:
             models.append(model_from_json(file.read()))
-        models[index].load_weights(name + ".h5")
+        models[index].load_weights(file_path + ".h5")
     return models
 
 
@@ -41,4 +44,4 @@ def evaluation_function(board):
     array = [board_to_arrays(board)]
     np_array = np.array(array, dtype=int)
 
-    return model.predict(np_array)
+    return model.predict(np_array)[0][0]
