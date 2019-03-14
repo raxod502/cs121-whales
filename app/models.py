@@ -40,7 +40,9 @@ def model_neural_depth1(pgn):
     using neural net
     """
     board = util.chess.pgn_to_board(pgn)
-    move = minimax.minimax(board, max_plies=1, eval_fn=neural_net_eval, starting_player=board.turn)[1]
+    move = minimax.minimax(
+        board, max_plies=1, eval_fn=neural_net_eval, starting_player=board.turn
+    )[1]
     board.push(move)
     return util.chess.board_to_pgn(board)
 

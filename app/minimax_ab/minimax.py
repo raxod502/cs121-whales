@@ -30,7 +30,7 @@ def minimax(
     alpha=float("-inf"),
     beta=float("inf"),
     eval_fn=eval_material,
-    starting_player=None
+    starting_player=None,
 ):
     """ Performs minimax search through board up to max_plies
     Uses alpha-beta pruning
@@ -70,9 +70,15 @@ def minimax(
             successor = board.copy()
             successor.push(action)
 
-            successor_val = minimax(successor, max_plies, curr_depth + 1, alpha, beta, eval_fn=eval_fn, starting_player=starting_player)[
-                0
-            ]
+            successor_val = minimax(
+                successor,
+                max_plies,
+                curr_depth + 1,
+                alpha,
+                beta,
+                eval_fn=eval_fn,
+                starting_player=starting_player,
+            )[0]
 
             if successor_val > v:
                 best_action = action
@@ -94,9 +100,15 @@ def minimax(
             successor = board.copy()
             successor.push(action)
 
-            successor_val = minimax(successor, max_plies, curr_depth + 1, alpha, beta, eval_fn=eval_fn, starting_player=starting_player)[
-                0
-            ]
+            successor_val = minimax(
+                successor,
+                max_plies,
+                curr_depth + 1,
+                alpha,
+                beta,
+                eval_fn=eval_fn,
+                starting_player=starting_player,
+            )[0]
 
             if successor_val < v:
                 best_action = action
