@@ -32,8 +32,8 @@ def load_models(model_names):
 
 
 # evil hack
-model = load_models(["model 1"])[0]
-model._make_predict_function()
+# model = load_models(["model 1"])[0]
+# model._make_predict_function()
 
 
 def evaluation_function(board):
