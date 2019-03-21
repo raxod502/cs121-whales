@@ -12,6 +12,10 @@ gunicorn = "*"
 tensorflow = "*"
 keras = "*"
 flask-talisman = "*"
+black = "*"
 
 [requires]
 python_version = "3.6"
+
+[pipenv]
+allow_prereleases = true
