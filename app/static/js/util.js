@@ -10,7 +10,7 @@ function apiRequest(request, callback) {
     // TODO: better error handling.
     error: console.error
   });
-};
+}
 
 function decodeHash(hash) {
   const result = {};
@@ -26,5 +26,8 @@ function decodeHash(hash) {
 
 function encodeHash(hash) {
   return encodeURI(
-    Object.entries(hash).map(mapping => mapping.join(":")).join(","));
+    Object.entries(hash)
+      .map(mapping => mapping.join(":"))
+      .join(",")
+  );
 }

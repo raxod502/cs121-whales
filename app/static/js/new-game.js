@@ -21,11 +21,13 @@ $(document).ready(function() {
     userColor = colorList.options[colorList.selectedIndex].value;
 
     // Pass as URL parameters.
-    window.location.href = "/play#" + encodeHash({
-      playerColor: userColor,
-      backendModel: modelName,
-      pgn: null
-    });
+    window.location.href =
+      "/play#" +
+      encodeHash({
+        playerColor: userColor,
+        backendModel: modelName,
+        pgn: null
+      });
   });
 });
 
@@ -42,4 +44,4 @@ function onModelRequestComplete(msg) {
   if (prevUserColor === "b" || prevUserColor === "w") {
     colorList.value = prevUserColor;
   }
-};
+}

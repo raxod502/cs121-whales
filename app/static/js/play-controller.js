@@ -1,7 +1,6 @@
 "use strict";
 
 function Controller() {
-
   const view = new View();
   const model = Model.fromHash(view.getHash());
 

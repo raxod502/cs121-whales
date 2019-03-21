@@ -129,7 +129,7 @@ function Model(params) {
     return encodeHash({
       playerColor,
       backendModel,
-      pgn: this.getGamePGN(),
+      pgn: this.getGamePGN()
     });
   };
 

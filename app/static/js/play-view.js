@@ -14,7 +14,6 @@
  * - changeSettingsHandler
  */
 function View() {
-
   this.getHash = () => {
     return window.location.hash.substr(1);
   };
@@ -81,9 +80,8 @@ function View() {
       $("#status").text(text);
     };
 
-    this.changeSettings = (defaultParameters) => {
+    this.changeSettings = defaultParameters => {
       window.location.href = "/#" + encodeHash(defaultParameters);
     };
   };
-
 }
