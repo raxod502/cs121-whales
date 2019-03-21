@@ -1,0 +1,13 @@
+linters:
+  "*.js":
+    - tidier --write
+    - git add
+  "*.py":
+    - pipenv run black
+    - git add
+ignore:
+  - "**/vendor/*.js"
+
+# Local Variables:
+# mode: yaml
+# End:
