@@ -1,4 +1,4 @@
-*{
+* {
   text-align: center;
   box-sizing: border-box;
   --primary-color: green;
@@ -14,21 +14,26 @@ body {
 
 div#board {
   max-width: 500px;
-  margin: 50px auto;
+  max-height: 550px;
+  margin: auto;
+  margin-top: 5%;
 }
 
 div#status {
-  position: relative;
-  margin-top: 10px;
+  margin: 10px auto;
   color: var(--tertiary-color);
   font-size: 20px;
   font-family: "Architects Daughter";
 }
 
+#gameplayBtns {
+  max-width: 500px;
+  margin: auto;
+}
+
 .gameplayBtn {
   position: relative;
-  margin-top: 10px;
-  font-size: 20px;
+  font-size: 16px;
   font-family: var(--secondary-font);
   color: var(--secondary-color);
   background-color: var(--tertiary-color);

@@ -56,6 +56,9 @@ function View() {
     $("#changeSettingsBtn").on("click", params.changeSettingsHandler);
 
     $(window).resize(board.resize);
+    $("#board").on("touchmove", e => {
+      e.preventDefault();
+    });
 
     this.highlightSquare = square => {
       const squareEl = $("#board .square-" + square);
