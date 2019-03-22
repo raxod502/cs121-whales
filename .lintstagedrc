@@ -1,6 +1,6 @@
 linters:
   "*.js":
-    - tidier --write
+    - prettier --write
     - git add
   "*.py":
     - pipenv run black
