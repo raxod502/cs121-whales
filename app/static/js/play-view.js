@@ -55,6 +55,8 @@ function View() {
     $("#newGameBtn").on("click", params.newGameHandler);
     $("#changeSettingsBtn").on("click", params.changeSettingsHandler);
 
+    $(window).resize(board.resize);
+
     this.highlightSquare = square => {
       const squareEl = $("#board .square-" + square);
 

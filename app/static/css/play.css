@@ -13,13 +13,8 @@ body {
 }
 
 div#board {
-  width: 500px;
-  position: relative;
-  top: 0%;
-  left: 50%;
-  margin-right: -50%;
-  margin-top: 5%;
-  transform: translate(-50%, 0);
+  max-width: 500px;
+  margin: 50px auto;
 }
 
 div#status {
