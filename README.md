@@ -69,3 +69,9 @@ Or you can render another Markdown document:
 
 Typically the server runs on `localhost:6419` if that port is
 available.
+
+### Vendored files
+
+We vendor a forked version of `chessboard.js` from
+[here](https://github.com/raxod502/chessboardjs/blob/whales/src/chessboard.js),
+minified [online](https://javascript-minifier.com/).
