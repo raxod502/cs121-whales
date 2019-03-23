@@ -5,18 +5,18 @@
     <title>Chess</title>
     <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/css/vendor/chessboard-0.3.0.min.css">
-    <link rel="stylesheet" href="/css/play.css">
+    <link rel="stylesheet" type="text/css" href="/css/shared.css">
+    <link rel="stylesheet" type="text/css" href="/css/play.css">
     <link rel="shortcut icon" href="/img/favicon.ico">
   </head>
   <body>
     <div id="bgpic"></div>
-    <div id="board"></div>
-    <div id="status"></div>
-    <div id="gameplayBtns">
+    <div id="body">
+      <div id="board"></div>
+      <div id="status"></div>
       <input type="button" class="gameplayBtn" id="undoBtn" value="Undo">
       <input type="button" class="gameplayBtn" id="newGameBtn" value="Restart">
       <input type="button" class="gameplayBtn" id="changeSettingsBtn" value="Settings">
-    </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

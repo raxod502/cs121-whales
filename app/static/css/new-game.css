@@ -1,4 +1,4 @@
-*{
+* {
   text-align: center;
   box-sizing: border-box;
   --primary-color: green;
@@ -8,14 +8,18 @@
   --secondary-font: 'Architects Daughter';
 }
 
+#body {
+  margin: 0 5px;
+}
+
 h1 {
-  font-size: 40px;
+  font-size: 35px;
   font-family: var(--primary-font);
   color: var(--primary-color);
 }
 
 h2 {
-  font-size: 30px;
+  font-size: 25px;
   font-family: var(--secondary-font);
   color: var(--tertiary-color);
 }
@@ -47,18 +51,4 @@ h3 {
   border-radius: 20px;
   border: 4px solid var(--secondary-color);
   box-shadow: 7px 7px 2px 1px gray;
-}
-
-#bgpic {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  background-image: url("/img/chess_background.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  opacity: 0.33;
-  z-index: -1;
 }

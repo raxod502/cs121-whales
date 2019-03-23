@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+}
+
+#bgpic {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-image: url("/img/chess_background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.33;
+  z-index: -1;
+}
