@@ -36,7 +36,10 @@ function Model(params) {
 
   this.undoLastMove = () => {
     // Undo both your move and the computer's move.
-    game.undo();
+    // If computer turn, only undo one move (the players)
+    if (this.isPlayerTurn()) {
+      game.undo();
+    };
     game.undo();
   };
 

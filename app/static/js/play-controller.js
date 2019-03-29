@@ -67,14 +67,8 @@ function Controller() {
     // thinking, and in that case drop the pending API request. For
     // now, force them to wait for their own turn.
     //
-    // Also, if the computer is Black and just made the first move,
-    // don't allow an undo. The player doesn't have any moves to undo.
-    if (model.isPlayerTurn() && model.hasPlayerMoved()) {
-      // If we are at the initial game state, this doesn't do
-      // anything.
       model.undoLastMove();
       updateViewWithMove({ animate: true });
-    }
   }
 
   function newGameHandler() {
