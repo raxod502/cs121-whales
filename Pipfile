@@ -6,16 +6,20 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-python-chess = "*"
-flask = "*"
-gunicorn = "*"
-tensorflow = "*"
-keras = "*"
-flask-talisman = "*"
 black = "*"
+flask = "*"
+flask-talisman = "*"
+gunicorn = "*"
+keras = "*"
+python-chess = "*"
+tensorflow = "<2"
 
 [requires]
 python_version = "3.6"
 
 [pipenv]
 allow_prereleases = true
+
+# Local Variables:
+# mode: conf
+# End:
