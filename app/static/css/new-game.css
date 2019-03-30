@@ -39,16 +39,3 @@ h3 {
   background-color: var(--secondary-color);
   border-radius: 5px;
 }
-
-#playBtn {
-  margin: 30px;
-  padding: 10px;
-  font-family: 'Pacifico';
-  font-size: 30px;
-  color: var(--secondary-color);
-  text-shadow: 10px;
-  background-color: var(--primary-color);
-  border-radius: 20px;
-  border: 4px solid var(--secondary-color);
-  box-shadow: 7px 7px 2px 1px gray;
-}
