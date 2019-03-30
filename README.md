@@ -25,6 +25,10 @@ Create a virtual environment for the backend:
 
     $ pipenv install --python "$(pyenv prefix 3.6.8)"/bin/python
 
+Download the models:
+
+    $ make download-models
+
 Run the server:
 
     $ make run-server-dev

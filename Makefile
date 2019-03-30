@@ -18,3 +18,7 @@ run-server-prod:
 .PHONY: hooks
 hooks:
 	@ln -sf ../../scripts/pre-commit .git/hooks/pre-commit
+
+.PHONY: download-models
+download-models:
+	scripts/vendorbinaries.sh
