@@ -1,3 +1,4 @@
+import argparse
 import chess.pgn
 import chess
 import numpy as np
@@ -5,20 +6,24 @@ import os
 import sys
 from timeit import default_timer as timer
 
-from chess_alpha_data import board_to_arrays_alpha_chess
+from app.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
 
 
-use_alpha_chess_format = True
-
-
-def pgn_to_npy(pgn_file, x_file_name, y_file_name, max_games=sys.maxsize):
+def pgn_to_npy(pgn_file, data_name, max_games, use_chess_alpha):
     """
     Reads in max_games of the chess games in pgn_file, converts them to
     numpy arrays, and save those arrays to x_file_name and
     y_file_name. Note that the .npy files are much faster to read numpy
     arrays from, but are also MUCH bigger.
     """
-    x, y = file_to_arrays(pgn_file, max_games)
+    if max_games is None:
+        max_games = sys.maxsize
+
+    x, y = file_to_arrays(pgn_file, max_games, use_chess_alpha)
+
+    file_dir = os.path.dirname(__file__)
+    x_file_name = os.path.join(file_dir, f"x_{data_name}.npy")
+    y_file_name = os.path.join(file_dir, f"y_{data_name}.npy")
     arrays_to_file(x, y, x_file_name, y_file_name)
 
 
@@ -65,7 +70,7 @@ def arrays_to_file(x_data, y_data, x_file_name="x_data.npy", y_file_name="y_data
     np.save(y_file_name, y_data)
 
 
-def file_to_arrays(filename, max_games=sys.maxsize):
+def file_to_arrays(filename, max_games, use_chess_alpha):
     """
     Reads in a .pgn file and returns two NumPy arrays, one with
     dimensions nx7x8x8 where n is the total number of board
@@ -74,7 +79,7 @@ def file_to_arrays(filename, max_games=sys.maxsize):
     """
     # Initialize the data to contain a single empty set of placeholder
     # 'boards', to set the size of the NumPy arrays.
-    if use_alpha_chess_format:
+    if use_chess_alpha:
         x_data = np.zeros((1, 18, 8, 8), dtype=int)
     else:
         x_data = np.zeros((1, 7, 8, 8), dtype=int)
@@ -86,7 +91,7 @@ def file_to_arrays(filename, max_games=sys.maxsize):
         game = chess.pgn.read_game(chess_file)
         num_games = 1
         while game is not None and num_games < max_games:
-            x_data, y_data = game_to_arrays(game, x_data, y_data)
+            x_data, y_data = game_to_arrays(game, x_data, y_data, use_chess_alpha)
             game = chess.pgn.read_game(chess_file)
             num_games += 1
 
@@ -94,7 +99,7 @@ def file_to_arrays(filename, max_games=sys.maxsize):
     return x_data[1:], y_data[1:]
 
 
-def game_to_arrays(game, x_data, y_data):
+def game_to_arrays(game, x_data, y_data, use_chess_alpha):
     """
     Extracts board positions out of the given game and adds the new
     board positions and labels to the bottom of the input data,
@@ -109,7 +114,7 @@ def game_to_arrays(game, x_data, y_data):
     for move in game.mainline_moves():
         board.push(move)
 
-        if use_alpha_chess_format:
+        if use_chess_alpha:
             new_x_data.append(board_to_arrays_alpha_chess(board))
         else:
             new_x_data.append(board_to_arrays(board))
@@ -192,35 +197,31 @@ def board_to_arrays(board):
     return data
 
 
-def main(command_line_args):
-    """
-    Use command-line arguments to initiate data processing.
-    """
-    if len(command_line_args) == 5:
-        script_name, pgn_file, x_file_name, y_file_name, max_games = sys.argv
-    elif len(command_line_args) == 4:
-        script_name, pgn_file, x_file_name, y_file_name = sys.argv
-        max_games = sys.maxsize
-    else:
-        print(
-            "Please enter 3 or 4 command line arguments. Your call should"
-            " look like:\n"
-            "python data_conversion.py <pgn_file> <x_file_name>"
-            " <y_file_name> opt:<max_games> \n"
-            "  <pgn_file>: the file to read the chess data from\n"
-            "  <x_file_name>: the name of the file the x_data should be"
-            " saved in. Should end in the extension .npy\n"
-            "  <y_file_name>: the name of the file the y_data should be"
-            " saved in. Should end in the extension .npy\n"
-            "  <max_games>: an optional parameter, which constrains how many"
-            " games will be processed from the pgn file. Use this when the"
-            " pgn file is large and you don't want to process all of it."
-        )
-        return
-
-    max_games = int(max_games)
-    pgn_to_npy(pgn_file, x_file_name, y_file_name, max_games)
-
-
 if __name__ == "__main__":
-    main(sys.argv)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "pgn_file", help="The name of the .pgn file to read in chess data from."
+    )
+    parser.add_argument(
+        "data_name",
+        help="The desired name of the converted data. It will get written to "
+        "app/neural_net/x_<data_name>.npy and app/neural_net/y_<data_name>.npy.",
+    )
+    parser.add_argument(
+        "-max_games",
+        help="Set a maximum number of games to process from the .pgn file, "
+        "instead of processing the entire file.",
+        type=int,
+    )
+
+    # If enabled, writes the data in the numpy format understood by the chess-alpha-zero model.
+    parser.add_argument(
+        "-use_chess_alpha",
+        help="Process the data into the 18x8x8 arrays used by chess-alpha-zero, "
+        "instead of the 7x8x8 default.",
+        action="store_true",
+    )
+
+    args = parser.parse_args()
+
+    pgn_to_npy(args.pgn_file, args.data_name, args.max_games, args.use_chess_alpha)
