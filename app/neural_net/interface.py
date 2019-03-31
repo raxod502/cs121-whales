@@ -1,8 +1,8 @@
+import json
 import numpy as np
 import os
 
-from data_conversion import board_to_arrays
-import json
+from app.neural_net.data_conversion import board_to_arrays
 from keras.engine.training import Model
 from keras.models import model_from_json
 
@@ -49,7 +49,7 @@ def load_models(model_names, alpha_chess=False):
 
 
 # evil hack
-model = load_models(["kingbase_2"])[0]
+model = load_models(["model 1"])[0]
 model._make_predict_function()
 
 
@@ -59,6 +59,8 @@ def evaluation_function(board):
     leading to white winning or black winning, and returns the
     classification.
     """
+    # TODO: ensure the correct board-to-arrays conversion is happening for the model in use
+    # (chess-alpha-zero uses a different board representation than 'model 1', for example)
 
     # The neural net wants prediction input to be in the form nx7x8x8, so
     # wrap the 7x8x8 board arrays in another list.
