@@ -29,6 +29,14 @@ def page_play():
     return flask.send_from_directory("html", "play.html")
 
 
+@app.route("/about")
+def page_about():
+    """
+    Serve HTML page with rules and instructions.
+    """
+    return flask.send_from_directory("html", "about.html")
+
+
 @app.route("/<path:path>")
 def static(path):
     """

@@ -61,4 +61,8 @@ For example:
 EOF
 fi
 
-lint-staged
+if [[ -n "$WHALES_NO_TTY" ]]; then
+    lint-staged | cat
+else
+    lint-staged
+fi

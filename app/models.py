@@ -54,12 +54,12 @@ MODELS = {
         "callable": model_random,
     },
     "material-depth1": {
-        "display_name": "material to depth 1",
+        "display_name": "Minimax depth 1 using material",
         "description": "Simple material evaluation function using depth 1 minimax",
         "callable": model_material_depth1,
     },
     "neuralnet-depth1": {
-        "display_name": "neural net depth 1",
+        "display_name": "Minimax depth 1 using neural net",
         "description": "Neural net evaluation function using depth 1 minimax",
         "callable": model_neural_depth1,
     },
