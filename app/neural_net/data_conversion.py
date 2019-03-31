@@ -5,6 +5,11 @@ import os
 import sys
 from timeit import default_timer as timer
 
+from chess_alpha_data import board_to_arrays_alpha_chess
+
+
+use_alpha_chess_format = True
+
 
 def pgn_to_npy(pgn_file, x_file_name, y_file_name, max_games=sys.maxsize):
     """
@@ -69,7 +74,10 @@ def file_to_arrays(filename, max_games=sys.maxsize):
     """
     # Initialize the data to contain a single empty set of placeholder
     # 'boards', to set the size of the NumPy arrays.
-    x_data = np.zeros((1, 7, 8, 8), dtype=int)
+    if use_alpha_chess_format:
+        x_data = np.zeros((1, 18, 8, 8), dtype=int)
+    else:
+        x_data = np.zeros((1, 7, 8, 8), dtype=int)
     y_data = np.zeros(1, dtype=int)
 
     with open(filename) as chess_file:
@@ -100,7 +108,11 @@ def game_to_arrays(game, x_data, y_data):
     # Every board position in the game gets added to the data.
     for move in game.mainline_moves():
         board.push(move)
-        new_x_data.append(board_to_arrays(board))
+
+        if use_alpha_chess_format:
+            new_x_data.append(board_to_arrays_alpha_chess(board))
+        else:
+            new_x_data.append(board_to_arrays(board))
 
     numpy_x_data = np.array(new_x_data, dtype=int)
     num_positions = numpy_x_data.shape[0]
