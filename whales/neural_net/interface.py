@@ -1,10 +1,11 @@
 import json
-import numpy as np
 import os
 
-from app.neural_net.data_conversion import board_to_arrays
 from keras.engine.training import Model
 from keras.models import model_from_json
+import numpy as np
+
+from whales.neural_net.data_conversion import board_to_arrays
 
 
 def save_models(models):

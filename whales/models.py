@@ -1,8 +1,9 @@
 import operator
 import random
-import util.chess
-from minimax_ab import minimax
-from neural_net.interface import evaluation_function as neural_net_eval
+
+from whales.minimax_ab import minimax
+from whales.neural_net.interface import evaluation_function as neural_net_eval
+import whales.util.chess
 
 
 class NoSuchModelError(Exception):
@@ -17,10 +18,10 @@ def model_random(pgn):
     """
     Model that makes random moves.
     """
-    board = util.chess.pgn_to_board(pgn)
+    board = whales.util.chess.pgn_to_board(pgn)
     move = random.choice(list(board.legal_moves))
     board.push(move)
-    return util.chess.board_to_pgn(board)
+    return whales.util.chess.board_to_pgn(board)
 
 
 def model_material_depth1(pgn):
@@ -28,10 +29,10 @@ def model_material_depth1(pgn):
     Model that uses a depth 1 minimax tree with evaluation function
     based on how much relative material each color has
     """
-    board = util.chess.pgn_to_board(pgn)
+    board = whales.util.chess.pgn_to_board(pgn)
     move = minimax.minimax(board, max_plies=1, eval_fn=minimax.eval_material)[1]
     board.push(move)
-    return util.chess.board_to_pgn(board)
+    return whales.util.chess.board_to_pgn(board)
 
 
 def model_neural_depth1(pgn):
@@ -39,12 +40,12 @@ def model_neural_depth1(pgn):
     Model that uses a depth 2 minimax tree with evaluation function
     using neural net
     """
-    board = util.chess.pgn_to_board(pgn)
+    board = whales.util.chess.pgn_to_board(pgn)
     move = minimax.minimax(
         board, max_plies=1, eval_fn=neural_net_eval, starting_player=board.turn
     )[1]
     board.push(move)
-    return util.chess.board_to_pgn(board)
+    return whales.util.chess.board_to_pgn(board)
 
 
 MODELS = {

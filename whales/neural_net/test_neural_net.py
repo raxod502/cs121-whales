@@ -2,7 +2,7 @@ import argparse
 import os
 import numpy as np
 
-from app.neural_net.interface import load_models
+from whales.neural_net.interface import load_models
 
 
 def test_net(model_name: str, data_name: str, use_chess_alpha: bool):

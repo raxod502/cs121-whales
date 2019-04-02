@@ -1,11 +1,12 @@
 .PHONY: all
 all: run-server-dev
 
-RUN_SERVER_PROD := pipenv run gunicorn -b "0.0.0.0:$${PORT:-5000}" --pythonpath app server:app
+FLASK_APP := whales.server:app
+RUN_SERVER_PROD := pipenv run gunicorn -b "0.0.0.0:$${PORT:-5000}" $(FLASK_APP)
 
 .PHONY: run-server-dev
 run-server-dev: hooks
-	WHALES_NO_SSL=1 FLASK_APP=app/server.py FLASK_DEBUG=1 pipenv run flask run
+	WHALES_NO_SSL=1 FLASK_APP=$(FLASK_APP) FLASK_DEBUG=1 pipenv run flask run
 
 .PHONY: run-server-prod-test
 run-server-prod-test:

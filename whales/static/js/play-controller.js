@@ -67,8 +67,8 @@ function Controller() {
     // thinking, and in that case drop the pending API request. For
     // now, force them to wait for their own turn.
     //
-      model.undoLastMove();
-      updateViewWithMove({ animate: true });
+    model.undoLastMove();
+    updateViewWithMove({ animate: true });
   }
 
   function newGameHandler() {

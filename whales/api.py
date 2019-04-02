@@ -1,5 +1,5 @@
-import models
-import util.chess
+import whales.models
+import whales.util.chess
 
 
 class APIError(Exception):
@@ -39,7 +39,7 @@ def query(request):
         return error_response("no command specified")
     command = request["command"]
     if command == "list_models":
-        info = models.get_model_info()
+        info = whales.models.get_model_info()
         return normal_response({"models": info})
     if command == "get_move":
         for param in ["model", "pgn"]:
@@ -50,10 +50,10 @@ def query(request):
         model_name = request["model"]
         old_pgn = request["pgn"]
         try:
-            new_pgn = models.run_model(model_name, old_pgn)
-        except models.NoSuchModelError:
+            new_pgn = whales.models.run_model(model_name, old_pgn)
+        except whales.models.NoSuchModelError:
             return error_response("unknown model {}".format(repr(model_name)))
-        except util.chess.InvalidPGNError:
+        except whales.util.chess.InvalidPGNError:
             return error_response("invalid PGN")
         return normal_response({"pgn": new_pgn})
     return error_response("unknown command {}".format(repr(command)))

@@ -39,7 +39,7 @@ function Model(params) {
     // If computer turn, only undo one move (the players)
     if (this.isPlayerTurn()) {
       game.undo();
-    };
+    }
     game.undo();
   };
 
