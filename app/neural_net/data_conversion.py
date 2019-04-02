@@ -91,9 +91,8 @@ def file_to_arrays(filename, max_games, use_chess_alpha):
         game = chess.pgn.read_game(chess_file)
         num_games = 1
         while game is not None and num_games < max_games:
-            if num_games % 10 == 0:
-                print("Converting game ", num_games)
-
+            # if num_games % 10 == 0:
+            #     print("Converting game ", num_games)
             x_data, y_data = game_to_arrays(game, x_data, y_data, use_chess_alpha)
             game = chess.pgn.read_game(chess_file)
             num_games += 1
