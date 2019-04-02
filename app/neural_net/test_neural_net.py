@@ -2,10 +2,10 @@ import argparse
 import os
 import numpy as np
 
-from keras.models import model_from_json
+from app.neural_net.interface import load_models
 
 
-def test_net(model_name: str, data_name: str):
+def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
     """
     Compares the predictions from the chess given neural net model to
     the actual results of the games, and prints the percent of the boards
@@ -19,21 +19,26 @@ def test_net(model_name: str, data_name: str):
                         will win.
     :param data_name: the name of the data to test the model on.
                         There should be files 'x_{data_name}.npy' and 'y_{data_name}.npy'.
+    :param use_chess_alpha: if enabled, loads the model using chess_alpha_zero format and
+                        assumes that the board evaluation is the second column in the neural
+                        net predictions
     """
-    # Load in the model
-    file_dir = os.path.dirname(__file__)
-    model_path = os.path.join(file_dir, model_name)
-    with open(model_path + ".json", "r") as file:
-        model = model_from_json(file.read())
-    model.load_weights(model_path + ".h5")
+    model = load_models(model_names=[model_name], alpha_chess=use_chess_alpha)[0]
 
     # Load in the data
+    file_dir = os.path.dirname(__file__)
     x = np.load(os.path.join(file_dir, f"x_{data_name}.npy"))
     y = np.load(os.path.join(file_dir, f"y_{data_name}.npy"))
 
     # Predict all of the data in the validation set to get an idea of how the
     # model is doing.
-    predictions = model.predict(x)  # Has shape nx1
+    predictions = model.predict(
+        x
+    )  # If predictions only evaluate the board (ie, returns [value]), has shape nx1
+
+    # If the model returns [policy, value] for predictions, only grab the board evaluations (value).
+    if use_chess_alpha:
+        predictions = predictions[1]
 
     predictions = predictions.reshape(y.shape)
 
@@ -56,6 +61,13 @@ if __name__ == "__main__":
         help="the name of the data to use. There should "
         "be x_<data_name>.npy and y_<data_name>.npy files in app/neural_net/",
     )
+    parser.add_argument(
+        "-use_chess_alpha",
+        help="Load the model the way that chess_alpha_zero requires, and assume that board evaluation "
+        "will be the second column in the predictions returned by neural net (the first likely being policy)",
+        # Boolean flag
+        action="store_true",
+    )
 
     args = parser.parse_args()
-    test_net(args.model_name, args.data_name)
+    test_net(args.model_name, args.data_name, args.use_chess_alpha)
