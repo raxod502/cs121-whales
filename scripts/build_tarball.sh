@@ -12,7 +12,7 @@ fi
 
 set -e
 
-DEST_PATH="app/neural_net/"
+DEST_PATH="whales/neural_net/"
 GZ_FILENAME="model.tar.gz"
 
 $TAR -czvf $GZ_FILENAME --transform "s|^|$DEST_PATH|g" "$@"
