@@ -1,11 +1,6 @@
 * {
-  text-align: center;
   box-sizing: border-box;
-  --primary-color: green;
-  --secondary-color: blanchedalmond;
-  --tertiary-color: rgb(70, 54, 30);
-  --primary-font: 'Pacifico';
-  --secondary-font: 'Architects Daughter';
+  text-align: center;
 }
 
 body {
@@ -24,13 +19,4 @@ div#status {
   color: var(--tertiary-color);
   font-size: 20px;
   font-family: "Architects Daughter";
-}
-
-.gameplayBtn {
-  position: relative;
-  font-size: 16px;
-  font-family: var(--secondary-font);
-  color: var(--secondary-color);
-  background-color: var(--tertiary-color);
-  border-radius: 5px;
 }

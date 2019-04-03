@@ -2,7 +2,7 @@
 <html>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <head>
-    <title> W.H.A.L.E.S. - About </title>
+    <title>W.H.A.L.E.S. - About</title>
     <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/css/vendor/chessboard-0.3.0.min.css">
     <link rel="stylesheet" type="text/css" href="/css/shared.css">
@@ -12,7 +12,83 @@
   <body>
     <div id="bgpic"></div>
     <div id="body">
-      Hello, about page!
+      <input type="button" class="gameplayBtn homeLink" value="Return to Home">
+      <h1>About W.H.A.L.E.S.</h1>
+      W.H.A.L.E.S. is a web application that allows you to play chess
+      against an AI opponent using <span class="troll">neural networks</span>
+      and <span class="troll">deep learning</span>.
+
+      <h2>Usage</h2>
+      <ul>
+        <li>
+          From the <a href="javascript:void(0)" class="homeLink">home page</a>,
+          you can select a color for your pieces and an AI model to play
+          against, then start a game.
+        </li>
+
+        <li>
+          When it is your turn, click and drag one of your pieces to
+          make a move. After thinking, the AI will respond and return
+          control to you.
+        </li>
+
+        <li>
+          At any time, you can also undo the last move, restart the game
+          from the beginning, or return to the home page to change your
+          selected color or AI model.
+        </li>
+
+        <li>
+          To save a game, simply bookmark the page. If you return later,
+          you can start right where you left off.
+        </li>
+      </ul>
+
+      <h2>About the models</h2>
+      This section is still under construction. Check back later!
+
+      <h2>How to play chess</h2>
+      There are many excellent resources to help you learn the rules of chess.
+      <a href="https://www.instructables.com/id/Playing-Chess/">Here</a> is
+      one of our favorites.
+
+      <h2>Credits</h2>
+      <p>
+        W.H.A.L.E.S. was created by Ben Baral, Shannon Collier, Miles
+        President, Radon Rosborough, and Max Treuletaar for
+        <a href="https://sites.google.com/site/hmccs121s2019/course-overview">CS 121: Software Development</a>
+        at <a href="https://www.hmc.edu/">Harvey Mudd College</a> in
+        Spring 2019.
+      </p>
+
+      <p>
+        We would like to give credit to the following open-source
+        libraries on which we have relied:
+        <ul>
+          <li>
+            <a href="https://github.com/niklasf/python-chess">python-chess</a>
+          </li>
+
+          <li>
+            <a href="https://chessboardjs.com/">chessboard.js</a>
+          </li>
+
+          <li>
+            <a href="https://keras.io/">Keras</a>
+          </li>
+
+          <li>
+            <a href="https://www.tensorflow.org/">Tensorflow</a>
+          </li>
+
+          <li>
+            <a href="http://flask.pocoo.org/">Flask</a>
+          </li>
+        </ul>
+      </p>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/util.js"></script>
   </body>
 </html>

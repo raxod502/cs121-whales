@@ -31,3 +31,9 @@ function encodeHash(hash) {
       .join(",")
   );
 }
+
+$(".homeLink").each((index, value) => {
+  $(value).on("click", () => {
+    window.location.href = "/" + window.location.hash;
+  });
+});
