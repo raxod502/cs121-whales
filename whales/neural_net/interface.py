@@ -7,6 +7,8 @@ import numpy as np
 
 from whales.neural_net.data_conversion import board_to_arrays
 
+# from data_conversion import board_to_arrays
+
 
 def save_models(models):
     """

@@ -9,6 +9,8 @@ import numpy as np
 
 from whales.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
 
+# from chess_alpha_data import board_to_arrays_alpha_chess
+
 
 def pgn_to_npy(pgn_file, data_name, max_games, use_chess_alpha):
     """
@@ -90,10 +92,11 @@ def file_to_arrays(filename, max_games, use_chess_alpha):
         # Continually read games and write to the NumPy arrays until
         # there are no more games to read.
         game = chess.pgn.read_game(chess_file)
-        num_games = 1
+        num_games = 0
         while game is not None and num_games < max_games:
-            # if num_games % 10 == 0:
-            #     print("Converting game ", num_games)
+            if num_games % 10 == 0:
+                print("Converting game ", num_games)
+                print(game)
             x_data, y_data = game_to_arrays(game, x_data, y_data, use_chess_alpha)
             game = chess.pgn.read_game(chess_file)
             num_games += 1
