@@ -5,7 +5,7 @@ import os
 import flask
 import flask_talisman
 
-import api
+import whales.api
 
 app = flask.Flask(__name__, static_folder=None)
 
@@ -54,9 +54,9 @@ def http_endpoint():
     print(request)
 
     if request is not None:
-        response = api.query(request)
+        response = whales.api.query(request)
     else:
-        response = api.error_response("invalid or missing JSON")
+        response = whales.api.error_response("invalid or missing JSON")
     return flask.jsonify(response)
 
 

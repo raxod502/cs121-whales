@@ -1,12 +1,13 @@
 import argparse
-import chess.pgn
-import chess
-import numpy as np
 import os
 import sys
 from timeit import default_timer as timer
 
-from app.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
+import chess
+import chess.pgn
+import numpy as np
+
+from whales.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
 
 
 def pgn_to_npy(pgn_file, data_name, max_games, use_chess_alpha):
