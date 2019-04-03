@@ -2,7 +2,7 @@
 all: run-server-dev
 
 FLASK_APP := whales.server:app
-RUN_SERVER_PROD := pipenv run gunicorn -b "0.0.0.0:$${PORT:-5000}" $(FLASK_APP)
+RUN_SERVER_PROD := gunicorn -b "0.0.0.0:$${PORT:-5000}" $(FLASK_APP)
 
 .PHONY: run-server-dev
 run-server-dev: hooks
@@ -10,7 +10,7 @@ run-server-dev: hooks
 
 .PHONY: run-server-prod-test
 run-server-prod-test:
-	WHALES_NO_SSL=1 $(RUN_SERVER_PROD)
+	WHALES_NO_SSL=1 pipenv run $(RUN_SERVER_PROD)
 
 .PHONY: run-server-prod
 run-server-prod:
