@@ -96,7 +96,6 @@ def file_to_arrays(filename, max_games, use_chess_alpha):
         while game is not None and num_games < max_games:
             if num_games % 10 == 0:
                 print("Converting game ", num_games)
-                print(game)
             x_data, y_data = game_to_arrays(game, x_data, y_data, use_chess_alpha)
             game = chess.pgn.read_game(chess_file)
             num_games += 1
@@ -140,8 +139,12 @@ def game_to_arrays(game, x_data, y_data, use_chess_alpha):
     else:
         return x_data, y_data
 
-    # Create the column of labels.
+    # Create the column of labels. For chess_alpha_zero, alternate back and forth between
+    # 1 and -1 since chess_alpha_zero return values from perspective of the moving player
+    # (Note that beginning game state fen is not included, so the first fen is black's turn)
     numpy_y_data = np.full(num_positions, result, dtype=int)
+    if use_chess_alpha:
+        numpy_y_data[::2] = -result
 
     # vstack the games to get a nx7x8x8 array, but hstack the labels
     # to get an n array instead of a nx1 array.

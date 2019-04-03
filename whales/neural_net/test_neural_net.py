@@ -34,6 +34,8 @@ def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
 
     # Predict all of the data in the validation set to get an idea of how the
     # model is doing.
+
+    print("\nPredicting...")
     predictions = model.predict(
         x
     )  # If predictions only evaluate the board (ie, returns [value]), has shape nx1
