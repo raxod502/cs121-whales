@@ -4,12 +4,18 @@
 # Builds tarball, prepending DEST_PATH to filenames, for use in model deployment
 # Outputs {md5}.tar.gz where {md5} is the md5sum of the tarball
 
+if command -v gtar &>/dev/null; then
+    TAR="gtar"
+else
+    TAR="tar"
+fi
+
 set -e
 
 DEST_PATH="app/neural_net/"
 GZ_FILENAME="model.tar.gz"
 
-tar -czvf $GZ_FILENAME --transform "s|^|$DEST_PATH|g" "$@"
+$TAR -czvf $GZ_FILENAME --transform "s|^|$DEST_PATH|g" "$@"
 
 md5=($(md5sum $GZ_FILENAME))
 
