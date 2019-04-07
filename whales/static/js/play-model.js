@@ -43,6 +43,22 @@ function Model(params) {
     game.undo();
   };
 
+  this.getSquareOfKing = color => {
+    let square;
+    let piece;
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        square = String.fromCharCode(97 + col) + (-row + 8).toString();
+        piece = game.get(square);
+        if (piece && piece.type === "k" && piece.color === color) {
+          return square;
+        }
+      }
+    }
+    // Shouldn't reach this
+    return null;
+  };
+
   this.getPlayerColor = () => {
     return playerColor;
   };

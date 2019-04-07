@@ -3,6 +3,7 @@
 function Controller() {
   const view = new View();
   const model = Model.fromHash(view.getHash());
+  let redSquare = "";
 
   function mouseoverEntryHandler(square) {
     if (!model.canPlayerMove()) return;
@@ -12,8 +13,10 @@ function Controller() {
     if (moves.length === 0) return;
 
     // Highlight the square the user moused over, if there is a
-    // movable piece there.
-    view.highlightSquare(square);
+    // movable piece there (and square is not red).
+    if (square !== redSquare) {
+      view.highlightSquare(square);
+    }
 
     // Highlight the squares it can move to.
     for (let move of moves) {
@@ -22,7 +25,9 @@ function Controller() {
   }
 
   function mouseoverExitHandler(square) {
-    view.unhighlightAllSquares();
+    redSquare !== ""
+      ? view.unhighlightAllNonredSquares(redSquare)
+      : view.unhighlightAllSquares();
   }
 
   function dragStartHandler(piece) {
@@ -30,14 +35,36 @@ function Controller() {
   }
 
   function dragFinishHandler(fromSquare, toSquare) {
-    view.unhighlightAllSquares();
+    redSquare !== ""
+      ? view.unhighlightAllNonredSquares(redSquare)
+      : view.unhighlightAllSquares();
     return model.tryMakingMove(fromSquare, toSquare);
   }
 
   function updateViewWithMove(params) {
     view.setBoardFEN(model.getGameFEN(), { animate: params.animate });
-    view.setStatusText(model.getGameStatus());
+    let text = model.getGameStatus();
+    maybeUpdateRedSquare(text);
+    view.setStatusText(text);
     view.setHash(model.toHash());
+  }
+
+  function maybeUpdateRedSquare(statusText) {
+    // In check last turn
+    if (redSquare !== "") {
+      view.unhighlightAllSquares();
+      redSquare = "";
+    } else if (statusText.startsWith("Check!")) {
+      let kingColor;
+      if (model.playerColor === "w") {
+        kingColor = model.isPlayerTurn() ? "b" : "w";
+      } else {
+        kingColor = model.isPlayerTurn() ? "w" : "b";
+      }
+
+      redSquare = model.getSquareOfKing(kingColor);
+      view.highlightSquare(redSquare, true);
+    }
   }
 
   function tryMakeComputerMove() {

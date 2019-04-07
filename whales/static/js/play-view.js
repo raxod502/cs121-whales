@@ -60,11 +60,13 @@ function View() {
       e.preventDefault();
     });
 
-    this.highlightSquare = square => {
+    this.highlightSquare = (square, red = false) => {
       const squareEl = $("#board .square-" + square);
 
       let background;
-      if (squareEl.hasClass("black-3c85d")) {
+      if (red) {
+        background = "#ff0000";
+      } else if (squareEl.hasClass("black-3c85d")) {
         background = "#696969";
       } else {
         background = "#a9a9a9";
@@ -75,6 +77,20 @@ function View() {
 
     this.unhighlightAllSquares = () => {
       $("#board .square-55d63").css("background", "");
+    };
+
+    this.unhighlightAllNonredSquares = redSquare => {
+      let square;
+      let squareEl;
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+          square = String.fromCharCode(97 + col) + (-row + 8).toString();
+          if (square !== redSquare) {
+            squareEl = $("#board .square-" + square);
+            squareEl.css("background", "");
+          }
+        }
+      }
     };
 
     this.setBoardFEN = (fen, params) => {
