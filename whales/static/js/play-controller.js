@@ -69,7 +69,7 @@ function Controller() {
     if (redSquare !== "") {
       view.unhighlightAllSquares();
       redSquare = "";
-    } else if (statusText.startsWith("Check!")) {
+    } else if (model.inCheck()) {
       redSquare = model.getSquareOfKing(model.getTurnColor());
       view.highlightSquare(redSquare, true);
     }
@@ -104,6 +104,9 @@ function Controller() {
     //
     model.undoLastMove();
     updateViewWithMove({ animate: true });
+    // If user is black and undoes computer's first move, then it is
+    // computer's turn
+    tryMakeComputerMove();
   }
 
   function newGameHandler() {

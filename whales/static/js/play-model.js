@@ -44,12 +44,13 @@ function Model(params) {
     return { from: lastMove.from, to: lastMove.to };
   };
 
+  // Note: the previous undo was buggy. If it was the
+  // computer's turn and you pressed undo, the computer's next move redid
+  // your move along with the computer's next move. I think it's best
+  // if we only allow the user to undo when it's their turn.
   this.undoLastMove = () => {
     // Undo both your move and the computer's move.
-    // If computer turn, only undo one move (the players)
-    if (this.isPlayerTurn()) {
-      game.undo();
-    }
+    game.undo();
     game.undo();
   };
 
@@ -148,6 +149,10 @@ function Model(params) {
 
   this.getTurnColor = () => {
     return game.turn();
+  };
+
+  this.inCheck = () => {
+    return game.in_check();
   };
 
   this.setBackendModel = newBackendModel => {
