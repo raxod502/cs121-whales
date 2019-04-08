@@ -4,8 +4,6 @@ import numpy as np
 
 from whales.neural_net.interface import load_models
 
-# from interface import load_models
-
 
 def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
     """
@@ -21,11 +19,10 @@ def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
                         will win.
     :param data_name: the name of the data to test the model on.
                         There should be files 'x_{data_name}.npy' and 'y_{data_name}.npy'.
-    :param use_chess_alpha: if enabled, loads the model using chess_alpha_zero format and
-                        assumes that the board evaluation is the second column in the neural
-                        net predictions
+    :param use_chess_alpha: if enabled, assumes that the board evaluation is the second
+                        column in the neural net predictions
     """
-    model = load_models(model_names=[model_name], alpha_chess=use_chess_alpha)[0]
+    model = load_models(model_names=[model_name])[0]
 
     # Load in the data
     file_dir = os.path.dirname(__file__)
@@ -67,7 +64,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-use_chess_alpha",
-        help="Load the model the way that chess_alpha_zero requires, and assume that board evaluation "
+        help="Assume that board evaluation "
         "will be the second column in the predictions returned by neural net (the first likely being policy)",
         # Boolean flag
         action="store_true",

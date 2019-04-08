@@ -9,8 +9,6 @@ import numpy as np
 
 from whales.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
 
-# from chess_alpha_data import board_to_arrays_alpha_chess
-
 
 def pgn_to_npy(pgn_file, data_name, max_games, use_chess_alpha):
     """

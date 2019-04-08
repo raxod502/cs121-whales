@@ -1,13 +1,8 @@
-import json
+import numpy as np
 import os
 
-from keras.engine.training import Model
 from keras.models import model_from_json
-import numpy as np
-
 from whales.neural_net.data_conversion import board_to_arrays
-
-# from data_conversion import board_to_arrays
 
 
 def save_models(models):
@@ -21,32 +16,17 @@ def save_models(models):
         model.save_weights("{}.h5".format(model.name))
 
 
-def load_models(model_names, alpha_chess=False):
+def load_models(model_names):
     """
     Loads a list of models from .json and .h5 files labeled with
     the name of each model.
-
-    alpha_chess_zero saved their model using
-        json.dump(self.model.get_config(), config_file_name)
-    which requires
-        Model.from_config(json.load(file))
-    to load the model.
-
-    save_models saves models using
-        model.to_json()
-    which requires
-        model_from_json(file.read())
-    to load the model.
     """
     models = []
     for index, name in enumerate(model_names):
         file_dir = os.path.dirname(__file__)
         file_path = os.path.join(file_dir, name)
         with open(file_path + ".json", "r") as file:
-            if alpha_chess:
-                models.append(Model.from_config(json.load(file)))
-            else:
-                models.append(model_from_json(file.read()))
+            models.append(model_from_json(file.read()))
         models[index].load_weights(file_path + ".h5")
     return models
 
