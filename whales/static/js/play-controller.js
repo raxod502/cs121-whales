@@ -102,6 +102,10 @@ function Controller() {
     // thinking, and in that case drop the pending API request. For
     // now, force them to wait for their own turn.
     //
+    if (!model.isPlayerTurn()) {
+      return;
+    }
+
     model.undoLastMove();
     updateViewWithMove({ animate: true });
     // If user is black and undoes computer's first move, then it is
