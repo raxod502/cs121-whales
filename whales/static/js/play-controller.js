@@ -46,7 +46,22 @@ function Controller() {
     let text = model.getGameStatus();
     maybeUpdateRedSquare(text);
     view.setStatusText(text);
+    updatePrevMoveOutline();
     view.setHash(model.toHash());
+  }
+
+  function updatePrevMoveOutline() {
+    // May need to remove previous outlines even if it is the
+    // player's turn (e.g., for undo and restart)
+    view.unoutlineAllSquares();
+    if (model.isPlayerTurn()) {
+      let fromAndToSquares = model.getLastMoveSquares();
+      if (fromAndToSquares === null) {
+        return;
+      }
+      view.outlineSquare(fromAndToSquares.from);
+      view.outlineSquare(fromAndToSquares.to);
+    }
   }
 
   function maybeUpdateRedSquare(statusText) {
@@ -55,14 +70,7 @@ function Controller() {
       view.unhighlightAllSquares();
       redSquare = "";
     } else if (statusText.startsWith("Check!")) {
-      let kingColor;
-      if (model.playerColor === "w") {
-        kingColor = model.isPlayerTurn() ? "b" : "w";
-      } else {
-        kingColor = model.isPlayerTurn() ? "w" : "b";
-      }
-
-      redSquare = model.getSquareOfKing(kingColor);
+      redSquare = model.getSquareOfKing(model.getTurnColor());
       view.highlightSquare(redSquare, true);
     }
   }

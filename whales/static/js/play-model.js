@@ -34,6 +34,16 @@ function Model(params) {
     });
   };
 
+  // Returns start and end squares of previous move
+  this.getLastMoveSquares = () => {
+    let history = game.history({ verbose: true });
+    if (history.length == 0) {
+      return null;
+    }
+    let lastMove = history[history.length - 1];
+    return { from: lastMove.from, to: lastMove.to };
+  };
+
   this.undoLastMove = () => {
     // Undo both your move and the computer's move.
     // If computer turn, only undo one move (the players)
@@ -134,6 +144,10 @@ function Model(params) {
         return "The computer is thinking...";
       }
     }
+  };
+
+  this.getTurnColor = () => {
+    return game.turn();
   };
 
   this.setBackendModel = newBackendModel => {

@@ -65,7 +65,7 @@ function View() {
 
       let background;
       if (red) {
-        background = "#ff0000";
+        background = "red";
       } else if (squareEl.hasClass("black-3c85d")) {
         background = "#696969";
       } else {
@@ -91,6 +91,17 @@ function View() {
           }
         }
       }
+    };
+
+    this.outlineSquare = square => {
+      $("#board .square-" + square).css(
+        "box-shadow",
+        "0 0 0 3px lightblue inset"
+      );
+    };
+
+    this.unoutlineAllSquares = () => {
+      $("#board .square-55d63").css("box-shadow", "");
     };
 
     this.setBoardFEN = (fen, params) => {
