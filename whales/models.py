@@ -1,3 +1,4 @@
+import functools
 import operator
 import random
 
@@ -35,14 +36,17 @@ def model_material_depth1(pgn):
     return whales.util.chess.board_to_pgn(board)
 
 
-def model_neural_depth1(pgn):
+def model_neural_depth1(pgn, model_name):
     """
-    Model that uses a depth 2 minimax tree with evaluation function
-    using neural net
+    Model that uses a depth 1 minimax tree with evaluation function
+    using a neural net
     """
     board = whales.util.chess.pgn_to_board(pgn)
     move = minimax.minimax(
-        board, max_plies=1, eval_fn=neural_net_eval, starting_player=board.turn
+        board,
+        max_plies=1,
+        eval_fn=functools.partial(neural_net_eval, model_name=model_name),
+        starting_player=board.turn,
     )[1]
     board.push(move)
     return whales.util.chess.board_to_pgn(board)
@@ -59,10 +63,17 @@ MODELS = {
         "description": "Simple material evaluation function using depth 1 minimax",
         "callable": model_material_depth1,
     },
-    "neuralnet-depth1": {
-        "display_name": "Minimax depth 1 using neural net",
-        "description": "Neural net evaluation function using depth 1 minimax",
-        "callable": model_neural_depth1,
+    "neuralnet-depth1-model-1": {
+        "display_name": "Minimax depth 1 using a very simple neural net",
+        "description": "'Model 1' neural net evaluation function using depth 1 minimax",
+        "callable": functools.partial(model_neural_depth1, model_name="model 1"),
+    },
+    "neuralnet-depth1-chess-alpha-zero": {
+        "display_name": "Minimax depth 1 using a good neural net",
+        "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
+        "callable": functools.partial(
+            model_neural_depth1, model_name="chess_alpha_zero"
+        ),
     },
 }
 
