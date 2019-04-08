@@ -2,7 +2,7 @@
 all: run-server-dev
 
 FLASK_APP := whales.server:app
-RUN_SERVER_PROD := gunicorn -b "0.0.0.0:$${PORT:-5000}" $(FLASK_APP)
+RUN_SERVER_PROD := gunicorn -b "0.0.0.0:$${PORT:-5000}" -t 60 $(FLASK_APP)
 
 .PHONY: run-server-dev
 run-server-dev: hooks
