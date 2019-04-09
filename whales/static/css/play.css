@@ -7,16 +7,22 @@ body {
   background-color: white;
 }
 
+h3 {
+  color: var(--tertiary-color);
+  font-size: 20px;
+  font-family: var(--secondary-font);
+}
+
 div#board {
   max-width: 500px;
   max-height: 550px;
   margin: auto;
-  margin-top: 5%;
+  margin-top: 2%;
 }
 
 div#status {
   margin: 10px auto;
   color: var(--tertiary-color);
   font-size: 20px;
-  font-family: "Architects Daughter";
+  font-family: var(--secondary-font);
 }

@@ -54,22 +54,17 @@ def model_neural_depth1(pgn, model_name):
 
 MODELS = {
     "random": {
-        "display_name": "Random",
+        "display_name": "Easy",
         "description": "Make random moves",
         "callable": model_random,
     },
-    "material-depth1": {
-        "display_name": "Minimax depth 1 using material",
-        "description": "Simple material evaluation function using depth 1 minimax",
-        "callable": model_material_depth1,
-    },
     "neuralnet-depth1-model-1": {
-        "display_name": "Minimax depth 1 using a very simple neural net",
+        "display_name": "Normal",
         "description": "'Model 1' neural net evaluation function using depth 1 minimax",
         "callable": functools.partial(model_neural_depth1, model_name="model 1"),
     },
     "neuralnet-depth1-chess-alpha-zero": {
-        "display_name": "Minimax depth 1 using a good neural net",
+        "display_name": "Hard",
         "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
         "callable": functools.partial(
             model_neural_depth1, model_name="chess_alpha_zero"

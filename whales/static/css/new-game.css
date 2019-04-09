@@ -13,13 +13,14 @@
 }
 
 h1 {
-  font-size: 35px;
+  font-size: 40px;
   font-family: var(--primary-font);
   color: var(--primary-color);
+  margin-bottom: 5px;
 }
 
 h2 {
-  font-size: 25px;
+  font-size: 30px;
   font-family: var(--secondary-font);
   color: var(--tertiary-color);
 }
@@ -30,6 +31,13 @@ h3 {
   font-family: var(--secondary-font);
   color: var(--primary-color);
   margin: 10px;
+}
+
+h4 {
+  font-size: 20px;
+  font-family: var(--secondary-font);
+  color: var(--primary-color);
+  margin-top: 5px;
 }
 
 .custom-select select {
