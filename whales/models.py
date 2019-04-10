@@ -52,6 +52,21 @@ def model_neural_depth1(pgn, model_name):
     return whales.util.chess.board_to_pgn(board)
 
 
+def new_model(pgn, model_name):
+    """
+    Model that uses a depth 1 minimax tree with evaluation function
+    using a neural net
+    """
+    board = whales.util.chess.pgn_to_board(pgn)
+    move = minimax.alt_minimax(
+        board,
+        max_plies=1,
+        eval_fn=functools.partial(neural_net_eval, model_name=model_name),
+    )
+    board.push(move)
+    return whales.util.chess.board_to_pgn(board)
+
+
 MODELS = {
     "random": {
         "display_name": "Easy",
@@ -69,6 +84,11 @@ MODELS = {
         "callable": functools.partial(
             model_neural_depth1, model_name="chess_alpha_zero"
         ),
+    },
+    "new": {
+        "display_name": "New",
+        "description": "Simple evaluation with neural net with alternative minimax",
+        "callable": functools.partial(new_model, model_name="alt_minimax"),
     },
 }
 

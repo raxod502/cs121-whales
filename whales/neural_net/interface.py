@@ -69,9 +69,17 @@ def model_alpha_prediction(model, board):
     # Chess_alpha_zero rates the board using 1 to represent the board being good for the player
     # that just moved. The minimax expects the board to be rated as 1 if good for white and -1
     # if good for black, so convert from chess_alpha's representation to the minimax's before returning.
+    # QUESTION FOR BEN: WHAT DOES MINIMAX WANT?
     if board.turn == chess.BLACK:
         prediction *= -1
     return prediction
+
+
+def new_model_prediction(model, boards):
+    array = [board_to_arrays_alpha_chess(b) for b in boards]
+    np_array = np.array(array, dtype=int)
+    values = model.predict(np_array)[1]
+    return values
 
 
 # Hardcoded list of names of models to use
@@ -94,6 +102,7 @@ for i in range(len(model_names)):
 model_predict_func_dict = {
     "model 1": partial(model_1_prediction, model_dict["model 1"]),
     "chess_alpha_zero": partial(model_alpha_prediction, model_dict["chess_alpha_zero"]),
+    "alt_minimax": partial(new_model_prediction, model_dict["chess_alpha_zero"]),
 }
 
 
