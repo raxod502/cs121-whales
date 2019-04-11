@@ -34,6 +34,80 @@ def load_models(model_names):
     return models
 
 
+def chess_alpha_zero_helper(model, board):
+    """
+    Get a prediction from the chess_alpha_zero model.
+    Returns [policy, value], where policy is a size 1968 vector of
+    probabilities associated with each chess move to make next (higher
+    probability seems to indicate a better move), and value is a number
+    from 0 to 1 indicating how good the current board is for the player
+    who moves next.
+    """
+    # Chess_alpha_zero's neural net wants prediction input to be in the form nx18x8x8, so
+    # wrap the 18x8x8 board arrays in another list before converting to numpy and
+    # feeding it to the net.
+    array = [board_to_arrays_alpha_chess(board)]
+    np_array = np.array(array, dtype=int)
+
+    # Chess_alpha_zero returns [policy, value] predictions, and we want the predictions
+    # of the first board in the list (though the list does only have one board in it).
+    policy, value = model.predict(np_array)
+    return policy[0], value[0]
+
+
+### Copied from chess_alpha_zero repository, with docstring annotated
+def create_uci_labels():
+    """
+    Creates the labels for the UCI into an array and returns them.
+    This is used to map between chess_alpha_zero's policy predictions
+    and the labels of the moves the policy vector is referring to.
+    """
+    labels_array = []
+    letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    numbers = ["1", "2", "3", "4", "5", "6", "7", "8"]
+    promoted_to = ["q", "r", "b", "n"]
+
+    for l1 in range(8):
+        for n1 in range(8):
+            destinations = (
+                [(t, n1) for t in range(8)]
+                + [(l1, t) for t in range(8)]
+                + [(l1 + t, n1 + t) for t in range(-7, 8)]
+                + [(l1 + t, n1 - t) for t in range(-7, 8)]
+                + [
+                    (l1 + a, n1 + b)
+                    for (a, b) in [
+                        (-2, -1),
+                        (-1, -2),
+                        (-2, 1),
+                        (1, -2),
+                        (2, -1),
+                        (-1, 2),
+                        (2, 1),
+                        (1, 2),
+                    ]
+                ]
+            )
+            for (l2, n2) in destinations:
+                if (l1, n1) != (l2, n2) and l2 in range(8) and n2 in range(8):
+                    move = letters[l1] + numbers[n1] + letters[l2] + numbers[n2]
+                    labels_array.append(move)
+    for l1 in range(8):
+        l = letters[l1]
+        for p in promoted_to:
+            labels_array.append(l + "2" + l + "1" + p)
+            labels_array.append(l + "7" + l + "8" + p)
+            if l1 > 0:
+                l_l = letters[l1 - 1]
+                labels_array.append(l + "2" + l_l + "1" + p)
+                labels_array.append(l + "7" + l_l + "8" + p)
+            if l1 < 7:
+                l_r = letters[l1 + 1]
+                labels_array.append(l + "2" + l_r + "1" + p)
+                labels_array.append(l + "7" + l_r + "8" + p)
+    return labels_array
+
+
 def model_1_prediction(model, board):
     """
     Get a prediction from a neural net which returns a single prediction
@@ -56,23 +130,15 @@ def model_alpha_prediction(model, board):
     board evaluation rates the board as 1 if it is good for the player
     who moves next.
     """
-    # Chess_alpha_zero's neural net wants prediction input to be in the form nx18x8x8, so
-    # wrap the 18x8x8 board arrays in another list before converting to numpy and
-    # feeding it to the net.
-    array = [board_to_arrays_alpha_chess(board)]
-    np_array = np.array(array, dtype=int)
-
-    # Chess_alpha_zero returns [policy, value] predictions, and we want the value prediction,
-    # of the first board in the list (though the list does only have one board in it).
-    prediction = model.predict(np_array)[1][0]
+    policy, value = chess_alpha_zero_helper(model, board)
 
     # Chess_alpha_zero rates the board using 1 to represent the board being good for the player
     # that just moved. The minimax expects the board to be rated as 1 if good for white and -1
     # if good for black, so convert from chess_alpha's representation to the minimax's before returning.
-    # QUESTION FOR BEN: WHAT DOES MINIMAX WANT?
+    # TODO: QUESTION FOR BEN: WHAT DOES MINIMAX WANT?
     if board.turn == chess.BLACK:
-        prediction *= -1
-    return prediction
+        value *= -1
+    return value
 
 
 def new_model_prediction(model, boards):
@@ -80,6 +146,23 @@ def new_model_prediction(model, boards):
     np_array = np.array(array, dtype=int)
     values = model.predict(np_array)[1]
     return values
+
+
+move_labels = create_uci_labels()
+
+
+def chess_alpha_zero_policy_prediction(model, board):
+    """
+    Get a prediction from a neural net which returns [policy, value]
+    and return the UCI representation of the move that the policy
+    network rates as having the highest probability.
+    """
+    policy, value = chess_alpha_zero_helper(model, board)
+
+    # Find the index of the move with the highest probability
+    best_move_index = policy.index(max(policy))
+    best_move = move_labels[best_move_index]
+    return best_move
 
 
 # Hardcoded list of names of models to use
@@ -103,6 +186,9 @@ model_predict_func_dict = {
     "model 1": partial(model_1_prediction, model_dict["model 1"]),
     "chess_alpha_zero": partial(model_alpha_prediction, model_dict["chess_alpha_zero"]),
     "alt_minimax": partial(new_model_prediction, model_dict["chess_alpha_zero"]),
+    "chess_alpha_zero_policy": partial(
+        chess_alpha_zero_policy_prediction, model_dict["chess_alpha_zero"]
+    ),
 }
 
 

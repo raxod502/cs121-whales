@@ -65,6 +65,18 @@ def new_model(pgn, model_name):
     return whales.util.chess.board_to_pgn(board)
 
 
+def chess_alpha_zero_policy(pgn, model_name):
+    """
+    Model that uses the chess_alpha_zero policy prediction to pick its
+    next move
+    """
+    board = whales.util.chess.pgn_to_board(pgn)
+    move_uci = neural_net_eval(board, model_name)
+    move = whales.util.chess.convert_move(move_uci)
+    board.push(move)
+    return whales.util.chess.board_to_pgn(board)
+
+
 MODELS = {
     "random": {
         "display_name": "Easy",
@@ -86,6 +98,11 @@ MODELS = {
     "new": {
         "display_name": "New",
         "description": "Simple evaluation with neural net with alternative minimax",
+        "callable": functools.partial(new_model, model_name="alt_minimax"),
+    },
+    "neuralnet-no-minimax-chess-alpha-zero": {
+        "display_name": "Medium",
+        "description": "Simple evaluation exclusively using the chess-alpha-zero neural network",
         "callable": functools.partial(new_model, model_name="alt_minimax"),
     },
 }
