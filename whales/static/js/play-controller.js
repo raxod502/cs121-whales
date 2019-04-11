@@ -6,7 +6,6 @@ function Controller() {
   let redSquare = "";
   var ignorePendingAPI = false;
 
-
   function mouseoverEntryHandler(square) {
     if (!model.canPlayerMove()) return;
 
@@ -87,11 +86,11 @@ function Controller() {
         },
         response => {
           // TODO: better error handling.
-          if (!ignorePendingAPI){
-          model.setGamePGN(response.pgn);
-          updateViewWithMove({ animate: true });
-        }
-        ignorePendingAPI = false; //reset
+          if (!ignorePendingAPI) {
+            model.setGamePGN(response.pgn);
+            updateViewWithMove({ animate: true });
+          }
+          ignorePendingAPI = false; //reset
         }
       );
     }
@@ -103,9 +102,9 @@ function Controller() {
   }
 
   function undoHandler() {
-   // This method allows for the api return to be ignored.
-   // if it is the computers turn, allow the player move to be undone, 
-   // and ignore the computer's move
+    // This method allows for the api return to be ignored.
+    // if it is the computers turn, allow the player move to be undone,
+    // and ignore the computer's move
 
     if (!model.isPlayerTurn()) {
       ignorePendingAPI = true;

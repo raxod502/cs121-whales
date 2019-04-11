@@ -50,7 +50,7 @@ function Model(params) {
 
   this.undoLastMove = () => {
     // Dont undo the first move if computer is white
-    if(!this.hasPlayerMoved() && playerColor == "b") {
+    if (!this.hasPlayerMoved() && playerColor == "b") {
       return;
     }
     //undo player and computer move
@@ -60,7 +60,6 @@ function Model(params) {
     //undo only your move if it is the computers turn
     game.undo();
   };
-
 
   this.getSquareOfKing = color => {
     let square;
