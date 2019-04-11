@@ -126,7 +126,7 @@ def minimax(
     return (v, best_action)
 
 
-def alt_minimax(board, max_plies, eval_fn):
+def alt_minimax(board, eval_fn):
     legal_actions = list(board.legal_moves)
     all_boards = [None] * len(legal_actions)
     for i in range(len(legal_actions)):

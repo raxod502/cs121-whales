@@ -59,9 +59,7 @@ def new_model(pgn, model_name):
     """
     board = whales.util.chess.pgn_to_board(pgn)
     move = minimax.alt_minimax(
-        board,
-        max_plies=1,
-        eval_fn=functools.partial(neural_net_eval, model_name=model_name),
+        board, eval_fn=functools.partial(neural_net_eval, model_name=model_name)
     )
     board.push(move)
     return whales.util.chess.board_to_pgn(board)
