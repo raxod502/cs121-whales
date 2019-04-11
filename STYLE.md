@@ -30,6 +30,7 @@ No trailing whitespace.
 - `camelCase` for JavaScript (`PascalCase` for classes)
 - `snake_case` for Python (`SCREAMING_SNAKE_CASE` for global constants
   and `PascalCase` for classes)
+- Use variable names that are as useful as possible
 
 #### Function Conventions
 - Functions require good docstrings. This means they need to describe
