@@ -4,6 +4,7 @@ function Controller() {
   const view = new View();
   const model = Model.fromHash(view.getHash());
   let redSquare = "";
+  var ignorePendingAPI = false;
 
   function mouseoverEntryHandler(square) {
     if (!model.canPlayerMove()) return;
@@ -85,8 +86,11 @@ function Controller() {
         },
         response => {
           // TODO: better error handling.
-          model.setGamePGN(response.pgn);
-          updateViewWithMove({ animate: true });
+          if (!ignorePendingAPI) {
+            model.setGamePGN(response.pgn);
+            updateViewWithMove({ animate: true });
+          }
+          ignorePendingAPI = false; //reset
         }
       );
     }
@@ -98,19 +102,16 @@ function Controller() {
   }
 
   function undoHandler() {
-    // We should probably allow the user to undo while the computer is
-    // thinking, and in that case drop the pending API request. For
-    // now, force them to wait for their own turn.
-    //
+    // This method allows for the api return to be ignored.
+    // if it is the computers turn, allow the player move to be undone,
+    // and ignore the computer's move
+
     if (!model.isPlayerTurn()) {
-      return;
+      ignorePendingAPI = true;
     }
 
     model.undoLastMove();
     updateViewWithMove({ animate: true });
-    // If user is black and undoes computer's first move, then it is
-    // computer's turn
-    tryMakeComputerMove();
   }
 
   function newGameHandler() {

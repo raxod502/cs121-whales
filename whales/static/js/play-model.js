@@ -44,13 +44,20 @@ function Model(params) {
     return { from: lastMove.from, to: lastMove.to };
   };
 
-  // Note: the previous undo was buggy. If it was the
-  // computer's turn and you pressed undo, the computer's next move redid
-  // your move along with the computer's next move. I think it's best
-  // if we only allow the user to undo when it's their turn.
+  // Note: I re-added this line so that the user can undo while the
+  // computer is thinking. To make sure that the user's move doesn't redo,
+  // it checks whether the pending api should be ignored in controller.
+
   this.undoLastMove = () => {
-    // Undo both your move and the computer's move.
-    game.undo();
+    // Dont undo the first move if computer is white
+    if (!this.hasPlayerMoved() && playerColor == "b") {
+      return;
+    }
+    //undo player and computer move
+    if (this.isPlayerTurn()) {
+      game.undo();
+    }
+    //undo only your move if it is the computers turn
     game.undo();
   };
 
