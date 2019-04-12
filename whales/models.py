@@ -46,7 +46,6 @@ def model_neural_depth1(pgn, model_name):
         board,
         max_plies=1,
         eval_fn=functools.partial(neural_net_eval, model_name=model_name),
-        starting_player=board.turn,
     )[1]
     board.push(move)
     return whales.util.chess.board_to_pgn(board)

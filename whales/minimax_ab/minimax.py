@@ -51,7 +51,8 @@ def minimax(
     max_depth = max_plies * NUM_AGENTS
 
     if curr_depth >= max_depth or board.is_game_over():
-        return (eval_fn(board), None)
+        multiplier = 1 if starting_player == chess.WHITE else -1
+        return (multiplier * eval_fn(board), None)
 
     curr_agent = board.turn
 
