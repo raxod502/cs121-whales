@@ -4,7 +4,7 @@ function Controller() {
   const view = new View();
   const model = Model.fromHash(view.getHash());
   let redSquare = "";
-  var ignorePendingAPI = false;
+  let ignoreAPICount = 0;
 
   function mouseoverEntryHandler(square) {
     if (!model.canPlayerMove()) return;
@@ -86,11 +86,12 @@ function Controller() {
         },
         response => {
           // TODO: better error handling.
-          if (!ignorePendingAPI) {
+          if (ignoreAPICount == 0) {
             model.setGamePGN(response.pgn);
             updateViewWithMove({ animate: true });
+          } else {
+            ignoreAPICount--;
           }
-          ignorePendingAPI = false; //reset
         }
       );
     }
@@ -107,7 +108,7 @@ function Controller() {
     // and ignore the computer's move
 
     if (!model.isPlayerTurn()) {
-      ignorePendingAPI = true;
+      ignoreAPICount++;
     }
 
     model.undoLastMove();
