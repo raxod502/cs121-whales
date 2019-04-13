@@ -10,13 +10,25 @@ import numpy as np
 from whales.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
 
 
-def pgn_to_npy(pgn_file, data_name, max_games, use_chess_alpha):
+def pgn_to_npy(pgn_file: str, data_name: str, max_games: int, use_chess_alpha: bool):
     """
-    Reads in max_games of the chess games in pgn_file, converts them to
-    numpy arrays, and save those arrays to x_file_name and
-    y_file_name. Note that the .npy files are much faster to read numpy
-    arrays from, but are also MUCH bigger.
+    Read in max_games of the chess games in pgn_file, convert them to
+    numpy arrays, and save those arrays to the new files
+    x_<data_name>.npy and y_<data_name>.npy in the same directory as
+    this file.
+
+    pgn_file should be the full string name of a file ending in .pgn
+    which is in the same directory as this file.
+
+    Note that the .npy files are much faster to read numpy arrays from,
+    but are also MUCH bigger.
+
+    If use_chess_alpha is enabled, the chess data is converted to
+    arrays in the format understood by the neural net from the
+    chess_alpha_zero project. Otherwise, it is converted into the
+    format understood by the neural net named 'model 1'.
     """
+    # TODO: refactor to give max_games a default value as a parameter
     if max_games is None:
         max_games = sys.maxsize
 
@@ -30,10 +42,13 @@ def pgn_to_npy(pgn_file, data_name, max_games, use_chess_alpha):
 
 def compare_times(num_games, pgn_file):
     """
-    Computes the time it takes to process the given number of games
-    from a .pgn file into numpy arrays, writes those arrays to files,
-    computes the time it takes to read the arrays back out of the
-    files, and prints these times.
+    Compute the time it takes to process the given number of games
+    from a .pgn file into numpy arrays, write those arrays to files,
+    compute the time it takes to read the arrays back out of the
+    files, and print these times.
+
+    pgn_file should be the full string name of a file ending in .pgn
+    which is in the same directory as this file.
     """
     x_test_file_name = "x_test.npy"
     y_test_file_name = "y_test.npy"
@@ -42,6 +57,7 @@ def compare_times(num_games, pgn_file):
 
     # Measure how long it takes to process the pgn file
     process_start_time = timer()
+    # TODO: update to match current file_to_arrays
     x, y = file_to_arrays(pgn_file, num_games)
     process_end_time = timer()
     process_total_time = process_end_time - process_start_time
@@ -63,9 +79,13 @@ def compare_times(num_games, pgn_file):
     os.remove(y_test_file_name)
 
 
-def arrays_to_file(x_data, y_data, x_file_name="x_data.npy", y_file_name="y_data.npy"):
+def arrays_to_file(x_data, y_data, x_file_name, y_file_name):
     """
-    Writes the two input numpy arrays to .npy files.
+    Write the two input numpy arrays to .npy files in the same
+    directory as this file.
+
+    x_data and y_data should be numpy arrays, and each file name
+    should end in .npy.
     """
     np.save(x_file_name, x_data)
     np.save(y_file_name, y_data)
@@ -73,10 +93,12 @@ def arrays_to_file(x_data, y_data, x_file_name="x_data.npy", y_file_name="y_data
 
 def file_to_arrays(filename, max_games, use_chess_alpha):
     """
-    Reads in a .pgn file and returns two NumPy arrays, one with
-    dimensions nx7x8x8 where n is the total number of board
-    positions in all of the games in the .pgn file, and one that is
-    n, which labels who won the game that each position came from.
+    Read in a .pgn file and returns two numpy arrays, one with
+    dimensions nxmx8x8 where n is the total number of board
+    positions in all of the games in the .pgn file and m depends on
+    the encoding of the boards used (i.e. whether use_chess_alpha is
+    enabled), and one that is n, which labels who won the game that
+    each position came from.
     """
     # Initialize the data to contain a single empty set of placeholder
     # 'boards', to set the size of the NumPy arrays.
@@ -104,9 +126,9 @@ def file_to_arrays(filename, max_games, use_chess_alpha):
 
 def game_to_arrays(game, x_data, y_data, use_chess_alpha):
     """
-    Extracts board positions out of the given game and adds the new
-    board positions and labels to the bottom of the input data,
-    which is then returned.
+    Extract board positions out of the given game, add the new
+    board positions and label to the bottom of the input data,
+    and return the modified input data.
     """
     # Until the entire game has been processed, use Python lists,
     # because they're easier to work with.
@@ -151,7 +173,7 @@ def game_to_arrays(game, x_data, y_data, use_chess_alpha):
 
 def board_to_arrays(board):
     """
-    Creates a 7x8x8 Python list representing a chess board. The first
+    Create a 7x8x8 Python list representing a chess board. The first
     6 8x8 arrays represent the board for a different piece type, with 1
     indicating a white piece of that type, -1 indicating a black piece
     of that type, and 0 indicating empty. The final 8x8 board

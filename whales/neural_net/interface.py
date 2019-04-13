@@ -10,8 +10,9 @@ from whales.neural_net.data_conversion import board_to_arrays
 
 def save_models(models):
     """
-    Saves a list of models to .json files and their weights to .h5
-    files.
+    Save a list of models to .json files and their weights to .h5
+    files. A model with model_name will be saved to model_name.json
+    and model_name.h5 in the same directory as this file.
     """
     for model in models:
         with open("{}.json".format(model.name), "w") as file:
@@ -21,8 +22,9 @@ def save_models(models):
 
 def load_models(model_names):
     """
-    Loads a list of models from .json and .h5 files labeled with
-    the name of each model.
+    Load a list of models from .json and .h5 files in the format
+    model_name.json and model_name.h5, whose files are located in the
+    same directory as this file.
     """
     models = []
     for index, name in enumerate(model_names):
@@ -37,7 +39,7 @@ def load_models(model_names):
 def chess_alpha_zero_helper(model, board):
     """
     Get a prediction from the chess_alpha_zero model.
-    Returns [policy, value], where policy is a size 1968 vector of
+    Return [policy, value], where policy is a size 1968 vector of
     probabilities associated with each chess move to make next (higher
     probability seems to indicate a better move), and value is a number
     from 0 to 1 indicating how good the current board is for the player
@@ -58,7 +60,9 @@ def chess_alpha_zero_helper(model, board):
 ### Copied from chess_alpha_zero repository, with docstring annotated
 def create_uci_labels():
     """
-    Creates the labels for the UCI into an array and returns them.
+    Create UCI labels for every chess move, put them into an array, and
+    return the array.
+
     This is used to map between chess_alpha_zero's policy predictions
     and the labels of the moves the policy vector is referring to.
     """
@@ -110,9 +114,9 @@ def create_uci_labels():
 
 def model_1_prediction(model, board):
     """
-    Get a prediction from a neural net which returns a single prediction
-    where 1 means the board is good for white and -1 means the board is
-    good for black.
+    Evaluate the board using the neural net 'model 1', and return a
+    single value where 1 means the board is good for white and -1
+    means the board is good for black.
     """
     # Model 1's neural net wants prediction input to be in the form nx7x8x8, so
     # wrap the 7x8x8 board arrays in another list before converting to numpy and
@@ -125,10 +129,9 @@ def model_1_prediction(model, board):
 
 def model_alpha_prediction(model, board):
     """
-    Get a prediction from a neural net which returns [policy, value]
-    (where the second prediction is the board evaluation), and where the
-    board evaluation rates the board as 1 if it is good for the player
-    who moves next.
+    Evaluate the board using the chess_alpha_zero neural net, and
+    return a single value where 1 means the board is good for white and
+    -1 means the board is good for black.
     """
     policy, value = chess_alpha_zero_helper(model, board)
 
@@ -142,6 +145,7 @@ def model_alpha_prediction(model, board):
 
 
 def new_model_prediction(model, boards):
+    # TODO: get a docstring from Miles
     array = [board_to_arrays_alpha_chess(b) for b in boards]
     np_array = np.array(array, dtype=int)
     values = model.predict(np_array)[1]
@@ -153,9 +157,9 @@ move_labels = create_uci_labels()
 
 def chess_alpha_zero_policy_prediction(model, board):
     """
-    Get a prediction from a neural net which returns [policy, value]
-    and return the UCI representation of the move that the policy
-    network rates as having the highest probability.
+    Evaluate the board using the chess_alpha_zero neural net, and
+    return the UCI representation of the move that the policy network
+    rates as having the highest probability.
     """
     policy, value = chess_alpha_zero_helper(model, board)
 
@@ -194,9 +198,10 @@ model_predict_func_dict = {
 
 def evaluation_function(board, model_name="chess_alpha"):
     """
-    Takes in a board, uses a neural net to classify the board as one
-    leading to white winning or black winning, and returns the
-    classification.
+    Take in a board, use a neural net to classify the board as one
+    leading to white winning or black winning, and return the
+    classification, where 1 means a sure win for white and -1 means a
+    sure win for black.
     """
     # Use the prediction function associated with the given model.
     return model_predict_func_dict[model_name](board)

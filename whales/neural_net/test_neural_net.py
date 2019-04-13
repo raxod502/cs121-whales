@@ -7,20 +7,26 @@ from whales.neural_net.interface import load_models
 
 def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
     """
-    Compares the predictions from the chess given neural net model to
-    the actual results of the games, and prints the percent of the boards
-    that the model predicted correctly.
+    Compare the predictions from the given chess neural net to
+    the actual results of the games, and print the percent of the
+    boards that the neural net predicted correctly.
 
     :param model_name: the name of the model to load.
-                       - There should be files '{model_name}.h5' and '{model_name}.json'
-                        to specify the configuration and weights of the model.
-                       - The model should be able to take in data representing a chess board
-                        and return a value between -1 and 1 predicting whether black or white
-                        will win.
+    - There should be files '{model_name}.h5' and '{model_name}.json'
+      to specify the configuration and weights of the model in the same
+      directory as this file.
+    - The model should be able to take in data representing a chess
+      board and return a value between -1 and 1 predicting whether
+      black or white will win.
+
     :param data_name: the name of the data to test the model on.
-                        There should be files 'x_{data_name}.npy' and 'y_{data_name}.npy'.
-    :param use_chess_alpha: if enabled, assumes that the board evaluation is the second
-                        column in the neural net predictions
+    - There should be files 'x_{data_name}.npy' and 'y_{data_name}.npy'
+      in the same directory as this file. It is the responsibility of
+      the user of this function to ensure that the data is in the
+      correct format for the neural net being tested.
+
+    :param use_chess_alpha: if enabled, assumes that the board
+      evaluation is the second column in the neural net predictions
     """
     model = load_models(model_names=[model_name])[0]
 
