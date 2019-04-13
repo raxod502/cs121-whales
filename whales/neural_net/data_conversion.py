@@ -55,17 +55,17 @@ def compare_times(num_games, pgn_file):
 
     print("Comparing the time to process or read " + str(num_games) + " games...")
 
-    # Measure how long it takes to process the pgn file
+    # Measure how long it takes to process the pgn file.
     process_start_time = timer()
     # TODO: update to match current file_to_arrays
     x, y = file_to_arrays(pgn_file, num_games)
     process_end_time = timer()
     process_total_time = process_end_time - process_start_time
 
-    # Save the newly processed data to the test files
+    # Save the newly processed data to the test files.
     arrays_to_file(x, y, x_file_name=x_test_file_name, y_file_name=y_test_file_name)
 
-    # Measure how long it takes to read the data from the files
+    # Measure how long it takes to read the data from the files.
     read_start_time = timer()
     x_read = np.load(x_test_file_name)
     y_read = np.load(y_test_file_name)
@@ -101,7 +101,7 @@ def file_to_arrays(filename, max_games, use_chess_alpha):
     each position came from.
     """
     # Initialize the data to contain a single empty set of placeholder
-    # 'boards', to set the size of the NumPy arrays.
+    # 'boards', to set the size of the numpy arrays.
     if use_chess_alpha:
         x_data = np.zeros((1, 18, 8, 8), dtype=int)
     else:
@@ -109,7 +109,7 @@ def file_to_arrays(filename, max_games, use_chess_alpha):
     y_data = np.zeros(1, dtype=int)
 
     with open(filename) as chess_file:
-        # Continually read games and write to the NumPy arrays until
+        # Continually read games and write to the numpy arrays until
         # there are no more games to read.
         game = chess.pgn.read_game(chess_file)
         num_games = 0
@@ -155,18 +155,20 @@ def game_to_arrays(game, x_data, y_data, use_chess_alpha):
         result = 1
     elif game.headers["Result"] == "0-1":
         result = -1
-    # If the game ended in a draw, throw away the new data.
     else:
+        # If the game ended in a draw, throw away the new data.
         return x_data, y_data
 
-    # Create the column of labels. For chess_alpha_zero, alternate back and forth between
-    # 1 and -1 since chess_alpha_zero return values from perspective of the moving player
-    # (Note that beginning game state fen is not included, so the first fen is black's turn)
+    # Create the column of labels. For chess_alpha_zero, alternate back
+    # and forth between 1 and -1 since chess_alpha_zero return values
+    # from perspective of the moving player.
+    # (Note that beginning game state fen is not included, so the first
+    # fen is black's turn.)
     numpy_y_data = np.full(num_positions, result, dtype=int)
     if use_chess_alpha:
         numpy_y_data[::2] = -result
 
-    # vstack the games to get a nx7x8x8 array, but hstack the labels
+    # vstack the games to get a nxmx8x8 array, but hstack the labels
     # to get an n array instead of a nx1 array.
     return np.vstack((x_data, numpy_x_data)), np.hstack((y_data, numpy_y_data))
 
@@ -188,7 +190,7 @@ def board_to_arrays(board):
     king
     turn
     """
-    # Create the empty 6x8x8 array
+    # Create the empty 6x8x8 array.
     data = [[[0] * 8 for i in range(8)] for j in range(6)]
 
     board_from_type = {
