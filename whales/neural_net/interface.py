@@ -42,7 +42,7 @@ def chess_alpha_zero_helper(model, board):
     Return [policy, value], where policy is a size 1968 vector of
     probabilities associated with each chess move to make next (higher
     probability seems to indicate a better move), and value is a number
-    from 0 to 1 indicating how good the current board is for the player
+    from -1 to 1 indicating how good the current board is for the player
     who moves next.
     """
     # Chess_alpha_zero's neural net wants prediction input to be in the
