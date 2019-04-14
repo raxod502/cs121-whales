@@ -12,6 +12,7 @@
  * - undoHandler
  * - newGameHandler
  * - changeSettingsHandler
+ * - backendModel
  */
 function View() {
   this.getHash = () => {
@@ -59,6 +60,22 @@ function View() {
     $("#board").on("touchmove", e => {
       e.preventDefault();
     });
+
+    // Display the opponent difficulty.
+    apiRequest(
+      {
+        command: "list_models"
+      },
+      response => {
+        const models = response.models;
+        for (const model of models) {
+          if (params.backendModel === model.internalName) {
+            document.getElementById("opponent").innerHTML =
+              "Opponent: " + model.displayName;
+          }
+        }
+      }
+    );
 
     this.highlightSquare = (square, red = false) => {
       const squareEl = $("#board .square-" + square);
