@@ -148,7 +148,20 @@ def model_alpha_prediction(model, board):
 
 
 def new_model_prediction(model, boards):
-    # TODO: get a docstring from Miles
+    """
+    Predict the likelihood of the moving player winning for multiple
+    chess boards.
+
+    :param (Keras model) model: A neural network that predicts the
+    likelihood of the moving player winning based on the board state
+    chess board
+    :param (list(python-chess Board)) boards: A list of boards
+    representing the current state of the multiple games
+
+    :return ((n, 1) float numpy array): Values between -1 and 1, which are
+    predictions of how good each board is for the moving player (1 is
+    good, -1 is bad)
+    """
     array = [board_to_arrays_alpha_chess(b) for b in boards]
     np_array = np.array(array, dtype=int)
     values = model.predict(np_array)[1]
