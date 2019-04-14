@@ -158,9 +158,9 @@ def new_model_prediction(model, boards):
     :param (list(python-chess Board)) boards: A list of boards
     representing the current state of the multiple games
 
-    :return ((n, 1) float numpy array): Values between -1 and 1, which are
-    predictions of how good each board is for the moving player (1 is
-    good, -1 is bad)
+    :return ((n, 1) float numpy array): Values between -1 and 1, which
+    are predictions of how good each board is for the moving player (1
+    is good, -1 is bad)
     """
     array = [board_to_arrays_alpha_chess(b) for b in boards]
     np_array = np.array(array, dtype=int)
