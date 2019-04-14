@@ -39,7 +39,7 @@ def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
     # how the model is doing.
 
     print("\nPredicting...")
-    # If the neural net only evaluate the board (ie, returns [value]),
+    # If the neural net only evaluates the board (ie, returns [value]),
     # "predictions" has shape nx1.
     predictions = model.predict(x)
 
