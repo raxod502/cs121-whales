@@ -9,27 +9,27 @@ belonging to a game where white won, or where black won.
 
 ## Data
 
-To train a neural net to classify boards, we need to create a 
-dataset that contains discrete board positions labeled with who 
-ultimately won. 
+To train a neural net to classify boards, we need to create a
+dataset that contains discrete board positions labeled with who
+ultimately won.
 
-There are a variety of online chess game databases to choose from, which 
+There are a variety of online chess game databases to choose from, which
 have various pros and cons. We will need to decide where to get our data.
-However, regardless of source, most chess data is stored in [pgn] format, which records the 
-entire sequence of moves that occurred in a game, rather than explicit 
+However, regardless of source, most chess data is stored in [pgn] format, which records the
+entire sequence of moves that occurred in a game, rather than explicit
 intermediate board positions. Thus, there are three main steps between
 starting out and feeding data to a neural net:
 1. Acquire pgn data
 1. Convert from pgn to board positions
-1. Convert from board positions to a data format that a neural 
+1. Convert from board positions to a data format that a neural
  network can understand
- 
+
 ### Database options
 
 * [Lichess] A very large database of random people on the internet playing
 chess games against one another. It's quite large, and allows for single,
 easy downloads of large pgn files. However, it consists largely of random
-people on the internet, meaning the average skill of the players is fairly 
+people on the internet, meaning the average skill of the players is fairly
 low (~18% of games with both players above 1500 ELO, 0.9% above 1800, and
 effectively none above 1900), many games end in a resign rather than a strict
 checkmate, and it involves a number of 'Blitz' or 'Bullet' games (fast chess,
@@ -44,8 +44,8 @@ automatic downloading script and data collation to be useful.
 
 * [KingBase] A large databse of chess games with the strict cutoff that all ELO is
 above 2000. Similarly to LiChess, this involves relatively few links and separate
-downloads, which is convenient. The average game quality (as measured by reported 
-ELO and lack of being a blitz or bullet game) is much higher (100% above 2000, 99% 
+downloads, which is convenient. The average game quality (as measured by reported
+ELO and lack of being a blitz or bullet game) is much higher (100% above 2000, 99%
 above 2200, 65% above 2300).
 
 I recommend we focus on using KingBase, because it best combines ease of use
@@ -67,20 +67,20 @@ there have been many different ways that people have handled this,
 including some (generally older) models that relied on features hand-created
 by chess experts (ie, add in specific variables to represent certain
 relative positions of pieces). Data representation may be something we want
-to revist and tweak as we try to improve model performance. However, I found a 
-representation that seemed reasonable and straightforward to implement, 
+to revist and tweak as we try to improve model performance. However, I found a
+representation that seemed reasonable and straightforward to implement,
 which I detail below.
 
 #### 'Piece-channel' representation
 In essence, this treats the chessboard as an 8x8 image. A normal image
 can be black and white, with only one channel, or RGB, with three channels
 per pixel. This representation treats the chessboard as an 8x8 image with 7
-channels, where the channels represent different piece types, with 0 if there 
-is no piece of that type, 1 if there is a white piece, and -1 if there is a 
-black piece of that type. The current ordering is (pawn, knight, bishop, rook, 
-queen, king). The last 8x8 board represents which color will move next, for an 
-8x8 array of 1s if white moves next and an 8x8 array of -1s if black moves 
-next. 
+channels, where the channels represent different piece types, with 0 if there
+is no piece of that type, 1 if there is a white piece, and -1 if there is a
+black piece of that type. The current ordering is (pawn, knight, bishop, rook,
+queen, king). The last 8x8 board represents which color will move next, for an
+8x8 array of 1s if white moves next and an 8x8 array of -1s if black moves
+next.
 
 This representation was drawn from this [chess-evaluation tutorial].
 

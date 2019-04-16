@@ -14,7 +14,7 @@ yet found). This would require storing the work that minimax does in each round 
 accessing it despite the recursive calls - this [decorator] might help with that. It looks
 like running this sort of loop would require either threading or using system signals.
 
-### Gunicorn 
+### Gunicorn
 I found a [setting] in gunicorn that might be what we want: ``-t INT`` or ``--timeout INT``
 which regulates how many seconds a worker can be silent before it is killed and restarted.
 This looks like it is default set to 30, which would definitely cause the 50+ sec minimax to
@@ -24,7 +24,7 @@ be killed. We might want to try adding ``-t 75`` to the gunicorn call.
 * __run-server-prod__
 Doesn't work for me?
 * __run-server-dev__
-If you select the "material to depth 2" model, it takes ~60 seconds for the computer to 
+If you select the "material to depth 2" model, it takes ~60 seconds for the computer to
 think, but it does eventually make a move so you can play the game. If gunicorn is the
 problem, this result makes sense, because that make command does not appear to use gunicorn.
 * __whales.life__
