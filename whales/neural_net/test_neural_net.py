@@ -1,5 +1,6 @@
 import argparse
 import os
+
 import numpy as np
 
 from whales.neural_net.interface import load_neural_nets

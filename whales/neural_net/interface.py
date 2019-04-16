@@ -1,9 +1,9 @@
-import chess
-import numpy as np
 import os
 
-from functools import partial
+import chess
+import numpy as np
 from keras.models import model_from_json
+
 from whales.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
 from whales.neural_net.data_conversion import board_to_arrays
 
