@@ -70,7 +70,7 @@ function View() {
         const models = response.models;
         for (const model of models) {
           if (params.backendModel === model.internalName) {
-            document.getElementById("opponent").innerHTML =
+            document.getElementById("opponent").innerText =
               "Opponent: " + model.displayName;
           }
         }
