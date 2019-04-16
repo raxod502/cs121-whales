@@ -37,7 +37,7 @@ def load_neural_nets(net_names):
     return neural_nets
 
 
-def chess_alpha_zero_helper(neural_net, board):
+def chess_alpha_zero_helper(board):
     """
     Get a prediction from the chess_alpha_zero neural net.
     Return [policy, value], where policy is a size 1968 vector of
@@ -55,7 +55,7 @@ def chess_alpha_zero_helper(neural_net, board):
     # Chess_alpha_zero returns [policy, value] predictions, and we want
     # the predictions of the first board in the list (though the list
     # does only have one board in it).
-    policy, value = neural_net.predict(np_array)
+    policy, value = neural_net_dict["chess_alpha_zero"].predict(np_array)
     return policy[0], value[0]
 
 
@@ -114,7 +114,7 @@ def create_uci_labels():
     return labels_array
 
 
-def model_1_prediction(neural_net, board):
+def model_1_prediction(board):
     """
     Evaluate the board using the neural net 'model 1', and return a
     single value where 1 means the board is good for white and -1
@@ -126,16 +126,16 @@ def model_1_prediction(neural_net, board):
     array = [board_to_arrays(board)]
     np_array = np.array(array, dtype=int)
 
-    return neural_net.predict(np_array)[0][0]
+    return neural_net_dict["model 1"].predict(np_array)[0][0]
 
 
-def chess_alpha_value(neural_net, board):
+def chess_alpha_value(board):
     """
     Evaluate the board using the chess_alpha_zero neural net, and
     return a single value where 1 means the board is good for white and
     -1 means the board is good for black.
     """
-    policy, value = chess_alpha_zero_helper(neural_net, board)
+    policy, value = chess_alpha_zero_helper(board)
 
     # Chess_alpha_zero rates the board using 1 to represent the board
     # being good for the player that just moved. The minimax expects
@@ -148,14 +148,11 @@ def chess_alpha_value(neural_net, board):
     return value
 
 
-def new_model_prediction(neural_net, boards):
+def new_model_prediction(boards):
     """
     Predict the likelihood of the moving player winning for multiple
-    chess boards.
+    chess boards using the chess_alpha_zero neural net.
 
-    :param (Keras model) neural_net: A neural network that predicts the
-    likelihood of the moving player winning based on the board state
-    chess board
     :param (list(python-chess Board)) boards: A list of boards
     representing the current state of the multiple games
 
@@ -165,20 +162,20 @@ def new_model_prediction(neural_net, boards):
     """
     array = [board_to_arrays_alpha_chess(b) for b in boards]
     np_array = np.array(array, dtype=int)
-    values = neural_net.predict(np_array)[1]
+    values = neural_net_dict["chess_alpha_zero"].predict(np_array)[1]
     return values
 
 
 move_labels = create_uci_labels()
 
 
-def chess_alpha_policy(neural_net, board):
+def chess_alpha_policy(board):
     """
     Evaluate the board using the chess_alpha_zero neural net, and
     return the UCI representation of the move that the policy network
     rates as having the highest probability.
     """
-    policy, value = chess_alpha_zero_helper(neural_net, board)
+    policy, value = chess_alpha_zero_helper(board)
 
     # Find the index of the move with the highest probability.
     best_move_index = policy.index(max(policy))
@@ -208,12 +205,10 @@ for i in range(len(neural_net_names)):
 # This dictionary specifies the function to call to get a prediction
 # for each of the models specified in models.py.
 model_predict_func_dict = {
-    "model 1": partial(model_1_prediction, neural_net_dict["model 1"]),
-    "chess_alpha_zero": partial(chess_alpha_value, neural_net_dict["chess_alpha_zero"]),
-    "alt_minimax": partial(new_model_prediction, neural_net_dict["chess_alpha_zero"]),
-    "chess_alpha_zero_policy": partial(
-        chess_alpha_policy, neural_net_dict["chess_alpha_zero"]
-    ),
+    "model 1": model_1_prediction,
+    "chess_alpha_zero": chess_alpha_value,
+    "alt_minimax": new_model_prediction,
+    "chess_alpha_zero_policy": chess_alpha_policy,
 }
 
 
@@ -223,7 +218,9 @@ def evaluation_function(board, model_name):
     return the neural net's prediction. This prediction might be a
     board evaluation (number from -1 to 1), a list of board
     evaluations, a move, or other, depending on the function called.
-    It is the responsibility of the
+    This means that models using evaluation_function should take care
+    to ensure that they are going to receive the kind of output
+    that they are expecting.
     """
     # Use the prediction function associated with the given model.
     return model_predict_func_dict[model_name](board)
