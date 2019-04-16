@@ -1,0 +1,25 @@
+{
+  "name": "cs121-whales",
+  "description": "Heroku pipeline for W.H.A.L.E.S.",
+  "scripts": {},
+  "env": {
+    "HEROKU_BUILDPACK_GIT_LFS_REPO": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    },
+    {
+      "url": "https://github.com/raxod502/heroku-buildpack-git-lfs"
+    }
+  ],
+  "stack": "heroku-18"
+}
