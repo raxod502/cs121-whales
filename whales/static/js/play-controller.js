@@ -137,7 +137,8 @@ function Controller() {
     moveFinishHandler,
     undoHandler,
     newGameHandler,
-    changeSettingsHandler
+    changeSettingsHandler,
+    backendModel: model.getBackendModel()
   });
   updateViewWithMove({ animate: false });
   tryMakeComputerMove();
