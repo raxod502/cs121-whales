@@ -56,9 +56,7 @@ beginning of the function’s code. Use the imperative tense for
 description (e.g., "Return x times 2").
 
 #### Import Conventions
-Avoid relative imports. It is acceptable to use any of `from X import
-y`, `import X`, and `import X as W`. Import order will be determined
-by Black (see [General Formatting](#general-formatting)).
+Follow [PEP8](https://www.python.org/dev/peps/pep-0008/#imports).
 
 #### JavaScript
 
