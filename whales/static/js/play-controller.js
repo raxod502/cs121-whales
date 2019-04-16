@@ -4,7 +4,7 @@ function Controller() {
   const view = new View();
   const model = Model.fromHash(view.getHash());
   let redSquare = "";
-  let ignoreAPICount = 0;
+  let apiReq;
 
   function mouseoverEntryHandler(square) {
     if (!model.canPlayerMove()) return;
@@ -78,7 +78,7 @@ function Controller() {
 
   function tryMakeComputerMove() {
     if (model.canComputerMove()) {
-      apiRequest(
+      apiReq = apiRequest(
         {
           command: "get_move",
           model: model.getBackendModel(),
@@ -86,12 +86,8 @@ function Controller() {
         },
         response => {
           // TODO: better error handling.
-          if (ignoreAPICount == 0) {
-            model.setGamePGN(response.pgn);
-            updateViewWithMove({ animate: true });
-          } else {
-            ignoreAPICount--;
-          }
+          model.setGamePGN(response.pgn);
+          updateViewWithMove({ animate: true });
         }
       );
     }
@@ -108,7 +104,10 @@ function Controller() {
     // and ignore the computer's move
 
     if (!model.isPlayerTurn()) {
-      ignoreAPICount++;
+      // readyState 4 means the request is already done
+      if (apiReq && apiReq.readyState != 4) {
+        apiReq.abort();
+      }
     }
 
     model.undoLastMove();

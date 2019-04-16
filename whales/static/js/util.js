@@ -1,5 +1,5 @@
 function apiRequest(request, callback) {
-  $.ajax({
+  return $.ajax({
     method: "POST",
     url: "/api/v1/http",
     contentType: "application/json",
