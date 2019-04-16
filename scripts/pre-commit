@@ -32,7 +32,7 @@ For example:
 EOF
 fi
 
-if ! venv="$(pipenv --venv)"; then
+if ! venv="$(PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv)"; then
     fail <<EOF
 Please create a virtualenv first.
 For example:
