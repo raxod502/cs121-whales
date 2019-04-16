@@ -17,7 +17,8 @@ No trailing whitespace.
   should go on the line immediately above the line of code they are
   referring to. If they are explaining a longer block of code, taken
   together, alternative conventions may be used.
-- For if-else statements, comments describing the condition go below the condition statement and are indented. Example:
+- For if-else statements, comments describing the condition go below
+  the condition statement and are indented. Example:
 
       if cond_1:
           # in this case, do x
@@ -44,7 +45,8 @@ Docstrings should have the following format:
         """
         Here is the first paragraph. Wrap to 72 columns.
 
-        If you have multiple paragraphs, leave a blank line between them. No trailing whitespace!
+        If you have multiple paragraphs, leave a blank line between
+        them. No trailing whitespace!
         """
         code begins
 
@@ -54,9 +56,7 @@ beginning of the function’s code. Use the imperative tense for
 description (e.g., "Return x times 2").
 
 #### Import Conventions
-Avoid relative imports. It is acceptable to use any of `from X import
-y`, `import X`, and `import X as W`. Import order will be determined
-by Black (see [General Formatting](#general-formatting)).
+Follow [PEP8](https://www.python.org/dev/peps/pep-0008/#imports).
 
 #### JavaScript
 
