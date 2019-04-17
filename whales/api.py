@@ -1,3 +1,9 @@
+"""
+Module containing API request-to-response logic, independent of the
+webserver or transit format. Main endpoint is `query`, which takes a
+dictionary request and returns a dictionary response.
+"""
+
 import whales.models
 import whales.util.chess
 
@@ -30,8 +36,8 @@ def error_response(message):
 
 def query(request):
     """
-    Given a dictionary with the API request, return a dictionary with
-    the response.
+    Given a dictionary with an API request, return a dictionary with the
+    response.
     """
     if not isinstance(request, dict):
         return error_response("invalid JSON")

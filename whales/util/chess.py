@@ -1,3 +1,7 @@
+"""
+Module containing utility functions wrapping python-chess.
+"""
+
 import chess.pgn
 import chess
 import io
@@ -47,4 +51,3 @@ def convert_move(uci):
     Convert a string of a move in UCI format into a python-chess move.
     """
     return chess.Move.from_uci(uci)
-
