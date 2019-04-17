@@ -1,10 +1,6 @@
 import enum
+
 import numpy as np
-
-# TODO: check if logging is actually needed
-from logging import getLogger
-
-logger = getLogger(__name__)
 
 
 def board_to_arrays_alpha_chess(board):

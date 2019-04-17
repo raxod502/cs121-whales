@@ -1,44 +1,45 @@
-import chess
-import numpy as np
 import os
 
-from functools import partial
+import chess
+import numpy as np
 from keras.models import model_from_json
+
 from whales.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
 from whales.neural_net.data_conversion import board_to_arrays
 
 
-def save_models(models):
+def save_neural_nets(neural_nets):
     """
-    Save a list of models to .json files and their weights to .h5
-    files. A model with model_name will be saved to model_name.json
-    and model_name.h5 in the same directory as this file.
+    Save a list of Keras neural net Models to .json files and their
+    weights to .h5 files. A neural net with net_name will be saved
+    to net_name.json and net_name.h5 in the same directory as this
+    file.
     """
-    for model in models:
-        with open("{}.json".format(model.name), "w") as file:
-            file.write(model.to_json())
-        model.save_weights("{}.h5".format(model.name))
+    for neural_net in neural_nets:
+        with open("{}.json".format(neural_net.name), "w") as file:
+            file.write(neural_net.to_json())
+            neural_net.save_weights("{}.h5".format(neural_net.name))
 
 
-def load_models(model_names):
+def load_neural_nets(net_names):
     """
-    Load a list of models from .json and .h5 files in the format
-    model_name.json and model_name.h5, whose files are located in the
-    same directory as this file.
+    Load a list of Keras neural net Models from .json and .h5 files in
+    the format net_name.json and net_name.h5, whose files are located
+    in the same directory as this file.
     """
-    models = []
-    for index, name in enumerate(model_names):
+    neural_nets = []
+    for index, name in enumerate(net_names):
         file_dir = os.path.dirname(__file__)
         file_path = os.path.join(file_dir, name)
         with open(file_path + ".json", "r") as file:
-            models.append(model_from_json(file.read()))
-        models[index].load_weights(file_path + ".h5")
-    return models
+            neural_nets.append(model_from_json(file.read()))
+            neural_nets[index].load_weights(file_path + ".h5")
+    return neural_nets
 
 
-def chess_alpha_zero_helper(model, board):
+def chess_alpha_zero_helper(board):
     """
-    Get a prediction from the chess_alpha_zero model.
+    Get a prediction from the chess_alpha_zero neural net.
     Return [policy, value], where policy is a size 1968 vector of
     probabilities associated with each chess move to make next (higher
     probability seems to indicate a better move), and value is a number
@@ -54,7 +55,7 @@ def chess_alpha_zero_helper(model, board):
     # Chess_alpha_zero returns [policy, value] predictions, and we want
     # the predictions of the first board in the list (though the list
     # does only have one board in it).
-    policy, value = model.predict(np_array)
+    policy, value = neural_net_dict["chess_alpha_zero"].predict(np_array)
     return policy[0], value[0]
 
 
@@ -113,7 +114,7 @@ def create_uci_labels():
     return labels_array
 
 
-def model_1_prediction(model, board):
+def model_1_prediction(board):
     """
     Evaluate the board using the neural net 'model 1', and return a
     single value where 1 means the board is good for white and -1
@@ -125,16 +126,16 @@ def model_1_prediction(model, board):
     array = [board_to_arrays(board)]
     np_array = np.array(array, dtype=int)
 
-    return model.predict(np_array)[0][0]
+    return neural_net_dict["model 1"].predict(np_array)[0][0]
 
 
-def model_alpha_prediction(model, board):
+def chess_alpha_value(board):
     """
     Evaluate the board using the chess_alpha_zero neural net, and
     return a single value where 1 means the board is good for white and
     -1 means the board is good for black.
     """
-    policy, value = chess_alpha_zero_helper(model, board)
+    policy, value = chess_alpha_zero_helper(board)
 
     # Chess_alpha_zero rates the board using 1 to represent the board
     # being good for the player that just moved. The minimax expects
@@ -147,14 +148,11 @@ def model_alpha_prediction(model, board):
     return value
 
 
-def new_model_prediction(model, boards):
+def new_model_prediction(boards):
     """
     Predict the likelihood of the moving player winning for multiple
-    chess boards.
+    chess boards using the chess_alpha_zero neural net.
 
-    :param (Keras model) model: A neural network that predicts the
-    likelihood of the moving player winning based on the board state
-    chess board
     :param (list(python-chess Board)) boards: A list of boards
     representing the current state of the multiple games
 
@@ -164,20 +162,20 @@ def new_model_prediction(model, boards):
     """
     array = [board_to_arrays_alpha_chess(b) for b in boards]
     np_array = np.array(array, dtype=int)
-    values = model.predict(np_array)[1]
+    values = neural_net_dict["chess_alpha_zero"].predict(np_array)[1]
     return values
 
 
 move_labels = create_uci_labels()
 
 
-def chess_alpha_zero_policy_prediction(model, board):
+def chess_alpha_policy(board):
     """
     Evaluate the board using the chess_alpha_zero neural net, and
     return the UCI representation of the move that the policy network
     rates as having the highest probability.
     """
-    policy, value = chess_alpha_zero_helper(model, board)
+    policy, value = chess_alpha_zero_helper(board)
 
     # Find the index of the move with the highest probability.
     best_move_index = policy.index(max(policy))
@@ -185,43 +183,44 @@ def chess_alpha_zero_policy_prediction(model, board):
     return best_move
 
 
-# Hardcoded list of names of models to use.
+# Hardcoded list of names of neural nets to use.
 # TODO: check if there is a better way to integrate this list with models.py
 # NOTE: don't change this list of neural net names without also
 # changing model_predict_func_dict!
-model_names = ["model 1", "chess_alpha_zero"]
+neural_net_names = ["model 1", "chess_alpha_zero"]
 
-# TODO: (optional optimization) lazily load models rather than upfront
-# Load every model, then store them in a dictionary mapping from name
-# to model.
-models = load_models(model_names)
-# Adding a mode._make_predict_function() call after every model load
+# TODO: (optional optimization) lazily load neural nets rather than upfront
+# Load every Keras neural net Model, then store them in a dictionary
+# mapping from name to neural net.
+neural_nets = load_neural_nets(neural_net_names)
+# Adding a net._make_predict_function() call after every load
 # seems to stop a weird error.
-for model in models:
-    model._make_predict_function()
+for net in neural_nets:
+    net._make_predict_function()
 
-model_dict = {}
-for i in range(len(model_names)):
-    model_dict[model_names[i]] = models[i]
+neural_net_dict = {}
+for i in range(len(neural_net_names)):
+    neural_net_dict[neural_net_names[i]] = neural_nets[i]
 
-# Name of the model to load, and the function to call to get the
-# prediction.
+# This dictionary specifies the function to call to get a prediction
+# for each of the models specified in models.py.
 model_predict_func_dict = {
-    "model 1": partial(model_1_prediction, model_dict["model 1"]),
-    "chess_alpha_zero": partial(model_alpha_prediction, model_dict["chess_alpha_zero"]),
-    "alt_minimax": partial(new_model_prediction, model_dict["chess_alpha_zero"]),
-    "chess_alpha_zero_policy": partial(
-        chess_alpha_zero_policy_prediction, model_dict["chess_alpha_zero"]
-    ),
+    "model 1": model_1_prediction,
+    "chess_alpha_zero": chess_alpha_value,
+    "alt_minimax": new_model_prediction,
+    "chess_alpha_zero_policy": chess_alpha_policy,
 }
 
 
-def evaluation_function(board, model_name="chess_alpha"):
+def evaluation_function(board, model_name):
     """
-    Take in a board, use a neural net to classify the board as one
-    leading to white winning or black winning, and return the
-    classification, where 1 means a sure win for white and -1 means a
-    sure win for black.
+    Take in a board, call the function associated with that model, and
+    return the neural net's prediction. This prediction might be a
+    board evaluation (number from -1 to 1), a list of board
+    evaluations, a move, or other, depending on the function called.
+    This means that models using evaluation_function should take care
+    to ensure that they are going to receive the kind of output
+    that they are expecting.
     """
     # Use the prediction function associated with the given model.
     return model_predict_func_dict[model_name](board)

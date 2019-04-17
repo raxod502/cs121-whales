@@ -1,25 +1,26 @@
 import argparse
 import os
+
 import numpy as np
 
-from whales.neural_net.interface import load_models
+from whales.neural_net.interface import load_neural_nets
 
 
-def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
+def test_net(net_name: str, data_name: str, use_chess_alpha: bool):
     """
     Compare the predictions from the given chess neural net to
     the actual results of the games, and print the percent of the
     boards that the neural net predicted correctly.
 
-    :param model_name: the name of the model to load.
-    - There should be files '{model_name}.h5' and '{model_name}.json'
-      to specify the configuration and weights of the model in the same
-      directory as this file.
-    - The model should be able to take in data representing a chess
+    :param net_name: the name of the neural net to load.
+    - There should be files '{net_name}.h5' and '{net_name}.json'
+      to specify the configuration and weights of the neural net in the
+      same directory as this file.
+    - The net should be able to take in data representing a chess
       board and return a value between -1 and 1 predicting whether
       black or white will win.
 
-    :param data_name: the name of the data to test the model on.
+    :param data_name: the name of the data to test the net on.
     - There should be files 'x_{data_name}.npy' and 'y_{data_name}.npy'
       in the same directory as this file. It is the responsibility of
       the user of this function to ensure that the data is in the
@@ -28,7 +29,7 @@ def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
     :param use_chess_alpha: if enabled, assumes that the board
       evaluation is the second column in the neural net predictions
     """
-    model = load_models(model_names=[model_name])[0]
+    net = load_neural_nets(net_names=[net_name])[0]
 
     # Load in the data.
     file_dir = os.path.dirname(__file__)
@@ -36,12 +37,12 @@ def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
     y = np.load(os.path.join(file_dir, f"y_{data_name}.npy"))
 
     # Predict all of the data in the validation set to get an idea of
-    # how the model is doing.
+    # how the neural net is doing.
 
     print("\nPredicting...")
     # If the neural net only evaluates the board (ie, returns [value]),
     # "predictions" has shape nx1.
-    predictions = model.predict(x)
+    predictions = net.predict(x)
 
     # If the neural net returns [policy, value] for predictions,
     # "predictions" has shape nx2x1, so grab the board evaluations
@@ -65,9 +66,9 @@ def test_net(model_name: str, data_name: str, use_chess_alpha: bool):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "model_name",
-        help="the name of the model to test. There should be "
-        "<model_name>.json and <model_name>.h5 files in "
+        "neural_net_name",
+        help="the name of the neural net to test. There should be "
+        "<net_name>.json and <net_name>.h5 files in "
         "app/neural_net/",
     )
     parser.add_argument(
@@ -86,4 +87,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    test_net(args.model_name, args.data_name, args.use_chess_alpha)
+    test_net(args.neural_net_name, args.data_name, args.use_chess_alpha)

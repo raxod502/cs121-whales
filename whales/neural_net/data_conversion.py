@@ -245,7 +245,8 @@ if __name__ == "__main__":
         type=int,
     )
 
-    # If enabled, writes the data in the numpy format understood by the chess-alpha-zero model.
+    # If enabled, writes the data in the numpy format understood by the
+    # chess-alpha-zero neural net.
     parser.add_argument(
         "-use_chess_alpha",
         help="Process the data into the 18x8x8 arrays used by chess-alpha-zero, "
