@@ -44,8 +44,41 @@
         </li>
       </ul>
 
-      <h2>About the models</h2>
-      This section is still under construction. Check back later!
+      <h2>About the AI</h2>
+      <p>
+          We would like to give a special thanks to the contributors of 
+          <a href="https://github.com/Zeta36/chess-alpha-zero">chess-alpha-zero</a>, whose 
+          pretrained neural network was used for the medium, hard, and new AI difficulties. 
+          Their network has been trained to output a (policy, value) prediction for a
+          chess game state input. The policy is an array of probabilities of representing the 
+          likelihood of making each legal move. The value represents the likelihood of the 
+          moving player winning the game. 
+          <br><br>
+          Below is a quick summary of how each difficulty level selects a move.
+      </p>
+      <ul>
+        <li>
+          <i>Easy:</i> Chooses a random move from a list of legal moves
+        </li>
+        <li>
+          <i>Normal:</i> Utilizes a <a href="https://en.wikipedia.org/wiki/Minimax">minimax</a>
+          algorithm of depth 1, using a neural network we trained from scratch as an evaluation
+          function. Our neural network takes a chess game state as input and outputs the likelihood
+          of the moving player winning the game, similar to the value output of chess-alpha-zero.
+        </li>
+        <li>
+          <i>Medium:</i> Selects the move with the highest probability in the policy array
+          returned by the chess-alpha-zero neural network.
+        </li>
+        <li>
+          <i>New:</i> Utilizes a minimax algorithm of depth 1, using the value of the board from
+          the neural network as the evaluation function
+        </li>
+        <li>
+          <i>Hard:</i> Utilizes a minimax algorithm depth 2, using the value of the board from
+          the neural network as the evaluation function
+        </li>
+      </ul>  
 
       <h2>How to play chess</h2>
       There are many excellent resources to help you learn the rules of chess.
