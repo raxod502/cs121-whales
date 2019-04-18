@@ -2,9 +2,6 @@ import chess
 import random
 import numpy as np
 
-# chess is a 2 player game
-NUM_AGENTS = 2
-
 
 def eval_material(board):
     """
@@ -25,7 +22,7 @@ def eval_material(board):
 
 def minimax(
     board,
-    max_plies=2,
+    max_depth=2,
     curr_depth=0,
     alpha=float("-inf"),
     beta=float("inf"),
@@ -34,7 +31,7 @@ def minimax(
 ):
     """
     Perform minimax search with alpha/beta pruning through board up
-    to a depth of max_plies.
+    to a depth of max_depth.
 
     Take in a board with the current game state, a max depth in
     plies, a current depth, alpha and beta for pruning, an evaluation
@@ -47,8 +44,6 @@ def minimax(
     if starting_player is None:
         # if given the default value, determine based on board
         starting_player = board.turn
-
-    max_depth = max_plies * NUM_AGENTS
 
     if curr_depth >= max_depth or board.is_game_over():
         # if at a leaf node, evaluate board
@@ -81,7 +76,7 @@ def minimax(
         # recurse with same parameters, except one level deeper
         successor_val = minimax(
             successor,
-            max_plies,
+            max_depth,
             curr_depth + 1,
             alpha,
             beta,
