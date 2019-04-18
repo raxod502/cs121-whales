@@ -5,14 +5,13 @@ import numpy as np
 # chess is a 2 player game
 NUM_AGENTS = 2
 
-# simple evaluation function
+
 def eval_material(board):
     """
-    Counts number of pieces white has more than black and also whether
-    white or black has won the game
+    Count number of pieces white has more than black and also whether
+    white or black has won the game. Takes in chess.Board and returns
+    weighted sum.
     """
-
-    # will be replaced later by better evaluation function
 
     white_won = 1 if board.result() == "1-0" else 0
     black_won = 1 if board.result() == "0-1" else 0
@@ -33,94 +32,77 @@ def minimax(
     eval_fn=eval_material,
     starting_player=None,
 ):
-    """ Performs minimax search through board up to max_plies
-    Uses alpha-beta pruning
+    """
+    Perform minimax search with alpha/beta pruning through board up
+    to a depth of max_plies.
 
-    Keyword arguments:
-    board      -- the current state of the game (required)
-    max_plies  -- the number of plies to descend before evaluating
-                  state (default 5)
-    curr_depth -- parameter to keep track of how deep we are (default 0)
-    alpha      -- alpha parameter for pruning (default -inf)
-    beta       -- beta parameter for pruning (default inf)
+    Take in a board with the current game state, a max depth in
+    plies, a current depth, alpha and beta for pruning, an evaluation
+    function called when depth is reached, and a starting player.
+
+    Note: use defaults for curr_depth, alpha, beta, and
+    starting_player.
     """
 
     if starting_player is None:
+        # if given the default value, determine based on board
         starting_player = board.turn
 
     max_depth = max_plies * NUM_AGENTS
 
     if curr_depth >= max_depth or board.is_game_over():
+        # if at a leaf node, evaluate board
         multiplier = 1 if starting_player == chess.WHITE else -1
         return (multiplier * eval_fn(board), None)
 
     curr_agent = board.turn
+
+    # if it is the starting player's turn, we maximize
+    is_maximizing = curr_agent == starting_player
+    is_minimizing = not is_maximizing
 
     legal_actions = list(board.legal_moves)
 
     best_action = None
     v = 0
 
-    if curr_agent == starting_player:
-        # maximizing layer
+    if is_maximizing:
         v = float("-inf")
-
-        for i in range(len(legal_actions)):
-            action = legal_actions[i]
-
-            # simulate the move to pass to children
-            successor = board.copy()
-            successor.push(action)
-
-            successor_val = minimax(
-                successor,
-                max_plies,
-                curr_depth + 1,
-                alpha,
-                beta,
-                eval_fn=eval_fn,
-                starting_player=starting_player,
-            )[0]
-
-            if successor_val > v:
-                best_action = action
-                v = successor_val
-
-            # beta pruning case, stop considering branch
-            # return value doesn't matter; we won't be using it
-            if v > beta:
-                return (v, best_action)
-
-            alpha = max(alpha, v)
-
     else:
-        # minimizing layer
         v = float("inf")
 
-        for i in range(len(legal_actions)):
-            action = legal_actions[i]
-            successor = board.copy()
-            successor.push(action)
+    for i in range(len(legal_actions)):
+        action = legal_actions[i]
 
-            successor_val = minimax(
-                successor,
-                max_plies,
-                curr_depth + 1,
-                alpha,
-                beta,
-                eval_fn=eval_fn,
-                starting_player=starting_player,
-            )[0]
+        # simulate the move to pass to children
+        successor = board.copy()
+        successor.push(action)
 
-            if successor_val < v:
-                best_action = action
-                v = successor_val
+        # recurse with same parameters, except one level deeper
+        successor_val = minimax(
+            successor,
+            max_plies,
+            curr_depth + 1,
+            alpha,
+            beta,
+            eval_fn=eval_fn,
+            starting_player=starting_player,
+        )[0]
 
-            # alpha pruning case, stop considering branch
-            # return value doesn't matter; we won't be using it
-            if v < alpha:
-                return (v, best_action)
+        if (successor_val > v and is_maximizing) or (
+            successor_val < v and is_minimizing
+        ):
+            best_action = action
+            v = successor_val
 
+        # pruning case, stop considering branch
+        # return value doesn't matter; we won't be using it
+        if (v > beta and is_maximizing) or (v < alpha and is_minimizing):
+            return (v, best_action)
+
+        if is_maximizing:
+            alpha = max(alpha, v)
+        else:
             beta = min(beta, v)
 
     # return most optimized child along with action to take
