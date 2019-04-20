@@ -140,9 +140,9 @@ MODELS = {
         "description": "'Model 1' neural net evaluation function using depth 1 minimax",
         "callable": model_minimax_with_neural_net(depth=1, nn_name="model 1"),
     },
-    "neuralnet-no-minimax-chess-alpha-zero": {
+    "new": {
         "display_name": "Medium",
-        "description": "Simple evaluation exclusively using the chess-alpha-zero neural network",
+        "description": "Simple evaluation with neural net with alternative minimax",
         "callable": model_onlymax_with_neural_net(),
     },
     "neuralnet-depth1-chess-alpha-zero": {
