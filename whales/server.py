@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+"""
+Module that contains our Flask app.
+"""
 
 import os
 
@@ -58,15 +60,3 @@ def http_endpoint():
     else:
         response = whales.api.error_response("invalid or missing JSON")
     return flask.jsonify(response)
-
-
-if __name__ == "__main__":
-    port = os.environ.get("PORT")
-    if port:
-        try:
-            port = int(port)
-        except ValueError:
-            port = None
-    if not port:
-        port = 5000
-    app.run(port=port)
