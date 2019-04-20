@@ -148,7 +148,7 @@ def chess_alpha_value(board):
     return value
 
 
-def new_model_prediction(boards):
+def chess_alpha_value_list(boards):
     """
     Predict the likelihood of the moving player winning for multiple
     chess boards using the chess_alpha_zero neural net.
@@ -201,26 +201,3 @@ for net in neural_nets:
 neural_net_dict = {}
 for i in range(len(neural_net_names)):
     neural_net_dict[neural_net_names[i]] = neural_nets[i]
-
-# This dictionary specifies the function to call to get a prediction
-# for each of the models specified in models.py.
-model_predict_func_dict = {
-    "model 1": model_1_prediction,
-    "chess_alpha_zero": chess_alpha_value,
-    "alt_minimax": new_model_prediction,
-    "chess_alpha_zero_policy": chess_alpha_policy,
-}
-
-
-def evaluation_function(board, model_name):
-    """
-    Take in a board, call the function associated with that model, and
-    return the neural net's prediction. This prediction might be a
-    board evaluation (number from -1 to 1), a list of board
-    evaluations, a move, or other, depending on the function called.
-    This means that models using evaluation_function should take care
-    to ensure that they are going to receive the kind of output
-    that they are expecting.
-    """
-    # Use the prediction function associated with the given model.
-    return model_predict_func_dict[model_name](board)

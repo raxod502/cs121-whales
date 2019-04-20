@@ -40,15 +40,15 @@ def model_random():
     return model
 
 
-def model_neural_net(nn_name):
+def model_neural_net():
     """
-    Return a model that uses a neural net to predict optimal moves. The
-    neural net must return move data in UCI format.
+    Return a model that uses the chess_alpha_zero neural net to predict
+    optimal moves. It returns move data in UCI format.
     """
 
     def model(pgn):
         board = whales.util.chess.pgn_to_board(pgn)
-        move_uci = neural_net.evaluation_function(board, nn_name)
+        move_uci = neural_net.chess_alpha_policy(board)
         move = whales.util.chess.convert_move(move_uci)
         board.push(move)
         return whales.util.chess.board_to_pgn(board)
@@ -72,15 +72,17 @@ def model_onlymax(eval_fn):
     return model
 
 
-def model_onlymax_with_neural_net(nn_name):
+def model_onlymax_with_neural_net():
     """
-    Return a model that uses minimax with a depth of 1/2, with the given
-    neural network as the evaluation function. The neural network must
-    return a list of floating-point numbers when given a list of boards.
+    Return a model that uses minimax with a depth of 1/2, using
+    chess_alpha_zero's value prediction as the evaluation function. The
+    neural net returns a list of floating-point numbers when given a
+    list of boards, where 1 means a sure win for the moving player and
+    -1 means a sure loss for the moving player.
     """
 
     def eval_fn(boards):
-        return neural_net.evaluation_function(boards, nn_name)
+        return neural_net.chess_alpha_value_list(boards)
 
     return model_onlymax(eval_fn)
 
@@ -111,11 +113,18 @@ def model_minimax_with_neural_net(depth, nn_name):
     move.
 
     The given neural net must return a floating-point number evaluating
-    the desirability of the board state.
+    the desirability of the board state, where 1 means a sure win for
+    white and -1 means a sure win for black.
     """
+    if nn_name == "model 1":
 
-    def eval_fn(board):
-        return neural_net.evaluation_function(board, nn_name)
+        def eval_fn(board):
+            return neural_net.model_1_prediction(board)
+
+    else:
+        # Default to using chess_alpha_zero unless 'model 1' is specified.
+        def eval_fn(board):
+            return neural_net.chess_alpha_value(board)
 
     return model_minimax(depth, eval_fn)
 
@@ -134,7 +143,7 @@ MODELS = {
     "neuralnet-no-minimax-chess-alpha-zero": {
         "display_name": "Medium",
         "description": "Simple evaluation exclusively using the chess-alpha-zero neural network",
-        "callable": model_onlymax_with_neural_net("alt_minimax"),
+        "callable": model_onlymax_with_neural_net(),
     },
     "neuralnet-depth1-chess-alpha-zero": {
         "display_name": "Hard",
