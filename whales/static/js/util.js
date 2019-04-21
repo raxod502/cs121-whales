@@ -1,4 +1,38 @@
-function apiRequest(request, callback) {
+"use strict";
+
+function isObject(val) {
+  return typeof val === "object" && val !== null;
+}
+
+function isString(val) {
+  return typeof val === "string";
+}
+
+function isArray(val) {
+  return Array.isArray(val);
+}
+
+function capitalize(str) {
+  return str[0].toUpperCase() + str.slice(1);
+}
+
+function friendlyErrorMessage(rawMessage) {
+  return (
+    'W.H.A.L.E.S. encountered an unexpected error: "' +
+    capitalize(rawMessage) +
+    '". Unfortunately, ' +
+    "we don't know how to fix it. Sorry! Your " +
+    "best bet is to reload the page and see if things " +
+    "are fixed."
+  );
+}
+
+function apiRequest(request, callback, onError) {
+  if (!onError) {
+    const up = "devastating error";
+    alert("No error callback provided!!");
+    throw up;
+  }
   return $.ajax({
     method: "POST",
     url: "/api/v1/http",
@@ -6,10 +40,62 @@ function apiRequest(request, callback) {
     data: JSON.stringify(request),
     // Parse the returned response into JSON.
     dataType: "json",
-    success: callback,
-    // TODO: better error handling.
-    error: console.error
+    success: data => {
+      if (!isObject(data)) {
+        onError("API response is not an object");
+      } else if (!data.hasOwnProperty("error")) {
+        onError("API response missing 'error' key");
+      } else if (data.error) {
+        onError(data.error);
+      } else {
+        callback(data);
+      }
+    },
+    error: (xhr, textStatus, errorThrown) => {
+      // Check first if an HTTP error occurred, and report the status
+      // text for it (confusingly named errorThrown) if so. Otherwise,
+      // fall back to the more generic textStatus argument
+      if (errorThrown) {
+        onError(errorThrown.toLowerCase());
+      } else {
+        onError(textStatus);
+      }
+    }
   });
+}
+
+function apiListModels(callback, onError) {
+  apiRequest(
+    {
+      command: "list_models"
+    },
+    response => {
+      if (!isArray(response.models)) {
+        onError("API response for 'list_models' was not an array");
+        return;
+      }
+      for (const model of response.models) {
+        if (!isObject(model)) {
+          onError("API response for 'list_models' contained non-object");
+          return;
+        }
+        for (const key of ["displayName", "internalName"]) {
+          if (!model.hasOwnProperty(key)) {
+            onError(`API response for 'list_models' missing key '${key}'`);
+            return;
+          }
+          if (!isString(model[key])) {
+            onError(
+              `API response for 'list_models' has non-string for key '${key}'`
+            );
+            return;
+          }
+        }
+      }
+      callback(response.models);
+    },
+    onError
+  );
 }
 
 function decodeHash(hash) {
