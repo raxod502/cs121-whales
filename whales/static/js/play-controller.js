@@ -85,10 +85,18 @@ function Controller() {
           pgn: model.getGamePGN()
         },
         response => {
-          // TODO: better error handling.
+          if (!response.hasOwnProperty("pgn")) {
+            view.crashAndBurn("API response missing PGN");
+            return;
+          }
+          if (!isString(response.pgn)) {
+            view.crashAndBurn("got invalid PGN from API");
+            return;
+          }
           model.setGamePGN(response.pgn);
           updateViewWithMove({ animate: true });
-        }
+        },
+        view.crashAndBurn
       );
     }
   }
