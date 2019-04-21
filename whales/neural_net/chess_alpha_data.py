@@ -1,20 +1,17 @@
-"""
-Encapsulates the functionality for representing
-and operating on the chess environment in chess-alpha-zero.
-"""
 import enum
+
 import numpy as np
-
-from logging import getLogger
-
-logger = getLogger(__name__)
 
 
 def board_to_arrays_alpha_chess(board):
     """
-    Creates an 18x8x8 representation of the game state, the data representation
-    used by chess-alpha-zero
-    :param board:
+    Create an 18x8x8 Python list representing a chess board, in the
+    format understood by the chess_alpha_zero neural net.
+
+    pieces_order = "KQRBNPkqrbnp"   # 12x8x8
+    castling_order = "KQkq"         # 4x8x8
+    fifty-move-rule                 # 1x8x8
+    en en_passant                   # 1x8x8
     """
     return canon_input_planes(board.fen())
 
