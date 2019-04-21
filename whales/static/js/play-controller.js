@@ -103,6 +103,11 @@ function Controller() {
     // if it is the computers turn, allow the player move to be undone,
     // and ignore the computer's move
 
+    // Can't undo if player has not moved
+    if (!model.hasPlayerMoved()) {
+      return;
+    }
+
     if (!model.isPlayerTurn()) {
       // readyState 4 means the request is already done
       if (apiReq && apiReq.readyState != 4) {
