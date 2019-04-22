@@ -3,30 +3,30 @@ import random
 import numpy as np
 
 
-def minimax(
-    board,
-    eval_fn,
-    max_depth=2,
-    curr_depth=0,
-    alpha=float("-inf"),
-    beta=float("inf"),
-    starting_player=None,
-):
+def minimax(board, eval_fn, max_depth):
     """
     Perform minimax search with alpha/beta pruning through board up
     to a depth of max_depth.
 
-    Take in a board with the current game state, a max depth in
-    plies, a current depth, alpha and beta for pruning, an evaluation
-    function called when depth is reached, and a starting player.
-
-    Note: use defaults for curr_depth, alpha, beta, and
-    starting_player.
+    Take in a board with the current game state, an evaluation function
+    called when depth is reached, and a max depth.
     """
+    starting_player = board.turn
 
-    if starting_player is None:
-        # if given the default value, determine based on board
-        starting_player = board.turn
+    return minimax_helper(
+        board, eval_fn, max_depth, 0, float("-inf"), float("inf"), starting_player
+    )
+
+
+def minimax_helper(board, eval_fn, max_depth, curr_depth, alpha, beta, starting_player):
+    """
+    Perform minimax search with alpha/beta pruning through board up
+    to a depth of max_depth.
+
+    Take in a board with the current game state, a max depth, a current
+    depth, alpha and beta for pruning, an evaluation function called
+    when depth is reached, and a starting player.
+    """
 
     if curr_depth >= max_depth or board.is_game_over():
         # if at a leaf node, evaluate board
@@ -57,14 +57,8 @@ def minimax(
         successor.push(action)
 
         # recurse with same parameters, except one level deeper
-        successor_val = minimax(
-            successor,
-            eval_fn,
-            max_depth,
-            curr_depth + 1,
-            alpha,
-            beta,
-            starting_player=starting_player,
+        successor_val = minimax_helper(
+            successor, eval_fn, max_depth, curr_depth + 1, alpha, beta, starting_player
         )[0]
 
         if (successor_val > v and is_maximizing) or (
