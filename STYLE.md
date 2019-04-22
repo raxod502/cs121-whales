@@ -52,8 +52,10 @@ Docstrings should have the following format:
 
 Note that the triple quotes are always on their own lines, and that
 there is no empty line between the end of the docstring and the
-beginning of the function’s code. Use the imperative tense for
-description (e.g., "Return x times 2").
+beginning of the function’s code. The only exception to this last is if
+the function body begins by defining an inner function; the whitespace
+around function definitions is dictated by Black. Use the imperative
+tense for description (e.g., "Return x times 2").
 
 #### Import Conventions
 Follow [PEP8](https://www.python.org/dev/peps/pep-0008/#imports).

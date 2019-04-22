@@ -49,10 +49,6 @@ function Model(params) {
   // it checks whether the pending api should be ignored in controller.
 
   this.undoLastMove = () => {
-    // Dont undo the first move if computer is white
-    if (!this.hasPlayerMoved() && playerColor == "b") {
-      return;
-    }
     //undo player and computer move
     if (this.isPlayerTurn()) {
       game.undo();
@@ -106,7 +102,7 @@ function Model(params) {
   };
 
   this.hasPlayerMoved = () => {
-    if (playerColor === "white") {
+    if (playerColor === "w") {
       return game.history().length >= 1;
     } else {
       return game.history().length >= 2;
