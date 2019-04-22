@@ -3,30 +3,13 @@ import random
 import numpy as np
 
 
-def eval_material(board):
-    """
-    Count number of pieces white has more than black and also whether
-    white or black has won the game. Takes in chess.Board and returns
-    weighted sum.
-    """
-
-    white_won = 1 if board.result() == "1-0" else 0
-    black_won = 1 if board.result() == "0-1" else 0
-
-    pieces = [board.piece_at(x) for x in chess.SQUARES]
-    white_material = [piece for piece in pieces if piece == chess.WHITE]
-    black_material = [piece for piece in pieces if piece == chess.BLACK]
-
-    return (white_won * 100) + len(white_material) - len(black_material)
-
-
 def minimax(
     board,
+    eval_fn,
     max_depth=2,
     curr_depth=0,
     alpha=float("-inf"),
     beta=float("inf"),
-    eval_fn=eval_material,
     starting_player=None,
 ):
     """
@@ -76,11 +59,11 @@ def minimax(
         # recurse with same parameters, except one level deeper
         successor_val = minimax(
             successor,
+            eval_fn,
             max_depth,
             curr_depth + 1,
             alpha,
             beta,
-            eval_fn=eval_fn,
             starting_player=starting_player,
         )[0]
 

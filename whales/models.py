@@ -25,17 +25,6 @@ def model_random(pgn):
     return whales.util.chess.board_to_pgn(board)
 
 
-def model_material_depth1(pgn):
-    """
-    Model that uses a depth 1 minimax tree with evaluation function
-    based on how much relative material each color has
-    """
-    board = whales.util.chess.pgn_to_board(pgn)
-    move = minimax.minimax(board, max_depth=2, eval_fn=minimax.eval_material)[1]
-    board.push(move)
-    return whales.util.chess.board_to_pgn(board)
-
-
 def model_neural_depth1(pgn, model_name):
     """
     Model that uses a depth 1 minimax tree with evaluation function
@@ -44,8 +33,8 @@ def model_neural_depth1(pgn, model_name):
     board = whales.util.chess.pgn_to_board(pgn)
     move = minimax.minimax(
         board,
-        max_depth=2,
         eval_fn=functools.partial(neural_net_eval, model_name=model_name),
+        max_depth=2,
     )[1]
     board.push(move)
     return whales.util.chess.board_to_pgn(board)
