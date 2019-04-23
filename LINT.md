@@ -1,9 +1,30 @@
-# Dryer lint
+# Testing
+## Dynamic testing
 
-(The output of our linters, and why we don't care that they all hate
-our code.)
+See [here](https://docs.google.com/document/d/1dBsCISVta9HC85s470jur387ijljPglaegBSbq-4jAA/edit?usp=sharing).
 
-## pylint output
+## Static testing
+
+Most of the below linter output seems pretty much like garbage.
+
+* Too many return statements is BS
+* Hanging indent stuff conflicts with Black
+* Missing module docstrings is valid, but we already have PRs to
+  address that
+* Missing imports are because pylint isn't configured with our
+  virtualenv
+* It complains about single-letter variables, but I don't super think
+  that's a big issue
+* Using enumerate is an okay hint, but it really doesn't matter that
+  much
+* It reports many errors on our vendored code
+* Access to protected member is a question for Shannon but I think
+  it's a workaround for a bug
+* eslint mostly doesn't understand our imports
+
+No use integrating these tools into our build system.
+
+### pylint output
 
     ************* Module whales.api
     whales/api.py:1:0: C0111: Missing module docstring (missing-docstring)
@@ -180,7 +201,7 @@ our code.)
     -------------------------------------
     Your code has been rated at -10.00/10
 
-## eslint output
+### eslint output
 
     /Users/raxod502/files/school/hmc/junior/spring/cs121/cs121-whales/whales/static/js/new-game.js
        8:3   error  '$' is not defined           no-undef
@@ -252,24 +273,3 @@ our code.)
       36:3   error  '$' is not defined                      no-undef
 
     ✖ 7 problems (7 errors, 0 warnings)
-
-## Discussion
-
-Most of this seems pretty much like garbage.
-
-* Too many return statements is BS
-* Hanging indent stuff conflicts with Black
-* Missing module docstrings is valid, but we already have PRs to
-  address that
-* Missing imports are because pylint isn't configured with our
-  virtualenv
-* It complains about single-letter variables, but I don't super think
-  that's a big issue
-* Using enumerate is an okay hint, but it really doesn't matter that
-  much
-* It reports many errors on our vendored code
-* Access to protected member is a question for Shannon but I think
-  it's a workaround for a bug
-* eslint mostly doesn't understand our imports
-
-No use integrating these tools into our build system.
