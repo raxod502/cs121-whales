@@ -5,7 +5,6 @@ import numpy as np
 from keras.models import model_from_json
 
 from whales.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
-from whales.neural_net.data_conversion import board_to_arrays
 
 
 def save_neural_nets(neural_nets):
@@ -114,21 +113,6 @@ def create_uci_labels():
     return labels_array
 
 
-def model_1_prediction(board):
-    """
-    Evaluate the board using the neural net 'model 1', and return a
-    single value where 1 means the board is good for white and -1
-    means the board is good for black.
-    """
-    # The 'model 1' neural net wants prediction input to be in the form
-    # nx7x8x8, so wrap the 7x8x8 board arrays in another list before
-    # converting to numpy and feeding it to the net.
-    array = [board_to_arrays(board)]
-    np_array = np.array(array, dtype=int)
-
-    return neural_net_dict["model 1"].predict(np_array)[0][0]
-
-
 def chess_alpha_value(board):
     """
     Evaluate the board using the chess_alpha_zero neural net, and
@@ -187,7 +171,7 @@ def chess_alpha_policy(board):
 # TODO: check if there is a better way to integrate this list with models.py
 # NOTE: don't change this list of neural net names without also
 # changing model_predict_func_dict!
-neural_net_names = ["model 1", "chess_alpha_zero"]
+neural_net_names = ["chess_alpha_zero"]
 
 # TODO: (optional optimization) lazily load neural nets rather than upfront
 # Load every Keras neural net Model, then store them in a dictionary

@@ -116,15 +116,10 @@ def model_minimax_with_neural_net(depth, nn_name):
     the desirability of the board state, where 1 means a sure win for
     white and -1 means a sure win for black.
     """
-    if nn_name == "model 1":
-
-        def eval_fn(board):
-            return neural_net.model_1_prediction(board)
-
-    else:
-        # Default to using chess_alpha_zero unless 'model 1' is specified.
-        def eval_fn(board):
-            return neural_net.chess_alpha_value(board)
+    # For now, default to using chess_alpha_zero, because it's the only
+    # available neural net.
+    def eval_fn(board):
+        return neural_net.chess_alpha_value(board)
 
     return model_minimax(depth, eval_fn)
 
@@ -135,13 +130,8 @@ MODELS = {
         "description": "Make random moves",
         "callable": model_random(),
     },
-    "neuralnet-depth1-model-1": {
-        "display_name": "Normal",
-        "description": "'Model 1' neural net evaluation function using depth 1 minimax",
-        "callable": model_minimax_with_neural_net(depth=1, nn_name="model 1"),
-    },
     "new": {
-        "display_name": "Medium",
+        "display_name": "Intermediate",
         "description": "Simple evaluation with neural net with alternative minimax",
         "callable": model_onlymax_with_neural_net(),
     },
