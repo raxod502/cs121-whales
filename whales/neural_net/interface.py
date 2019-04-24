@@ -153,20 +153,6 @@ def chess_alpha_value_list(boards):
 move_labels = create_uci_labels()
 
 
-def chess_alpha_policy(board):
-    """
-    Evaluate the board using the chess_alpha_zero neural net, and
-    return the UCI representation of the move that the policy network
-    rates as having the highest probability.
-    """
-    policy, value = chess_alpha_zero_helper(board)
-
-    # Find the index of the move with the highest probability.
-    best_move_index = policy.index(max(policy))
-    best_move = move_labels[best_move_index]
-    return best_move
-
-
 # Hardcoded list of names of neural nets to use.
 # TODO: check if there is a better way to integrate this list with models.py
 # NOTE: don't change this list of neural net names without also

@@ -40,22 +40,6 @@ def model_random():
     return model
 
 
-def model_neural_net():
-    """
-    Return a model that uses the chess_alpha_zero neural net to predict
-    optimal moves. It returns move data in UCI format.
-    """
-
-    def model(pgn):
-        board = whales.util.chess.pgn_to_board(pgn)
-        move_uci = neural_net.chess_alpha_policy(board)
-        move = whales.util.chess.convert_move(move_uci)
-        board.push(move)
-        return whales.util.chess.board_to_pgn(board)
-
-    return model
-
-
 def model_onlymax(eval_fn):
     """
     Return a model that uses minimax with a depth of 1/2, meaning only
