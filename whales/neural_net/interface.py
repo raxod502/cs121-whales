@@ -1,6 +1,5 @@
 import os
 
-import chess
 import numpy as np
 from keras.models import model_from_json
 
@@ -36,26 +35,31 @@ def load_neural_nets(net_names):
     return neural_nets
 
 
-def chess_alpha_zero_helper(board):
+def chess_alpha_zero_helper(board_input):
     """
     Get a prediction from the chess_alpha_zero neural net.
     Return [policy, value], where policy is a size 1968 vector of
     probabilities associated with each chess move to make next (higher
     probability seems to indicate a better move), and value is a number
-    from -1 to 1 indicating how good the current board is for the player
-    who moves next.
-    """
-    # Chess_alpha_zero's neural net wants prediction input to be in the
-    # form nx18x8x8, so wrap the 18x8x8 board arrays in another list
-    # before converting to numpy and feeding it to the net.
-    array = [board_to_arrays_alpha_chess(board)]
-    np_array = np.array(array, dtype=int)
+    from -1 to 1 indicating how good the current board_input is for the
+    player who moves next.
 
-    # Chess_alpha_zero returns [policy, value] predictions, and we want
-    # the predictions of the first board in the list (though the list
-    # does only have one board in it).
-    policy, value = neural_net_dict["chess_alpha_zero"].predict(np_array)
-    return policy[0], value[0]
+    Board_input can be either a single board or a list of boards. In
+    either case the policy and value returned will be vectors.
+    """
+    if type(board_input) != list:
+        # Chess_alpha_zero's neural net wants prediction input to be in
+        # the form nx18x8x8, so wrap the 18x8x8 board_input array in
+        # another list.
+        array = [board_to_arrays_alpha_chess(board_input)]
+    else:
+        # Otherwise we can just convert each chess board to the
+        # nx18x8x8 representation because they're already in a list.
+        array = [board_to_arrays_alpha_chess(b) for b in board_input]
+
+    # Convert to numpy and feed to the neural net.
+    np_array = np.array(array, dtype=int)
+    return neural_net_dict["chess_alpha_zero"].predict(np_array)
 
 
 ### Copied from chess_alpha_zero repository, with docstring annotated
@@ -113,50 +117,7 @@ def create_uci_labels():
     return labels_array
 
 
-def chess_alpha_value(board):
-    """
-    Evaluate the board using the chess_alpha_zero neural net, and
-    return a single value where 1 means the board is good for white and
-    -1 means the board is good for black.
-    """
-    policy, value = chess_alpha_zero_helper(board)
-
-    # Chess_alpha_zero rates the board using 1 to represent the board
-    # being good for the player that just moved. The minimax expects
-    # the board to be rated as 1 if good for white and -1 if good for
-    # black, so convert from chess_alpha's representation to the
-    # minimax's before returning.
-    # TODO: QUESTION FOR BEN: WHAT DOES MINIMAX WANT?
-    if board.turn == chess.BLACK:
-        value *= -1
-    return value
-
-
-def chess_alpha_value_list(boards):
-    """
-    Predict the likelihood of the moving player winning for multiple
-    chess boards using the chess_alpha_zero neural net.
-
-    :param (list(python-chess Board)) boards: A list of boards
-    representing the current state of the multiple games
-
-    :return ((n, 1) float numpy array): Values between -1 and 1, which
-    are predictions of how good each board is for the moving player (1
-    is good, -1 is bad)
-    """
-    array = [board_to_arrays_alpha_chess(b) for b in boards]
-    np_array = np.array(array, dtype=int)
-    values = neural_net_dict["chess_alpha_zero"].predict(np_array)[1]
-    return values
-
-
-move_labels = create_uci_labels()
-
-
 # Hardcoded list of names of neural nets to use.
-# TODO: check if there is a better way to integrate this list with models.py
-# NOTE: don't change this list of neural net names without also
-# changing model_predict_func_dict!
 neural_net_names = ["chess_alpha_zero"]
 
 # TODO: (optional optimization) lazily load neural nets rather than upfront
@@ -171,3 +132,8 @@ for net in neural_nets:
 neural_net_dict = {}
 for i in range(len(neural_net_names)):
     neural_net_dict[neural_net_names[i]] = neural_nets[i]
+
+# A dictionary mapping from the name of a neural net to a function that
+# takes in a board or list of boards, and returns that neural net's
+# prediction of that input.
+neural_net_predict = {"chess_alpha_zero": lambda b: chess_alpha_zero_helper(b)}
