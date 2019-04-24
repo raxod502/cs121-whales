@@ -77,7 +77,7 @@ def model_onlymax_with_neural_net():
     """
 
     def eval_fn(boards):
-        _, value = neural_net.neural_net_predict["chess_alpha_zero"](boards)
+        _, value = neural_net.NEURAL_NET_PREDICT["chess_alpha_zero"](boards)
         return value
 
     return model_onlymax(eval_fn)
@@ -116,11 +116,11 @@ def model_minimax_with_neural_net(depth, nn_name, nn_result_transform):
     nn_result_transform must take in both the result of the neural net
     and the input to eval_fn (board).
     """
-    if nn_name not in neural_net.neural_net_names:
+    if nn_name not in neural_net.NEURAL_NET_NAMES:
         raise NoSuchNeuralNetError
 
     def eval_fn(board):
-        prediction = neural_net.neural_net_predict[nn_name](board)
+        prediction = neural_net.NEURAL_NET_PREDICT[nn_name](board)
         return nn_result_transform(prediction, board)
 
     return model_minimax(depth, eval_fn)

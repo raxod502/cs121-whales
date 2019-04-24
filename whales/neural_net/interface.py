@@ -1,3 +1,10 @@
+"""
+Module containing the neural nets. When this file is run, it loads all
+neural nets and stores them in NEURAL_NETS. Outside actors wanting to
+get the prediction of a chess board from a neural net named 'net_name'
+should call NEURAL_NET_PREDICT[net_name](board). This can also be used
+to get the predictions of a list of boards.
+"""
 import os
 
 import numpy as np
@@ -59,7 +66,7 @@ def chess_alpha_zero_helper(board_input):
 
     # Convert to numpy and feed to the neural net.
     np_array = np.array(array, dtype=int)
-    return neural_net_dict["chess_alpha_zero"].predict(np_array)
+    return NEURAL_NET_DICT["chess_alpha_zero"].predict(np_array)
 
 
 ### Copied from chess_alpha_zero repository, with docstring annotated
@@ -118,22 +125,22 @@ def create_uci_labels():
 
 
 # Hardcoded list of names of neural nets to use.
-neural_net_names = ["chess_alpha_zero"]
+NEURAL_NET_NAMES = ["chess_alpha_zero"]
 
 # TODO: (optional optimization) lazily load neural nets rather than upfront
 # Load every Keras neural net Model, then store them in a dictionary
 # mapping from name to neural net.
-neural_nets = load_neural_nets(neural_net_names)
+NEURAL_NETS = load_neural_nets(NEURAL_NET_NAMES)
 # Adding a net._make_predict_function() call after every load
 # seems to stop a weird error.
-for net in neural_nets:
+for net in NEURAL_NETS:
     net._make_predict_function()
 
-neural_net_dict = {}
-for i in range(len(neural_net_names)):
-    neural_net_dict[neural_net_names[i]] = neural_nets[i]
+NEURAL_NET_DICT = {}
+for i in range(len(NEURAL_NET_NAMES)):
+    NEURAL_NET_DICT[NEURAL_NET_NAMES[i]] = NEURAL_NETS[i]
 
 # A dictionary mapping from the name of a neural net to a function that
 # takes in a board or list of boards, and returns that neural net's
 # prediction of that input.
-neural_net_predict = {"chess_alpha_zero": lambda b: chess_alpha_zero_helper(b)}
+NEURAL_NET_PREDICT = {"chess_alpha_zero": lambda b: chess_alpha_zero_helper(b)}
