@@ -5,6 +5,12 @@ let retrievedModels = false;
 let models = null;
 
 function initButton(id, path) {
+  /**
+   *Initialize buttons for page
+   *takes 'id', the name from HTML, and 'path', the name of the function to call
+   *set the hash for color and model
+   */
+
   $(`#${id}`).on("click", () => {
     const data = {
       playerColor: $(colorDropdown).val()
@@ -27,6 +33,7 @@ if (prevColor === "w" || prevColor === "b") {
 }
 
 apiRequest(
+  //call to api to list models, for use in dropdown menu
   {
     command: "list_models"
   },
