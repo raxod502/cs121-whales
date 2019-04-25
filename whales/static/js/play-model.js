@@ -113,13 +113,23 @@ function Model(params) {
     // We ought to be able to check if a move is legal without
     // actually making it. I can't figure out how to do this, though.
     // Do we really have to make it and then undo it?
-    return (
-      game.move({
-        from: fromSquare,
-        to: toSquare,
-        promotion: "q"
-      }) !== null
-    );
+    let move = game.move({
+      from: fromSquare,
+      to: toSquare,
+      promotion: "q"
+    });
+
+    if (move === null) {
+      return false;
+    }
+
+    if (move.flags.includes("p")) {
+      game.undo();
+      move.promotion = "b";
+      game.move(move);
+    }
+
+    return true;
   };
 
   this.getGameStatus = () => {
