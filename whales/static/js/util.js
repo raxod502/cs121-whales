@@ -1,22 +1,40 @@
 "use strict";
 
 function isObject(val) {
+  /**
+   * Return True if val is a non-null object
+   */
   return typeof val === "object" && val !== null;
 }
 
 function isString(val) {
+  /**
+   * Return True if val is a string
+   * NOTE: could be empty
+   */
   return typeof val === "string";
 }
 
 function isArray(val) {
+  /**
+   * Return True if val is an array
+   */
+
   return Array.isArray(val);
 }
 
 function capitalize(str) {
+  /**
+   * Capitalize the first letter of a string.
+   */
   return str[0].toUpperCase() + str.slice(1);
 }
 
 function friendlyErrorMessage(rawMessage) {
+  /**
+   * Take "rawMessage", return in a nice string that can be displayed
+   * to users.
+   */
   return (
     'W.H.A.L.E.S. encountered an unexpected error: "' +
     capitalize(rawMessage) +
@@ -28,6 +46,11 @@ function friendlyErrorMessage(rawMessage) {
 }
 
 function apiRequest(request, callback, onError) {
+  /**
+   *Send api request
+   *If valid request, perform callback
+   *Otherwise, perform onError
+   */
   if (!onError) {
     const up = "devastating error";
     alert("No error callback provided!!");
@@ -65,6 +88,9 @@ function apiRequest(request, callback, onError) {
 }
 
 function apiListModels(callback, onError) {
+  /**
+   * Wrapper to list models via the api
+   */
   apiRequest(
     {
       command: "list_models"
