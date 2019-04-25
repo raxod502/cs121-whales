@@ -32,25 +32,26 @@ if (prevColor === "w" || prevColor === "b") {
   $(colorDropdown).val(prevColor);
 }
 
-apiRequest(
-  //call to api to list models, for use in dropdown menu
-  {
-    command: "list_models"
-  },
-  response => {
-    models = response.models;
-    $(modelDropdown).options = [];
-    for (const model of models) {
-      $(modelDropdown).append(
-        new Option(model.displayName, model.internalName)
-      );
-      if (model.internalName === prevModel) {
-        $(modelDropdown).val(prevModel);
-      }
+function displayError(error) {
+  $("playBtn").off();
+  alert(
+    friendlyErrorMessage(
+      "couldn't get the list of models: " + capitalize(error)
+    )
+  );
+}
+
+apiListModels(respModels => {
+  models = respModels;
+  $(modelDropdown).options = [];
+  for (const model of models) {
+    $(modelDropdown).append(new Option(model.displayName, model.internalName));
+    if (model.internalName === prevModel) {
+      $(modelDropdown).val(prevModel);
     }
-    retrievedModels = true;
   }
-);
+  retrievedModels = true;
+}, displayError);
 
 initButton("playBtn", "play");
 initButton("aboutBtn", "about");

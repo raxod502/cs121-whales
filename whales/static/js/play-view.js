@@ -33,19 +33,24 @@ function View() {
   // of the functionality. Only methods that need to be used before
   // creating the model are available before init.
   this.init = params => {
+    let disableGame = false;
+
     let board = ChessBoard("board", {
       draggable: true,
       position: "start",
       onMouseoverSquare: (square, piece) => {
+        if (disableGame) return;
         params.mouseoverEntryHandler(square);
       },
       onMouseoutSquare: (square, piece) => {
         params.mouseoverExitHandler(square);
       },
       onDragStart: (source, piece, position, orientation) => {
+        if (disableGame) return false;
         return params.dragStartHandler(piece);
       },
       onDrop: (fromSquare, toSquare) => {
+        if (disableGame) return "snapback";
         if (params.dragFinishHandler(fromSquare, toSquare)) {
           return null;
         } else {
@@ -53,6 +58,7 @@ function View() {
         }
       },
       onSnapEnd: () => {
+        if (disableGame) return;
         params.moveFinishHandler();
       },
       orientation: params.boardOrientation === "w" ? "white" : "black"
@@ -66,22 +72,6 @@ function View() {
     $("#board").on("touchmove", e => {
       e.preventDefault();
     });
-
-    // Display the opponent difficulty.
-    apiRequest(
-      {
-        command: "list_models"
-      },
-      response => {
-        const models = response.models;
-        for (const model of models) {
-          if (params.backendModel === model.internalName) {
-            document.getElementById("opponent").innerText =
-              "Opponent: " + model.displayName;
-          }
-        }
-      }
-    );
 
     this.highlightSquare = (square, red = false) => {
       /**
@@ -164,5 +154,21 @@ function View() {
        */
       window.location.href = "/#" + encodeHash(defaultParameters);
     };
+
+    this.crashAndBurn = message => {
+      disableGame = true;
+      alert(friendlyErrorMessage(message));
+    };
+
+    // Display the opponent difficulty.
+    apiListModels(respModels => {
+      const models = respModels;
+      for (const model of models) {
+        if (params.backendModel === model.internalName) {
+          document.getElementById("opponent").innerText =
+            "Opponent: " + model.displayName;
+        }
+      }
+    }, this.crashAndBurn);
   };
 }

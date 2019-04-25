@@ -111,10 +111,18 @@ function Controller() {
           pgn: model.getGamePGN()
         },
         response => {
-          // TODO: better error handling.
+          if (!response.hasOwnProperty("pgn")) {
+            view.crashAndBurn("API response missing PGN");
+            return;
+          }
+          if (!isString(response.pgn)) {
+            view.crashAndBurn("got invalid PGN from API");
+            return;
+          }
           model.setGamePGN(response.pgn);
           updateViewWithMove({ animate: true });
-        }
+        },
+        view.crashAndBurn
       );
     }
   }
@@ -128,10 +136,14 @@ function Controller() {
   }
 
   function undoHandler() {
-    /**
-     * Allows for the api return to be ignored.
-     * Use .abort() method to cancel api request
-     */
+    // This method allows for the api return to be ignored.
+    // if it is the computers turn, allow the player move to be undone,
+    // and ignore the computer's move
+
+    // Can't undo if player has not moved
+    if (!model.hasPlayerMoved()) {
+      return;
+    }
     if (!model.isPlayerTurn()) {
       if (apiReq && apiReq.readyState != 4) {
         // readyState 4 means the request is already done
