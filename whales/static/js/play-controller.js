@@ -136,9 +136,9 @@ function Controller() {
   }
 
   function undoHandler() {
-    // This method allows for the api return to be ignored.
-    // if it is the computers turn, allow the player move to be undone,
-    // and ignore the computer's move
+    /**
+     * Allows api to be ignored, using abort()
+     */
 
     // Can't undo if player has not moved
     if (!model.hasPlayerMoved()) {

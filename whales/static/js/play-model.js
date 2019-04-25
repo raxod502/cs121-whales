@@ -63,7 +63,10 @@ function Model(params) {
   // it checks whether the pending api should be ignored in controller.
 
   this.undoLastMove = () => {
-    //undo player and computer move
+    /**
+     * Undo the last move of the player, and the computer move,
+     * if appropriate.
+     */
 
     if (this.isPlayerTurn()) {
       //undo player and computer move
@@ -137,6 +140,9 @@ function Model(params) {
   };
 
   this.hasPlayerMoved = () => {
+    /**
+     * Return true if player has moved, else false
+     */
     if (playerColor === "w") {
       return game.history().length >= 1;
     } else {
