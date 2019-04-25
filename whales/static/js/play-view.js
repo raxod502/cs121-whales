@@ -16,10 +16,16 @@
  */
 function View() {
   this.getHash = () => {
+    /**
+     * Return the hash of the current game state.
+     */
     return window.location.hash.substr(1);
   };
 
   this.setHash = hash => {
+    /**
+     * Set the hash of the current game state.
+     */
     window.location.hash = "#" + hash;
   };
 
@@ -78,6 +84,10 @@ function View() {
     );
 
     this.highlightSquare = (square, red = false) => {
+      /**
+       * Highlight given square.
+       * Takes optional parameter 'red', turns highlightesd square red.
+       */
       const squareEl = $("#board .square-" + square);
 
       let background;
@@ -93,10 +103,16 @@ function View() {
     };
 
     this.unhighlightAllSquares = () => {
+      /**
+       * Unhighlight all squares
+       */
       $("#board .square-55d63").css("background", "");
     };
 
     this.unhighlightAllNonredSquares = redSquare => {
+      /**
+       * Unhighlight all non-red squares
+       */
       let square;
       let squareEl;
       for (let row = 0; row < 8; row++) {
@@ -111,6 +127,9 @@ function View() {
     };
 
     this.outlineSquare = square => {
+      /**
+       * Create an outline around a square
+       */
       $("#board .square-" + square).css(
         "box-shadow",
         "0 0 0 3px lightblue inset"
@@ -118,18 +137,31 @@ function View() {
     };
 
     this.unoutlineAllSquares = () => {
+      /**
+       * Remove the outline from all squares.
+       */
       $("#board .square-55d63").css("box-shadow", "");
     };
 
     this.setBoardFEN = (fen, params) => {
+      /**
+       * Set board FEN
+       * Takes option, animate = true/false
+       */
       board.position(fen, params.animate);
     };
 
     this.setStatusText = text => {
+      /**
+       * Set the text displayed at the bottom of the screen
+       */
       $("#status").text(text);
     };
 
     this.changeSettings = defaultParameters => {
+      /**
+       * Take the settings from the change settings box and encode them
+       */
       window.location.href = "/#" + encodeHash(defaultParameters);
     };
   };
