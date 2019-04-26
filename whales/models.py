@@ -94,7 +94,7 @@ def model_minimax(depth, eval_fn):
 
     def model(pgn):
         board = whales.util.chess.pgn_to_board(pgn)
-        result = minimax.minimax(board, max_plies=depth, eval_fn=eval_fn)
+        result = minimax.minimax(board, eval_fn, depth)
         move = result[1]
         board.push(move)
         return whales.util.chess.board_to_pgn(board)
