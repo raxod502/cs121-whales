@@ -1,9 +1,20 @@
-import functools
+"""
+Module containing the backend models which users can select to play
+against in the app. A model is a function that takes a PGN string and
+returns a new PGN string with an additional move. Passing a model a PGN
+string that is a completed game produces an unspecified result, but
+should not be an error. (Malformed PGN may produce an InvalidPGNError.)
+
+For convenience, mostly this module defines functions which *return* a
+model, so that you can easily construct models with different parameters
+substituted in.
+"""
+
 import operator
 import random
 
-from whales.minimax_ab import minimax
-from whales.neural_net.interface import evaluation_function as neural_net_eval
+import whales.minimax_ab.minimax as minimax
+import whales.neural_net.interface as neural_net
 import whales.util.chess
 
 
@@ -15,83 +26,129 @@ class NoSuchModelError(Exception):
     pass
 
 
-def model_random(pgn):
+def model_random():
     """
-    Model that makes random moves.
+    Return a model that makes random moves.
     """
-    board = whales.util.chess.pgn_to_board(pgn)
-    move = random.choice(list(board.legal_moves))
-    board.push(move)
-    return whales.util.chess.board_to_pgn(board)
+
+    def model(pgn):
+        board = whales.util.chess.pgn_to_board(pgn)
+        move = random.choice(list(board.legal_moves))
+        board.push(move)
+        return whales.util.chess.board_to_pgn(board)
+
+    return model
 
 
-def model_neural_depth1(pgn, model_name):
+def model_neural_net():
     """
-    Model that uses a depth 1 minimax tree with evaluation function
-    using a neural net
+    Return a model that uses the chess_alpha_zero neural net to predict
+    optimal moves. It returns move data in UCI format.
     """
-    board = whales.util.chess.pgn_to_board(pgn)
-    move = minimax.minimax(
-        board,
-        eval_fn=functools.partial(neural_net_eval, model_name=model_name),
-        max_depth=2,
-    )[1]
-    board.push(move)
-    return whales.util.chess.board_to_pgn(board)
+
+    def model(pgn):
+        board = whales.util.chess.pgn_to_board(pgn)
+        move_uci = neural_net.chess_alpha_policy(board)
+        move = whales.util.chess.convert_move(move_uci)
+        board.push(move)
+        return whales.util.chess.board_to_pgn(board)
+
+    return model
 
 
-def new_model(pgn, model_name):
+def model_onlymax(eval_fn):
     """
-    Model that uses a depth 1 minimax tree with evaluation function
-    using a neural net
+    Return a model that uses minimax with a depth of 1/2, meaning only
+    looking at the possible next moves and not at any potential
+    countermoves.
     """
-    board = whales.util.chess.pgn_to_board(pgn)
-    move = minimax.alt_minimax(
-        board, eval_fn=functools.partial(neural_net_eval, model_name=model_name)
-    )
-    board.push(move)
-    return whales.util.chess.board_to_pgn(board)
+
+    def model(pgn):
+        board = whales.util.chess.pgn_to_board(pgn)
+        move = minimax.alt_minimax(board, eval_fn=eval_fn)
+        board.push(move)
+        return whales.util.chess.board_to_pgn(board)
+
+    return model
 
 
-def chess_alpha_zero_policy(pgn, model_name):
+def model_onlymax_with_neural_net():
     """
-    Model that uses the chess_alpha_zero policy prediction to pick its
-    next move
+    Return a model that uses minimax with a depth of 1/2, using
+    chess_alpha_zero's value prediction as the evaluation function. The
+    neural net returns a list of floating-point numbers when given a
+    list of boards, where 1 means a sure win for the moving player and
+    -1 means a sure loss for the moving player.
     """
-    board = whales.util.chess.pgn_to_board(pgn)
-    move_uci = neural_net_eval(board, model_name)
-    move = whales.util.chess.convert_move(move_uci)
-    board.push(move)
-    return whales.util.chess.board_to_pgn(board)
+
+    def eval_fn(boards):
+        return neural_net.chess_alpha_value_list(boards)
+
+    return model_onlymax(eval_fn)
+
+
+def model_minimax(depth, eval_fn):
+    """
+    Return a model that uses minimax to the given depth with the given
+    evaluation function to find the optimal move.
+
+    To use a neural net as the evaluation function, see
+    `model_minimax_with_neural_net` instead.
+    """
+
+    def model(pgn):
+        board = whales.util.chess.pgn_to_board(pgn)
+        result = minimax.minimax(board, eval_fn, depth)
+        move = result[1]
+        board.push(move)
+        return whales.util.chess.board_to_pgn(board)
+
+    return model
+
+
+def model_minimax_with_neural_net(depth, nn_name):
+    """
+    Return a model that uses minimax to the given depth with the neural
+    net by the given name as the evaluation function to find the optimal
+    move.
+
+    The given neural net must return a floating-point number evaluating
+    the desirability of the board state, where 1 means a sure win for
+    white and -1 means a sure win for black.
+    """
+    if nn_name == "model 1":
+
+        def eval_fn(board):
+            return neural_net.model_1_prediction(board)
+
+    else:
+        # Default to using chess_alpha_zero unless 'model 1' is specified.
+        def eval_fn(board):
+            return neural_net.chess_alpha_value(board)
+
+    return model_minimax(depth, eval_fn)
 
 
 MODELS = {
     "random": {
         "display_name": "Easy",
         "description": "Make random moves",
-        "callable": model_random,
+        "callable": model_random(),
     },
     "neuralnet-depth1-model-1": {
         "display_name": "Normal",
         "description": "'Model 1' neural net evaluation function using depth 1 minimax",
-        "callable": functools.partial(model_neural_depth1, model_name="model 1"),
+        "callable": model_minimax_with_neural_net(depth=2, nn_name="model 1"),
+    },
+    "new": {
+        "display_name": "Medium",
+        "description": "Simple evaluation with neural net with alternative minimax",
+        "callable": model_onlymax_with_neural_net(),
     },
     "neuralnet-depth1-chess-alpha-zero": {
         "display_name": "Hard",
         "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
-        "callable": functools.partial(
-            model_neural_depth1, model_name="chess_alpha_zero"
-        ),
-    },
-    "new": {
-        "display_name": "New",
-        "description": "Simple evaluation with neural net with alternative minimax",
-        "callable": functools.partial(new_model, model_name="alt_minimax"),
-    },
-    "neuralnet-no-minimax-chess-alpha-zero": {
-        "display_name": "Medium",
-        "description": "Simple evaluation exclusively using the chess-alpha-zero neural network",
-        "callable": functools.partial(new_model, model_name="alt_minimax"),
+        "callable": model_minimax_with_neural_net(depth=2, nn_name="chess_alpha_zero"),
     },
 }
 
