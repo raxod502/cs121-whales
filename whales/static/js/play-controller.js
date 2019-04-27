@@ -76,13 +76,6 @@ function Controller() {
     }
   }
 
-  function handleAPIError(errorMessage) {
-    if (errorMessage !== "abort") {
-      // if we aborted, we want to swallow the error
-      view.crashAndBurn(errorMessage);
-    }
-  }
-
   function tryMakeComputerMove() {
     if (model.canComputerMove()) {
       apiReq = apiRequest(
@@ -103,7 +96,7 @@ function Controller() {
           model.setGamePGN(response.pgn);
           updateViewWithMove({ animate: true });
         },
-        handleAPIError
+        view.crashAndBurn
       );
     }
   }

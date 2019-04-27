@@ -52,11 +52,14 @@ function apiRequest(request, callback, onError) {
       }
     },
     error: (xhr, textStatus, errorThrown) => {
-      // Check first if an HTTP error occurred, and report the status
-      // text for it (confusingly named errorThrown) if so. Otherwise,
-      // fall back to the more generic textStatus argument
+      // Check first if an HTTP error occurred, and (assuming it's not an
+      // abort) report the status text for it (confusingly named errorThrown)
+      // if so. Otherwise, fall back to the more generic textStatus argument
       if (errorThrown) {
-        onError(errorThrown.toLowerCase());
+        // Swallow abort error
+        if (errorThrown !== "abort") {
+          onError(errorThrown.toLowerCase());
+        }
       } else {
         onError(textStatus);
       }
