@@ -150,7 +150,7 @@ function encodeHash(hash) {
   );
 }
 
-//Below handles clicks on screen, hasing the location
+//Below handles clicks on screen, hashing the location
 $(".homeLink").each((index, value) => {
   $(value).on("click", () => {
     window.location.href = "/" + window.location.hash;

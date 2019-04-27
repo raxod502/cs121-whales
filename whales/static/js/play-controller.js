@@ -3,7 +3,7 @@
 function Controller() {
   const view = new View();
   const model = Model.fromHash(view.getHash());
-  let redSquare = ""; //for use in checkmate
+  let redSquare = ""; //for use in check situtations
   let apiReq;
 
   function mouseoverEntryHandler(square) {
