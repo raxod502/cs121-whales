@@ -39,7 +39,19 @@ function Controller() {
     redSquare !== ""
       ? view.unhighlightAllNonredSquares(redSquare)
       : view.unhighlightAllSquares();
-    return model.tryMakingMove(fromSquare, toSquare);
+    let validObj = model.tryMakingMove(fromSquare, toSquare, null);
+    if (validObj.isPromotion) {
+      console.log("SET");
+      view.selectPawnPromotion(promotionHandler, fromSquare, toSquare);
+    }
+    return validObj.isValid;
+  }
+
+  function promotionHandler(fromSquare, toSquare, promotionPiece) {
+    console.log(toSquare);
+    model.tryMakingMove(fromSquare, toSquare, promotionPiece);
+    view.setBoardFEN(model.getGameFEN(), { animate: true });
+    tryMakeComputerMove();
   }
 
   function updateViewWithMove(params) {

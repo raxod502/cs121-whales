@@ -37,7 +37,7 @@ body {
   box-shadow: 7px 7px 2px 1px gray;
 }
 
-.gameplayBtn {
+.gameplayBtn, .ppBtn {
   position: relative;
   font-size: 16px;
   font-family: var(--secondary-font);

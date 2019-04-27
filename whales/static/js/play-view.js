@@ -44,6 +44,7 @@ function View() {
         return params.dragStartHandler(piece);
       },
       onDrop: (fromSquare, toSquare) => {
+        console.log("Drop " + toSquare);
         if (disableGame) return "snapback";
         if (params.dragFinishHandler(fromSquare, toSquare)) {
           return null;
@@ -109,6 +110,14 @@ function View() {
 
     this.unoutlineAllSquares = () => {
       $("#board .square-55d63").css("box-shadow", "");
+    };
+
+    this.selectPawnPromotion = (callback, fromSquare, toSquare) => {
+      $("#ppPopup").show();
+      $(".ppBtn").click(function(e) {
+        $("#ppPopup").hide();
+        callback(fromSquare, toSquare, this.id);
+      });
     };
 
     this.setBoardFEN = (fen, params) => {
