@@ -21,7 +21,7 @@ function Model(params) {
 
   this.setGamePGN = pgn => {
     /**
-     * Set the game PGN
+     * Set the game PGN.
      */
     game = Chess();
     if (pgn !== null) {
@@ -31,7 +31,7 @@ function Model(params) {
 
   this.getGameFEN = () => {
     /**
-     * Return the game FEN
+     * Return the game FEN.
      */
     return game.fen();
   };
@@ -69,10 +69,10 @@ function Model(params) {
      */
 
     if (this.isPlayerTurn()) {
-      //undo player and computer move
+      // Undo player and computer move.
       game.undo();
     }
-    //undo only your move if it is the computers turn
+    // Undo only your move if it is the computers turn.
     game.undo();
   };
 
@@ -91,14 +91,14 @@ function Model(params) {
         }
       }
     }
-    // Shouldn't reach this
+    // Shouldn't reach this.
     return null;
   };
 
   this.getPlayerColor = () => {
     /**
-     * Return player color
-     * RETURNS: 'b' or 'w'
+     * Return player color.
+     * RETURNS: 'b' or 'w'.
      */
     return playerColor;
   };
@@ -141,7 +141,7 @@ function Model(params) {
 
   this.hasPlayerMoved = () => {
     /**
-     * Return true if player has moved, else false
+     * Return true if player has moved, else false.
      */
     if (playerColor === "w") {
       return game.history().length >= 1;
@@ -152,7 +152,7 @@ function Model(params) {
 
   this.tryMakingMove = (fromSquare, toSquare) => {
     /**
-     * Try making move fromSquare -> toSquare
+     * Try making move fromSquare -> toSquare.
      */
     return (
       game.move({
@@ -165,7 +165,7 @@ function Model(params) {
 
   this.getGameStatus = () => {
     /**
-     * Return text indicating game status
+     * Return text indicating game status.
      */
     if (game.in_checkmate()) {
       if (this.isPlayerTurn()) {

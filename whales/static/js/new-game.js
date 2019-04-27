@@ -6,9 +6,9 @@ let models = null;
 
 function initButton(id, path) {
   /**
-   *Initialize buttons for page
-   *takes 'id', the name from HTML, and 'path', the name of the function to call
-   *set the hash for color and model
+   * Initialize buttons for page.
+   * Takes'id', the name from HTML, and 'path', the name of the function to call.
+   * Set the hash for color and model.
    */
 
   $(`#${id}`).on("click", () => {
@@ -46,7 +46,7 @@ function displayError(error) {
 
 apiListModels(respModels => {
   /**
-   * Return a list of all models
+   * Return a list of all models.
    */
   models = respModels;
   $(modelDropdown).options = [];

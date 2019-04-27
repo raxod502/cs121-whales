@@ -8,7 +8,7 @@ function Controller() {
 
   function mouseoverEntryHandler(square) {
     /**
-     *take a square, highlight the possible moved from that square
+     * Take a square, highlight the possible moved from that .
      */
     if (!model.canPlayerMove()) return;
 
@@ -30,7 +30,7 @@ function Controller() {
 
   function mouseoverExitHandler(square) {
     /**
-     *Unhighlight squares when the mouse moves off of square
+     * Unhighlight squares when the mouse moves off of square.
      */
     redSquare !== ""
       ? view.unhighlightAllNonredSquares(redSquare)
@@ -47,7 +47,7 @@ function Controller() {
 
   function dragFinishHandler(fromSquare, toSquare) {
     /**
-     *Handle end of drag by unhiglighting squares, and calling tryMakeMove
+     * Handle end of drag by unhiglighting squares, and calling tryMakeMove.
      */
     redSquare !== ""
       ? view.unhighlightAllNonredSquares(redSquare)
@@ -57,9 +57,9 @@ function Controller() {
 
   function updateViewWithMove(params) {
     /**
-     *Update game FEN and status with move
-     *Takes boolean 'animate' as param
-     *e.x. updateViewWithMove({ animate: true });
+     * Update game FEN and status with move.
+     * Takes boolean 'animate' as param.
+     *   e.x. updateViewWithMove({ animate: true });
      */
     view.setBoardFEN(model.getGameFEN(), { animate: params.animate });
     let text = model.getGameStatus();
@@ -71,7 +71,7 @@ function Controller() {
 
   function updatePrevMoveOutline() {
     /**
-     *Update the black square denoting the previous move.
+     *  Update the black square denoting the previous move.
      */
     view.unoutlineAllSquares();
     if (model.isPlayerTurn()) {
@@ -86,10 +86,10 @@ function Controller() {
 
   function maybeUpdateRedSquare(statusText) {
     /**
-     *Check to see if red square needs updating, and if so, update it.
+     *  Check to see if red square needs updating, and if so, update it.
      */
     if (redSquare !== "") {
-      //if there currently are no red qsuares
+      //if there currently are red squares (someone in check)
       view.unhighlightAllSquares();
       redSquare = "";
     } else if (model.inCheck()) {
@@ -101,7 +101,7 @@ function Controller() {
 
   function tryMakeComputerMove() {
     /**
-     *Attempt to make computer move
+     *  Attempt to make computer move.
      */
     if (model.canComputerMove()) {
       apiReq = apiRequest(
@@ -129,7 +129,7 @@ function Controller() {
 
   function moveFinishHandler() {
     /**
-     *Finish making player move, initiate computers move.
+     *  Finish making player move, initiate computers move.
      */
     updateViewWithMove({ animate: true });
     tryMakeComputerMove();
@@ -137,7 +137,11 @@ function Controller() {
 
   function undoHandler() {
     /**
-     * Allows api to be ignored, using abort()
+     * Allow api to be ignored, using abort().
+     * Check if player has moved, if not return (nothing to undo).
+     * If it isn't the players turn, and the API request has been made,
+     *   abort the api request.
+     * Finally, call undoLastMove, and update the view
      */
 
     // Can't undo if player has not moved
@@ -157,8 +161,8 @@ function Controller() {
 
   function newGameHandler() {
     /**
-     * Start a new game
-     * Triggered by button
+     * Start a new game.
+     * Triggered by button.
      */
     model.setGamePGN(null);
     updateViewWithMove({ animate: false });
@@ -167,7 +171,7 @@ function Controller() {
 
   function changeSettingsHandler() {
     /**
-     * Handle button push of change settings
+     * Handle button push of change settings.
      */
     view.changeSettings({
       playerColor: model.getPlayerColor(),
@@ -177,7 +181,7 @@ function Controller() {
 
   view.init({
     /**
-     *Initialize functions. Update the board to initial state
+     *  Initialize functions. Update the board to initial state.
      */
     boardOrientation: model.getPlayerColor(),
     fen: model.getGameFEN(),

@@ -2,14 +2,14 @@
 
 function isObject(val) {
   /**
-   * Return True if val is a non-null object
+   * Return True if val is a non-null object.
    */
   return typeof val === "object" && val !== null;
 }
 
 function isString(val) {
   /**
-   * Return True if val is a string
+   * Return True if val is a string.
    * NOTE: could be empty
    */
   return typeof val === "string";
@@ -17,7 +17,7 @@ function isString(val) {
 
 function isArray(val) {
   /**
-   * Return True if val is an array
+   * Return True if val is an array.
    */
 
   return Array.isArray(val);
@@ -47,9 +47,9 @@ function friendlyErrorMessage(rawMessage) {
 
 function apiRequest(request, callback, onError) {
   /**
-   *Send api request
-   *If valid request, perform callback
-   *Otherwise, perform onError
+   * Send api request.
+   * If valid request, perform callback.
+   * Otherwise, perform onError.
    */
   if (!onError) {
     const up = "devastating error";
@@ -89,7 +89,7 @@ function apiRequest(request, callback, onError) {
 
 function apiListModels(callback, onError) {
   /**
-   * Wrapper to list models via the api
+   * Wrapper to list models via the api.
    */
   apiRequest(
     {
@@ -126,7 +126,7 @@ function apiListModels(callback, onError) {
 
 function decodeHash(hash) {
   /**
-   * Decode hash
+   * Decode hash.
    */
   const result = {};
   for (let component of decodeURI(hash).split(",")) {
@@ -141,7 +141,7 @@ function decodeHash(hash) {
 
 function encodeHash(hash) {
   /**
-   * Encode hash
+   * Encode hash.
    */
   return encodeURI(
     Object.entries(hash)
@@ -150,7 +150,7 @@ function encodeHash(hash) {
   );
 }
 
-//Below handles clicks on screen, hashing the location
+// Below handles clicks on screen, hashing the location.
 $(".homeLink").each((index, value) => {
   $(value).on("click", () => {
     window.location.href = "/" + window.location.hash;
