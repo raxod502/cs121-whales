@@ -89,11 +89,11 @@ function Controller() {
      *  Check to see if red square needs updating, and if so, update it.
      */
     if (redSquare !== "") {
-      //if there currently are red squares (someone in check)
+      // If there currently are red squares (someone in check)
       view.unhighlightAllSquares();
       redSquare = "";
     } else if (model.inCheck()) {
-      //if the model is in check
+      // If the model is in check
       redSquare = model.getSquareOfKing(model.getTurnColor());
       view.highlightSquare(redSquare, true);
     }
