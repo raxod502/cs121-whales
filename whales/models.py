@@ -98,7 +98,7 @@ def model_minimax(depth, eval_fn):
 
     def model(pgn):
         board = whales.util.chess.pgn_to_board(pgn)
-        result = minimax.minimax(board, max_plies=depth, eval_fn=eval_fn)
+        result = minimax.minimax(board, eval_fn, depth)
         move = result[1]
         board.push(move)
         return whales.util.chess.board_to_pgn(board)
@@ -138,7 +138,7 @@ MODELS = {
     "neuralnet-depth1-model-1": {
         "display_name": "Normal",
         "description": "'Model 1' neural net evaluation function using depth 1 minimax",
-        "callable": model_minimax_with_neural_net(depth=1, nn_name="model 1"),
+        "callable": model_minimax_with_neural_net(depth=2, nn_name="model 1"),
     },
     "new": {
         "display_name": "Medium",
@@ -148,7 +148,7 @@ MODELS = {
     "neuralnet-depth1-chess-alpha-zero": {
         "display_name": "Hard",
         "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
-        "callable": model_minimax_with_neural_net(depth=1, nn_name="chess_alpha_zero"),
+        "callable": model_minimax_with_neural_net(depth=2, nn_name="chess_alpha_zero"),
     },
 }
 
