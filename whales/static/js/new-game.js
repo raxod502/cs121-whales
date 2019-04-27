@@ -5,6 +5,12 @@ let retrievedModels = false;
 let models = null;
 
 function initButton(id, path) {
+  /**
+   * Initialize buttons for page.
+   * Takes'id', the name from HTML, and 'path', the name of the function to call.
+   * Set the hash for color and model.
+   */
+
   $(`#${id}`).on("click", () => {
     const data = {
       playerColor: $(colorDropdown).val()
@@ -27,6 +33,9 @@ if (prevColor === "w" || prevColor === "b") {
 }
 
 function displayError(error) {
+  /**
+   * Display an error if the models can't be retrieved.
+   */
   $("playBtn").off();
   alert(
     friendlyErrorMessage(
@@ -36,6 +45,9 @@ function displayError(error) {
 }
 
 apiListModels(respModels => {
+  /**
+   * Return a list of all models.
+   */
   models = respModels;
   $(modelDropdown).options = [];
   for (const model of models) {
