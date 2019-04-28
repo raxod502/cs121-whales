@@ -162,7 +162,7 @@ MODELS = {
         "display_name": "Hard",
         "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
         "callable": model_minimax_with_neural_net(
-            depth=1,
+            depth=2,
             nn_name="chess_alpha_zero",
             nn_result_transform=minimax_chess_alpha_transform,
         ),
