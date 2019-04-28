@@ -28,12 +28,34 @@ def minimax_helper(board, eval_fn, max_depth, curr_depth, alpha, beta, starting_
     when depth is reached, and a starting player.
     """
 
-    if curr_depth >= max_depth or board.is_game_over():
-        # if at a leaf node, evaluate board
-        multiplier = 1 if starting_player == chess.WHITE else -1
-        return (multiplier * eval_fn(board), None)
-
     curr_agent = board.turn
+
+    multiplier = 1 if starting_player == chess.WHITE else -1
+
+    if board.is_game_over():
+        result = board.result()
+
+        score = 0
+
+        # strongly prioritize/deprioritize checkmate boards
+
+        if result == "1-0":
+            # white has won
+            score = 100
+        elif result == "0-1":
+            # black has won
+            score = -100
+        else:
+            # game is draw
+            # assign a score of 0 here because a tie is better than
+            # a black win
+            score = 0
+
+        return (multiplier * score, None)
+
+    if curr_depth >= max_depth:
+        # if at a leaf node, evaluate board
+        return (multiplier * eval_fn(board), None)
 
     # if it is the starting player's turn, we maximize
     is_maximizing = curr_agent == starting_player

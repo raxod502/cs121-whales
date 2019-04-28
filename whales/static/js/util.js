@@ -1,22 +1,40 @@
 "use strict";
 
 function isObject(val) {
+  /**
+   * Return True if val is a non-null object.
+   */
   return typeof val === "object" && val !== null;
 }
 
 function isString(val) {
+  /**
+   * Return True if val is a string.
+   * NOTE: could be empty
+   */
   return typeof val === "string";
 }
 
 function isArray(val) {
+  /**
+   * Return True if val is an array.
+   */
+
   return Array.isArray(val);
 }
 
 function capitalize(str) {
+  /**
+   * Capitalize the first letter of a string.
+   */
   return str[0].toUpperCase() + str.slice(1);
 }
 
 function friendlyErrorMessage(rawMessage) {
+  /**
+   * Take "rawMessage", return in a nice string that can be displayed
+   * to users.
+   */
   return (
     'W.H.A.L.E.S. encountered an unexpected error: "' +
     capitalize(rawMessage) +
@@ -28,6 +46,11 @@ function friendlyErrorMessage(rawMessage) {
 }
 
 function apiRequest(request, callback, onError) {
+  /**
+   * Send api request.
+   * If valid request, perform callback.
+   * Otherwise, perform onError.
+   */
   if (!onError) {
     const up = "devastating error";
     alert("No error callback provided!!");
@@ -52,11 +75,14 @@ function apiRequest(request, callback, onError) {
       }
     },
     error: (xhr, textStatus, errorThrown) => {
-      // Check first if an HTTP error occurred, and report the status
-      // text for it (confusingly named errorThrown) if so. Otherwise,
-      // fall back to the more generic textStatus argument
+      // Check first if an HTTP error occurred, and (assuming it's not an
+      // abort) report the status text for it (confusingly named errorThrown)
+      // if so. Otherwise, fall back to the more generic textStatus argument
       if (errorThrown) {
-        onError(errorThrown.toLowerCase());
+        // Swallow abort error
+        if (errorThrown !== "abort") {
+          onError(errorThrown.toLowerCase());
+        }
       } else {
         onError(textStatus);
       }
@@ -65,6 +91,9 @@ function apiRequest(request, callback, onError) {
 }
 
 function apiListModels(callback, onError) {
+  /**
+   * Wrapper to list models via the api.
+   */
   apiRequest(
     {
       command: "list_models"
@@ -99,6 +128,9 @@ function apiListModels(callback, onError) {
 }
 
 function decodeHash(hash) {
+  /**
+   * Decode hash.
+   */
   const result = {};
   for (let component of decodeURI(hash).split(",")) {
     let [key, value] = component.split(":");
@@ -111,6 +143,9 @@ function decodeHash(hash) {
 }
 
 function encodeHash(hash) {
+  /**
+   * Encode hash.
+   */
   return encodeURI(
     Object.entries(hash)
       .map(mapping => mapping.join(":"))
@@ -118,6 +153,7 @@ function encodeHash(hash) {
   );
 }
 
+// Below handles clicks on screen, hashing the location.
 $(".homeLink").each((index, value) => {
   $(value).on("click", () => {
     window.location.href = "/" + window.location.hash;

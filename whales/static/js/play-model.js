@@ -13,10 +13,16 @@ function Model(params) {
   let playerColor = params.playerColor;
 
   this.getGamePGN = () => {
+    /**
+     * Return the game PGN.
+     */
     return game.pgn();
   };
 
   this.setGamePGN = pgn => {
+    /**
+     * Set the game PGN.
+     */
     game = Chess();
     if (pgn !== null) {
       game.load_pgn(pgn);
@@ -24,18 +30,26 @@ function Model(params) {
   };
 
   this.getGameFEN = () => {
+    /**
+     * Return the game FEN.
+     */
     return game.fen();
   };
 
   this.getAllowedMoves = fromSquare => {
+    /**
+     * Return a list of allowed moves.
+     */
     return game.moves({
       square: fromSquare,
       verbose: true
     });
   };
 
-  // Returns start and end squares of previous move
   this.getLastMoveSquares = () => {
+    /**
+     * Return start and end squares of previous move.
+     */
     let history = game.history({ verbose: true });
     if (history.length == 0) {
       return null;
@@ -49,15 +63,23 @@ function Model(params) {
   // it checks whether the pending api should be ignored in controller.
 
   this.undoLastMove = () => {
-    //undo player and computer move
+    /**
+     * Undo the last move of the player, and the computer move,
+     * if appropriate.
+     */
+
     if (this.isPlayerTurn()) {
+      // Undo player and computer move.
       game.undo();
     }
-    //undo only your move if it is the computers turn
+    // Undo only your move if it is the computers turn.
     game.undo();
   };
 
   this.getSquareOfKing = color => {
+    /**
+     * Returns square which king is located in.
+     */
     let square;
     let piece;
     for (let row = 0; row < 8; row++) {
@@ -69,23 +91,36 @@ function Model(params) {
         }
       }
     }
-    // Shouldn't reach this
+    // Shouldn't reach this.
     return null;
   };
 
   this.getPlayerColor = () => {
+    /**
+     * Return player color.
+     * RETURNS: 'b' or 'w'.
+     */
     return playerColor;
   };
 
   this.isPlayerTurn = () => {
+    /**
+     * Return true is player turn, else false.
+     */
     return game.turn() === playerColor;
   };
 
   this.doesPlayerOwnPiece = piece => {
+    /**
+     * Return true if player owns piece, false else.
+     */
     return piece.search(new RegExp(`^${playerColor}`)) !== -1;
   };
 
   this.canPlayerMove = () => {
+    /**
+     * Return true if player can move, false else.
+     */
     if (game.in_checkmate() || game.in_draw()) {
       return false;
     }
@@ -94,6 +129,9 @@ function Model(params) {
   };
 
   this.canComputerMove = () => {
+    /**
+     * Return true if computer can move, false else.
+     */
     if (game.in_checkmate() || game.in_draw()) {
       return false;
     }
@@ -102,6 +140,9 @@ function Model(params) {
   };
 
   this.hasPlayerMoved = () => {
+    /**
+     * Return true if player has moved, else false.
+     */
     if (playerColor === "w") {
       return game.history().length >= 1;
     } else {
@@ -129,6 +170,9 @@ function Model(params) {
   };
 
   this.getGameStatus = () => {
+    /**
+     * Return text indicating game status.
+     */
     if (game.in_checkmate()) {
       if (this.isPlayerTurn()) {
         return "Checkmate! You have lost.";
@@ -157,22 +201,37 @@ function Model(params) {
   };
 
   this.getTurnColor = () => {
+    /**
+     * Return the color of the player who is next to move.
+     */
     return game.turn();
   };
 
   this.inCheck = () => {
+    /**
+     * Return true if game in check, false else.
+     */
     return game.in_check();
   };
 
   this.setBackendModel = newBackendModel => {
+    /**
+     * Set new back end model.
+     */
     backendModel = newBackendModel;
   };
 
   this.getBackendModel = () => {
+    /**
+     * Return name of backend model.
+     */
     return backendModel;
   };
 
   this.toHash = () => {
+    /**
+     * Encode hash of current game state.
+     */
     return encodeHash({
       playerColor,
       backendModel,
@@ -184,11 +243,18 @@ function Model(params) {
 }
 
 Model.checkPGN = pgn => {
+  /**
+   * Validate the PGN. Return Boolean.
+   * NOTE: Calls load_pgn, uses the response to determine validity.
+   */
   const game = Chess();
   return game.load_pgn(pgn);
 };
 
 Model.fromHash = hash => {
+  /**
+   * Decode hash data, load into game state.
+   */
   const hashData = decodeHash(hash);
 
   let playerColor;
