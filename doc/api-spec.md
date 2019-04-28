@@ -1,12 +1,10 @@
 # API specification
 ## Summary
 
-The frontend and backend communicate over a single WebSocket API
-endpoint at `/api/v1/ws`. The format is JSON. No authentication or
-session management is required, and the API is stateless.
-
-For quick testing, the same API is exposed over HTTP at the endpoint
-`/api/v1/http`.
+The frontend and backend communicate over a single HTTP API endpoint
+at `/api/v1/http`. The format is JSON. The endpoint responds to POST
+requests. No authentication or session management is required, and the
+API is stateless.
 
 ## Conventions
 
@@ -16,6 +14,10 @@ refer to specific features of the backend, which is written in Python,
 and will not be used as variable names in JavaScript.
 
 Game states are passed in [PGN] format.
+
+The API will return `200 OK` for almost any data sent to the endpoint
+as long as the server is functional; in order to check that the command
+was successful, look at the response's `error`.
 
 ## Examples
 ### Request list of chess models
