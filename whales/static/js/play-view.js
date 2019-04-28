@@ -114,7 +114,8 @@ function View() {
 
     this.selectPawnPromotion = (callback, fromSquare, toSquare) => {
       $("#ppPopup").show();
-      $(".ppBtn").click(function(e) {
+      $(".ppBtn").off("click");
+      $(".ppBtn").on("click", function(e) {
         $("#ppPopup").hide();
         callback(fromSquare, toSquare, this.id);
       });
