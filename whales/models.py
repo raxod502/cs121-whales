@@ -147,6 +147,8 @@ def minimax_chess_alpha_transform(prediction, board):
     return value
 
 
+# NOTE: Keep models list here in sync with html/about.html!
+
 MODELS = {
     "random": {
         "display_name": "Easy",
