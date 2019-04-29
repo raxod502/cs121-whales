@@ -72,6 +72,22 @@ function View() {
     $("#undoBtn").on("click", params.undoHandler);
     $("#newGameBtn").on("click", params.newGameHandler);
     $("#changeSettingsBtn").on("click", params.changeSettingsHandler);
+    $("#r").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "R.png"
+    );
+    $("#n").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "N.png"
+    );
+    $("#b").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "B.png"
+    );
+    $("#q").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "Q.png"
+    );
 
     $(window).resize(board.resize);
     $("#board").on("touchmove", e => {
