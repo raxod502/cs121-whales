@@ -50,7 +50,6 @@ function View() {
         return params.dragStartHandler(piece);
       },
       onDrop: (fromSquare, toSquare) => {
-        console.log("Drop " + toSquare);
         if (disableGame) return "snapback";
         let isValidObj = params.dragFinishHandler(fromSquare, toSquare);
         if (isValidObj.isPromotion) {
@@ -170,12 +169,15 @@ function View() {
     };
 
     this.selectPawnPromotion = (callback, fromSquare, toSquare) => {
-      $("#undoBtn").off("click");
+      /**
+       * Display pawn promotion selection window
+       */
+      $(".gameplayBtn").hide();
       $("#ppPopup").show();
       $(".ppBtn").off("click");
       this.setStatusText("Pawn promotion! Select a piece.");
       $(".ppBtn").on("click", function(e) {
-        $("#undoBtn").on("click", params.undoHandler);
+        $(".gameplayBtn").show();
         $("#ppPopup").hide();
         callback(fromSquare, toSquare, this.id);
         disableGame = false;

@@ -151,6 +151,9 @@ function Model(params) {
   };
 
   this.tryMakingMove = (fromSquare, toSquare, promotePiece) => {
+    /**
+     * Try making a move fromSquare to toSquare.
+     */
     let move = game.move({
       from: fromSquare,
       to: toSquare,
@@ -208,10 +211,18 @@ function Model(params) {
   };
 
   this.putPiece = (piece, square) => {
+    /**
+     * Put a piece on the specified square.
+     * NOTE: This updates the FEN, but not the PGN.
+     */
     return game.put(piece, square);
   };
 
   this.removePiece = square => {
+    /**
+     * Remove the piece on the specified square.
+     * NOTE: This updates the FEN, but not the PGN.
+     */
     return game.remove(square);
   };
 

@@ -65,7 +65,9 @@ function Controller() {
   }
 
   function promotionHandler(fromSquare, toSquare, promotionPiece) {
-    console.log(toSquare);
+    /**
+     * Continue the game after user selects a piece for pawn promotion.
+     */
     model.tryMakingMove(fromSquare, toSquare, promotionPiece);
     view.setBoardFEN(model.getGameFEN(), { animate: true });
     tryMakeComputerMove();
