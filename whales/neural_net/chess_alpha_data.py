@@ -1,3 +1,9 @@
+"""
+Module to convert from a python-chess Board representation of a chess
+board to the list representation understood by the chess_alpha_zero
+neural network. The majority of this file is copied directly from
+chess-alpha-zero/src/chess_zero/env/chess_env.py.
+"""
 import enum
 
 import numpy as np
