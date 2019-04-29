@@ -56,8 +56,11 @@ function View() {
           disableGame = true;
         }
         if (isValidObj.isValid) {
+          console.log("VALID");
+
           return null;
         } else {
+          console.log("SNAPBACK");
           return "snapback";
         }
       },

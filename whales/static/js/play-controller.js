@@ -57,7 +57,7 @@ function Controller() {
       let pgn = model.getGamePGN();
       model.removePiece(fromSquare);
       model.putPiece({ type: "p", color: model.getTurnColor() }, toSquare);
-      view.setBoardFEN(model.getGameFEN(), { animate: true });
+      view.setBoardFEN(model.getGameFEN(), { animate: false });
       model.setGamePGN(pgn);
       view.selectPawnPromotion(promotionHandler, fromSquare, toSquare);
     }

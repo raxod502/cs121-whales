@@ -166,7 +166,7 @@ function Model(params) {
 
     if (promotePiece === null && move.flags.includes("p")) {
       game.undo();
-      return { isValid: false, isPromotion: true };
+      return { isValid: true, isPromotion: true };
     }
 
     return { isValid: true, isPromotion: false };
