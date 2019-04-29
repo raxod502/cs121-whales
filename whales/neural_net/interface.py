@@ -54,7 +54,7 @@ def chess_alpha_zero_helper(board_input):
     Board_input can be either a single board or a list of boards. In
     either case the policy and value returned will be vectors.
     """
-    if type(board_input) != list:
+    if not isinstance(board_input, list):
         # Chess_alpha_zero's neural net wants prediction input to be in
         # the form nx18x8x8, so wrap the 18x8x8 board_input array in
         # another list.
@@ -69,65 +69,9 @@ def chess_alpha_zero_helper(board_input):
     return NEURAL_NET_DICT["chess_alpha_zero"].predict(np_array)
 
 
-### Copied from chess_alpha_zero repository, with docstring annotated
-def create_uci_labels():
-    """
-    Create UCI labels for every chess move, put them into an array, and
-    return the array.
-
-    This is used to map between chess_alpha_zero's policy predictions
-    and the labels of the moves the policy vector is referring to.
-    """
-    labels_array = []
-    letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
-    numbers = ["1", "2", "3", "4", "5", "6", "7", "8"]
-    promoted_to = ["q", "r", "b", "n"]
-
-    for l1 in range(8):
-        for n1 in range(8):
-            destinations = (
-                [(t, n1) for t in range(8)]
-                + [(l1, t) for t in range(8)]
-                + [(l1 + t, n1 + t) for t in range(-7, 8)]
-                + [(l1 + t, n1 - t) for t in range(-7, 8)]
-                + [
-                    (l1 + a, n1 + b)
-                    for (a, b) in [
-                        (-2, -1),
-                        (-1, -2),
-                        (-2, 1),
-                        (1, -2),
-                        (2, -1),
-                        (-1, 2),
-                        (2, 1),
-                        (1, 2),
-                    ]
-                ]
-            )
-            for (l2, n2) in destinations:
-                if (l1, n1) != (l2, n2) and l2 in range(8) and n2 in range(8):
-                    move = letters[l1] + numbers[n1] + letters[l2] + numbers[n2]
-                    labels_array.append(move)
-    for l1 in range(8):
-        l = letters[l1]
-        for p in promoted_to:
-            labels_array.append(l + "2" + l + "1" + p)
-            labels_array.append(l + "7" + l + "8" + p)
-            if l1 > 0:
-                l_l = letters[l1 - 1]
-                labels_array.append(l + "2" + l_l + "1" + p)
-                labels_array.append(l + "7" + l_l + "8" + p)
-            if l1 < 7:
-                l_r = letters[l1 + 1]
-                labels_array.append(l + "2" + l_r + "1" + p)
-                labels_array.append(l + "7" + l_r + "8" + p)
-    return labels_array
-
-
 # Hardcoded list of names of neural nets to use.
 NEURAL_NET_NAMES = ["chess_alpha_zero"]
 
-# TODO: (optional optimization) lazily load neural nets rather than upfront
 # Load every Keras neural net Model, then store them in a dictionary
 # mapping from name to neural net.
 NEURAL_NETS = load_neural_nets(NEURAL_NET_NAMES)
@@ -137,10 +81,10 @@ for net in NEURAL_NETS:
     net._make_predict_function()
 
 NEURAL_NET_DICT = {}
-for i in range(len(NEURAL_NET_NAMES)):
-    NEURAL_NET_DICT[NEURAL_NET_NAMES[i]] = NEURAL_NETS[i]
+for i, net_name in enumerate(NEURAL_NET_NAMES):
+    NEURAL_NET_DICT[net_name] = NEURAL_NETS[i]
 
 # A dictionary mapping from the name of a neural net to a function that
 # takes in a board or list of boards, and returns that neural net's
 # prediction of that input.
-NEURAL_NET_PREDICT = {"chess_alpha_zero": lambda b: chess_alpha_zero_helper(b)}
+NEURAL_NET_PREDICT = {"chess_alpha_zero": chess_alpha_zero_helper}
