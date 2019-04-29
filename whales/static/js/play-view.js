@@ -170,7 +170,7 @@ function View() {
 
     this.selectPawnPromotion = (callback, fromSquare, toSquare) => {
       /**
-       * Display pawn promotion selection window
+       * Display pawn promotion selection window.
        */
       $(".gameplayBtn").hide();
       $("#ppPopup").show();

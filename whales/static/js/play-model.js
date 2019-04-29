@@ -152,7 +152,7 @@ function Model(params) {
 
   this.tryMakingMove = (fromSquare, toSquare, promotePiece) => {
     /**
-     * Try making a move fromSquare to toSquare.
+     * Try making a move from fromSquare to toSquare.
      */
     let move = game.move({
       from: fromSquare,
