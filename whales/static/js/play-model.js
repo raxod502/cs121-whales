@@ -207,6 +207,14 @@ function Model(params) {
     return game.turn();
   };
 
+  this.putPiece = (piece, square) => {
+    return game.put(piece, square);
+  };
+
+  this.removePiece = square => {
+    return game.remove(square);
+  };
+
   this.inCheck = () => {
     /**
      * Return true if game in check, false else.

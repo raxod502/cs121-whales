@@ -52,7 +52,11 @@ function View() {
       onDrop: (fromSquare, toSquare) => {
         console.log("Drop " + toSquare);
         if (disableGame) return "snapback";
-        if (params.dragFinishHandler(fromSquare, toSquare)) {
+        let isValidObj = params.dragFinishHandler(fromSquare, toSquare);
+        if (isValidObj.isPromotion) {
+          disableGame = true;
+        }
+        if (isValidObj.isValid) {
           return null;
         } else {
           return "snapback";
@@ -134,15 +138,6 @@ function View() {
       $("#board .square-55d63").css("box-shadow", "");
     };
 
-    this.selectPawnPromotion = (callback, fromSquare, toSquare) => {
-      $("#ppPopup").show();
-      $(".ppBtn").off("click");
-      $(".ppBtn").on("click", function(e) {
-        $("#ppPopup").hide();
-        callback(fromSquare, toSquare, this.id);
-      });
-    };
-
     this.setBoardFEN = (fen, params) => {
       /**
        * Set board FEN.
@@ -156,6 +151,19 @@ function View() {
        * Set the text displayed at the bottom of the screen.
        */
       $("#status").text(text);
+    };
+
+    this.selectPawnPromotion = (callback, fromSquare, toSquare) => {
+      $("#undoBtn").off("click");
+      $("#ppPopup").show();
+      $(".ppBtn").off("click");
+      this.setStatusText("Pawn promotion! Select a piece.");
+      $(".ppBtn").on("click", function(e) {
+        $("#undoBtn").on("click", params.undoHandler);
+        $("#ppPopup").hide();
+        callback(fromSquare, toSquare, this.id);
+        disableGame = false;
+      });
     };
 
     this.changeSettings = defaultParameters => {

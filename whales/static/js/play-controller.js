@@ -54,10 +54,14 @@ function Controller() {
       : view.unhighlightAllSquares();
     let validObj = model.tryMakingMove(fromSquare, toSquare, null);
     if (validObj.isPromotion) {
-      console.log("SET");
+      let pgn = model.getGamePGN();
+      model.removePiece(fromSquare);
+      model.putPiece({ type: "p", color: model.getTurnColor() }, toSquare);
+      view.setBoardFEN(model.getGameFEN(), { animate: true });
+      model.setGamePGN(pgn);
       view.selectPawnPromotion(promotionHandler, fromSquare, toSquare);
     }
-    return validObj.isValid;
+    return validObj;
   }
 
   function promotionHandler(fromSquare, toSquare, promotionPiece) {
