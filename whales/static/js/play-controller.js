@@ -52,7 +52,25 @@ function Controller() {
     redSquare !== ""
       ? view.unhighlightAllNonredSquares(redSquare)
       : view.unhighlightAllSquares();
-    return model.tryMakingMove(fromSquare, toSquare);
+    let validObj = model.tryMakingMove(fromSquare, toSquare, null);
+    if (validObj.isPromotion) {
+      let pgn = model.getGamePGN();
+      model.removePiece(fromSquare);
+      model.putPiece({ type: "p", color: model.getTurnColor() }, toSquare);
+      view.setBoardFEN(model.getGameFEN(), { animate: false });
+      model.setGamePGN(pgn);
+      view.selectPawnPromotion(promotionHandler, fromSquare, toSquare);
+    }
+    return validObj;
+  }
+
+  function promotionHandler(fromSquare, toSquare, promotionPiece) {
+    /**
+     * Continue the game after user selects a piece for pawn promotion.
+     */
+    model.tryMakingMove(fromSquare, toSquare, promotionPiece);
+    view.setBoardFEN(model.getGameFEN(), { animate: true });
+    tryMakeComputerMove();
   }
 
   function updateViewWithMove(params) {

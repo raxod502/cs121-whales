@@ -51,7 +51,11 @@ function View() {
       },
       onDrop: (fromSquare, toSquare) => {
         if (disableGame) return "snapback";
-        if (params.dragFinishHandler(fromSquare, toSquare)) {
+        let isValidObj = params.dragFinishHandler(fromSquare, toSquare);
+        if (isValidObj.isPromotion) {
+          disableGame = true;
+        }
+        if (isValidObj.isValid) {
           return null;
         } else {
           return "snapback";
@@ -67,6 +71,22 @@ function View() {
     $("#undoBtn").on("click", params.undoHandler);
     $("#newGameBtn").on("click", params.newGameHandler);
     $("#changeSettingsBtn").on("click", params.changeSettingsHandler);
+    $("#r").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "R.png"
+    );
+    $("#n").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "N.png"
+    );
+    $("#b").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "B.png"
+    );
+    $("#q").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "Q.png"
+    );
 
     $(window).resize(board.resize);
     $("#board").on("touchmove", e => {
@@ -146,6 +166,22 @@ function View() {
        * Set the text displayed at the bottom of the screen.
        */
       $("#status").text(text);
+    };
+
+    this.selectPawnPromotion = (callback, fromSquare, toSquare) => {
+      /**
+       * Display pawn promotion selection window.
+       */
+      $(".gameplayBtn").hide();
+      $("#ppPopup").show();
+      $(".ppBtn").off("click");
+      this.setStatusText("Pawn promotion! Select a piece.");
+      $(".ppBtn").on("click", function(e) {
+        $(".gameplayBtn").show();
+        $("#ppPopup").hide();
+        callback(fromSquare, toSquare, this.id);
+        disableGame = false;
+      });
     };
 
     this.changeSettings = defaultParameters => {

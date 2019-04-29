@@ -26,3 +26,12 @@ div#status {
   font-size: 20px;
   font-family: var(--secondary-font);
 }
+
+#ppPopup {
+  margin: auto;
+  margin-top: 10px;
+  max-width: 500px;
+  padding: 10px;
+  background-color: rgba(123, 123,123, 0.8);
+  display: none;
+}
