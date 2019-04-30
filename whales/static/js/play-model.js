@@ -150,15 +150,20 @@ function Model(params) {
     }
   };
 
-  this.tryMakingMove = (fromSquare, toSquare) => {
+  this.tryMakingMove = (fromSquare, toSquare, promotionSelection) => {
     /**
      * Try making move fromSquare -> toSquare.
      */
+    let promote;
+
+    if (this.isPromotion(fromSquare, toSquare) && promotionSelection == null) {
+      return "promote";
+    }
     return (
       game.move({
         from: fromSquare,
         to: toSquare,
-        promotion: "q"
+        promotion: promotionSelection
       }) !== null
     );
   };

@@ -22,12 +22,19 @@
       <button id="myBtn">Open Modal</button>
 
       <!-- The Modal -->
-      <div id="myModal" class="modal">
+      <div id="promotePopup" class="modal">
 
         <!-- Modal content -->
         <div class="modal-content">
-          <span class="close">&times;</span>
-          <p>Some text in the Modal..</p>
+          <h3 class="promote-header">What piece would you like to promote this pawn to?</h3>
+          <select id=select-promote>
+          <option value="q">Queen</option>
+          <option value="n">Knight</option>          
+          <option value="r">Rook</option>
+          <option value="b">Bishop</option>
+        </select>
+        <input type="button" class="gameplayBtn" id="promoteBtn" value="Promote!">
+
         </div>
 
   </div> 

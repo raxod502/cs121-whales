@@ -13,6 +13,7 @@
  * - newGameHandler
  * - changeSettingsHandler
  * - backendModel
+ * - promoteHandler
  */
 function View() {
   this.getHash = () => {
@@ -170,31 +171,29 @@ function View() {
         }
       }
     }, this.crashAndBurn);
-  };
 
-  // Get the modal
-  let modal = document.getElementById("myModal");
+    this.passPromoteChoice = () => {
+      return $(promoteDropdown).val();
+    };
 
-  // Get the button that opens the modal
-  let btn = document.getElementById("myBtn");
+    const promoteDropdown = "#select-promote";
 
-  // Get the <span> element that closes the modal
-  let span = document.getElementsByClassName("close")[0];
+    // Get the modal
+    let modal = document.getElementById("promotePopup");
 
-  // When the user clicks on the button, open the modal
-  btn.onclick = function() {
-    modal.style.display = "block";
-  };
+    // Get the button that opens the modal
+    let btn = document.getElementById("myBtn");
 
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function() {
-    modal.style.display = "none";
-  };
+    let go = document.getElementsByClassName("promoteBtn");
 
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function(event) {
-    if (event.target == modal) {
+    // When the user clicks on the button, open the modal
+    btn.onclick = function() {
+      modal.style.display = "block";
+    };
+
+    promoteBtn.onclick = function() {
       modal.style.display = "none";
-    }
+      params.promoteHandler;
+    };
   };
 }

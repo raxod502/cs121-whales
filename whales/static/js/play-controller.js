@@ -52,7 +52,12 @@ function Controller() {
     redSquare !== ""
       ? view.unhighlightAllNonredSquares(redSquare)
       : view.unhighlightAllSquares();
-    return model.tryMakingMove(fromSquare, toSquare);
+
+    if (model.tryMakingMove(fromSquare, toSquare) == "promote") {
+      return;
+    } else {
+      return;
+    }
   }
 
   function updateViewWithMove(params) {
@@ -179,6 +184,11 @@ function Controller() {
     });
   }
 
+  function promoteHandler() {
+    // console.log(view.passPromoteChoice());
+    return view.passPromoteChoice();
+  }
+
   view.init({
     /**
      *  Initialize functions. Update the board to initial state.
@@ -193,6 +203,7 @@ function Controller() {
     undoHandler,
     newGameHandler,
     changeSettingsHandler,
+    promoteHandler,
     backendModel: model.getBackendModel()
   });
   updateViewWithMove({ animate: false });
