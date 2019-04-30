@@ -46,6 +46,21 @@ function Model(params) {
     });
   };
 
+  this.getRandomMove = () => {
+    /**
+     * Return a randomly chosen legal move.
+     */
+    let moves = game.moves({ verbose: true });
+    return moves[Math.floor(Math.random() * moves.length)];
+  };
+
+  this.makeRandomMove = () => {
+    /**
+     * Make randomly chosen legal move.
+     */
+    game.move(this.getRandomMove());
+  };
+
   this.getLastMoveSquares = () => {
     /**
      * Return start and end squares of previous move.

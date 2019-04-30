@@ -117,6 +117,21 @@ function Controller() {
     }
   }
 
+  function handleAPIError(errorMessage) {
+    /**
+     * Determine if error is a timeout, in which case randomly select
+     * legal move, or call view error display function.
+     */
+    if (errorMessage === "timeout") {
+      if (model.canComputerMove()) {
+        model.makeRandomMove();
+        updateViewWithMove({ anomate: true });
+      }
+    } else {
+      view.crashAndBurn(errorMessage);
+    }
+  }
+
   function tryMakeComputerMove() {
     /**
      *  Attempt to make computer move.
@@ -140,7 +155,7 @@ function Controller() {
           model.setGamePGN(response.pgn);
           updateViewWithMove({ animate: true });
         },
-        view.crashAndBurn
+        handleAPIError
       );
     }
   }
