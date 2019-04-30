@@ -163,6 +163,28 @@ function Model(params) {
     );
   };
 
+  this.isPromotion = (fromSquare, toSquare) => {
+    if (this.isPawn(fromSquare)) {
+      if (playerColor == "w" && toSquare[1] == 8) {
+        return true;
+      } else if (playerColor == "b" && toSquare[1] == 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  };
+
+  this.isPawn = square => {
+    let piece = game.get(square);
+    if (piece.type === "p") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   this.getGameStatus = () => {
     /**
      * Return text indicating game status.
