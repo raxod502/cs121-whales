@@ -182,10 +182,16 @@ function View() {
     }, this.crashAndBurn);
 
     this.passPromoteChoice = () => {
+      /**
+       * Return promotion selection from dropdown.
+       */
       return $(promoteDropdown).val();
     };
 
     this.openPromoteWindow = () => {
+      /**
+       * Open promotion window
+       */
       modal.style.display = "block";
     };
 
@@ -194,17 +200,14 @@ function View() {
     // Get the modal
     let modal = document.getElementById("promotePopup");
 
-    // Get the button that opens the modal
-    let btn = document.getElementById("myBtn");
-
+    //get the 'promote' button
     let go = document.getElementsByClassName("promoteBtn");
 
-    // When the user clicks on the button, open the modal
-    btn.onclick = function() {
-      modal.style.display = "block";
-    };
-
     promoteBtn.onclick = function() {
+      /**
+       * When promotion button is clicked, hide the modal window,
+       * call promoteHandler.
+       */
       modal.style.display = "none";
       params.promoteHandler(storeFromSquare, storeToSquare);
     };
