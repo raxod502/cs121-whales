@@ -5,6 +5,8 @@ function Controller() {
   const model = Model.fromHash(view.getHash());
   let redSquare = ""; //for use in check situtations
   let apiReq;
+  // let promotionChoice;
+  let movingSquares;
 
   function mouseoverEntryHandler(square) {
     /**
@@ -45,7 +47,7 @@ function Controller() {
     return model.canPlayerMove() && model.doesPlayerOwnPiece(piece);
   }
 
-  function dragFinishHandler(fromSquare, toSquare) {
+  function dragFinishHandler(fromSquare, toSquare, promotionChoice) {
     /**
      * Handle end of drag by unhiglighting squares, and calling tryMakeMove.
      */
@@ -53,11 +55,39 @@ function Controller() {
       ? view.unhighlightAllNonredSquares(redSquare)
       : view.unhighlightAllSquares();
 
-    if (model.tryMakingMove(fromSquare, toSquare) == "promote") {
-      return;
-    } else {
-      return;
+    let moved;
+
+    moved = model.tryMakingMove(fromSquare, toSquare, promotionChoice);
+
+    if (moved == null) {
+      return null;
     }
+
+    if (moved == "promote") {
+      return "promote";
+      // while(promotionChoice == null) {
+      //   setTimeout(function () {console.log(promotionChoice)}, 1000)
+      // }
+    } else {
+      return moved;
+    }
+
+    // if (model.isPromotion(fromSquare,toSquare)) {
+    //   if (model.getAllowedMoves(square)
+    //   console.log('promting');
+    //   promotionChoice = null;
+    //   view.openPromoteWindow();
+    //   while(promotionChoice == null) {
+    //     console.lot(promotionChoice)
+    //   }
+
+    // }
+
+    return model.tryMakingMove(fromSquare, toSquare, promotionChoice);
+  }
+
+  function promotingMove(fromSquare, toSquare) {
+    return model.isPromotion(fromSquare, toSquare);
   }
 
   function updateViewWithMove(params) {
@@ -184,9 +214,12 @@ function Controller() {
     });
   }
 
-  function promoteHandler() {
-    // console.log(view.passPromoteChoice());
-    return view.passPromoteChoice();
+  function promoteHandler(fromSquare, toSquare) {
+    let promotionChoice = view.passPromoteChoice();
+    console.log(promotionChoice);
+    console.log(fromSquare, toSquare);
+    model.tryMakingMove(fromSquare, toSquare, promotionChoice);
+    this.moveFinishHandler();
   }
 
   view.init({

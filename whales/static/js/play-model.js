@@ -154,8 +154,6 @@ function Model(params) {
     /**
      * Try making move fromSquare -> toSquare.
      */
-    let promote;
-
     if (this.isPromotion(fromSquare, toSquare) && promotionSelection == null) {
       return "promote";
     }

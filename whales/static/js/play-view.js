@@ -16,6 +16,9 @@
  * - promoteHandler
  */
 function View() {
+  let storeFromSquare;
+  let storeToSquare;
+
   this.getHash = () => {
     /**
      * Return the hash of the current game state.
@@ -52,7 +55,13 @@ function View() {
       },
       onDrop: (fromSquare, toSquare) => {
         if (disableGame) return "snapback";
-        if (params.dragFinishHandler(fromSquare, toSquare)) {
+        let move = params.dragFinishHandler(fromSquare, toSquare);
+        if (move == "promote") {
+          this.openPromoteWindow();
+          storeFromSquare = fromSquare;
+          storeToSquare = toSquare;
+          return null;
+        } else if (move) {
           return null;
         } else {
           return "snapback";
@@ -176,6 +185,10 @@ function View() {
       return $(promoteDropdown).val();
     };
 
+    this.openPromoteWindow = () => {
+      modal.style.display = "block";
+    };
+
     const promoteDropdown = "#select-promote";
 
     // Get the modal
@@ -193,7 +206,7 @@ function View() {
 
     promoteBtn.onclick = function() {
       modal.style.display = "none";
-      params.promoteHandler;
+      params.promoteHandler(storeFromSquare, storeToSquare);
     };
   };
 }
