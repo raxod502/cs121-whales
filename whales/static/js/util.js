@@ -140,9 +140,11 @@ function decodeHash(hash) {
     result[key] = value;
   }
 
-  // The pgn in the hash separates moves with underscores, to look
-  // nicer, but convert back to spaces to have a valid pgn string.
-  result["pgn"] = result["pgn"].replace(/_/g, " ");
+  if (result["pgn"] !== undefined) {
+    // The pgn in the hash separates moves with underscores, to look
+    // nicer, but convert back to spaces to have a valid pgn string.
+    result["pgn"] = result["pgn"].replace(/_/g, " ");
+  }
 
   return result;
 }
@@ -152,9 +154,11 @@ function encodeHash(hash) {
    * Encode hash.
    */
 
-  // Change the pgn in the hash to separate moves with underscores
-  // instead of spaces, to make the URL look nicer.
-  hash.pgn = hash.pgn.replace(/ /g, "_");
+  if (hash.pgn !== undefined) {
+    // Change the pgn in the hash to separate moves with underscores
+    // instead of spaces, to make the URL look nicer.
+    hash.pgn = hash.pgn.replace(/ /g, "_");
+  }
 
   return encodeURI(
     Object.entries(hash)
