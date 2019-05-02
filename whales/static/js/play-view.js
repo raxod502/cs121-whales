@@ -192,6 +192,9 @@ function View() {
     };
 
     this.crashAndBurn = message => {
+      /**
+       * Display an error messsage.
+       */
       disableGame = true;
       alert(friendlyErrorMessage(message));
     };
