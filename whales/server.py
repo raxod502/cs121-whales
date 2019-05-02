@@ -29,7 +29,7 @@ def stream_json(ping_secs):
     def decorator(orig_view):
         def new_view(*args, **kwargs):
             def generate():
-                result = whales.util.Unset
+                result = whales.util.UNSET
                 done = threading.Event()
 
                 @flask.copy_current_request_context
