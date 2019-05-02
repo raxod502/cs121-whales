@@ -63,6 +63,7 @@ function apiRequest(request, callback, onError) {
     data: JSON.stringify(request),
     // Parse the returned response into JSON.
     dataType: "json",
+    timeout: 60000,
     success: data => {
       if (!isObject(data)) {
         onError("API response is not an object");
