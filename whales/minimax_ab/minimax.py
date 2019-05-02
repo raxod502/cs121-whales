@@ -1,5 +1,4 @@
 import chess
-import random
 import numpy as np
 
 

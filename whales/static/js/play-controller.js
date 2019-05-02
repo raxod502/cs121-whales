@@ -28,7 +28,7 @@ function Controller() {
     }
   }
 
-  function mouseoverExitHandler(square) {
+  function mouseoverExitHandler() {
     /**
      * Unhighlight squares when the mouse moves off of square.
      */
@@ -80,9 +80,8 @@ function Controller() {
      *   e.x. updateViewWithMove({ animate: true });
      */
     view.setBoardFEN(model.getGameFEN(), { animate: params.animate });
-    let text = model.getGameStatus();
-    maybeUpdateRedSquare(text);
-    view.setStatusText(text);
+    maybeUpdateRedSquare();
+    view.setStatusText(model.getGameStatus());
     updatePrevMoveOutline();
     view.setHash(model.toHash());
   }
@@ -102,7 +101,7 @@ function Controller() {
     }
   }
 
-  function maybeUpdateRedSquare(statusText) {
+  function maybeUpdateRedSquare() {
     /**
      *  Check to see if red square needs updating, and if so, update it.
      */
@@ -218,4 +217,4 @@ function Controller() {
 }
 
 // Kick everything off.
-const controller = new Controller();
+new Controller();

@@ -2,9 +2,10 @@
 Module containing utility functions wrapping python-chess.
 """
 
+import io
+
 import chess.pgn
 import chess
-import io
 
 
 class InvalidPGNError(Exception):

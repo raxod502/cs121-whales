@@ -38,14 +38,14 @@ function View() {
     let board = ChessBoard("board", {
       draggable: true,
       position: "start",
-      onMouseoverSquare: (square, piece) => {
+      onMouseoverSquare: square => {
         if (disableGame) return;
         params.mouseoverEntryHandler(square);
       },
-      onMouseoutSquare: (square, piece) => {
-        params.mouseoverExitHandler(square);
+      onMouseoutSquare: square => {
+        params.mouseoverExitHandler();
       },
-      onDragStart: (source, piece, position, orientation) => {
+      onDragStart: (source, piece) => {
         if (disableGame) return false;
         return params.dragStartHandler(piece);
       },
