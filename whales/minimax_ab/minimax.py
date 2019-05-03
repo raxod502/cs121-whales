@@ -106,15 +106,21 @@ def minimax_helper(board, eval_fn, max_depth, curr_depth, alpha, beta, starting_
     return (v, best_action)
 
 
-def alt_minimax(board, eval_fn):
+def greedy_minimax(board, eval_fn):
+    """
+    Greedily select best board based solely on evaluation function.
+    """
+
     legal_actions = list(board.legal_moves)
     all_boards = [None] * len(legal_actions)
+
     for i in range(len(legal_actions)):
         all_boards[i] = board.copy()
         all_boards[i].push(legal_actions[i])
 
     values = eval_fn(all_boards)
-    # Get the board that is least advantageous for opponent
+
+    # Select move that is least advantageous for opponent.
     index = np.argmin(values)
 
     return legal_actions[index]

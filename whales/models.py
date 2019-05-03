@@ -60,7 +60,7 @@ def model_onlymax(eval_fn):
 
     def model(pgn):
         board = whales.util.chess.pgn_to_board(pgn)
-        move = minimax.alt_minimax(board, eval_fn=eval_fn)
+        move = minimax.greedy_minimax(board, eval_fn=eval_fn)
         board.push(move)
         return whales.util.chess.board_to_pgn(board)
 
