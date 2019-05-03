@@ -78,12 +78,12 @@ def page_about():
     return flask.send_from_directory("html", "about.html")
 
 
-@app.route("/<path:path>")
-def static(path):
+@app.route("/api/v1/http")
+def http_endpoint_get():
     """
-    Serve non-HTML static files.
+    Error with method not allowed.
     """
-    return flask.send_from_directory("static", path)
+    flask.abort(405)
 
 
 @app.route("/api/v1/http", methods=["POST"])
@@ -100,3 +100,11 @@ def http_endpoint():
     else:
         response = whales.api.error_response("invalid or missing JSON")
     return response
+
+
+@app.route("/<path:path>")
+def static(path):
+    """
+    Serve non-HTML static files.
+    """
+    return flask.send_from_directory("static", path)
