@@ -10,7 +10,7 @@ model, so that you can easily construct models with different parameters
 substituted in.
 """
 
-import operator
+import collections
 import random
 
 import chess
@@ -149,26 +149,28 @@ def minimax_chess_alpha_transform(prediction, board):
 
 # NOTE: Keep models list here in sync with html/about.html!
 
-MODELS = {
-    "random": {
-        "display_name": "Easy",
-        "description": "Make random moves",
-        "callable": model_random(),
-    },
-    "new": {
-        "display_name": "Intermediate",
-        "description": "Simple evaluation with neural net with alternative minimax",
-        "callable": model_onlymax_with_neural_net(),
-    },
-    "neuralnet-depth1-chess-alpha-zero": {
-        "display_name": "Hard",
-        "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
-        "callable": model_minimax_with_neural_net(
-            depth=2,
-            nn_name="chess_alpha_zero",
-            nn_result_transform=minimax_chess_alpha_transform,
-        ),
-    },
+MODELS = collections.OrderedDict()
+
+MODELS["random"] = {
+    "display_name": "Easy",
+    "description": "Make random moves",
+    "callable": model_random(),
+}
+
+MODELS["new"] = {
+    "display_name": "Intermediate",
+    "description": "Simple evaluation with neural net with alternative minimax",
+    "callable": model_onlymax_with_neural_net(),
+}
+
+MODELS["neuralnet-depth1-chess-alpha-zero"] = {
+    "display_name": "Hard",
+    "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
+    "callable": model_minimax_with_neural_net(
+        depth=2,
+        nn_name="chess_alpha_zero",
+        nn_result_transform=minimax_chess_alpha_transform,
+    ),
 }
 
 
@@ -186,7 +188,6 @@ def get_model_info():
                 "description": info["description"],
             }
         )
-    info_list.sort(key=operator.itemgetter("internalName"))
     return info_list
 
 
