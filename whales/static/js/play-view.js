@@ -38,20 +38,24 @@ function View() {
     let board = ChessBoard("board", {
       draggable: true,
       position: "start",
-      onMouseoverSquare: (square, piece) => {
+      onMouseoverSquare: square => {
         if (disableGame) return;
         params.mouseoverEntryHandler(square);
       },
-      onMouseoutSquare: (square, piece) => {
-        params.mouseoverExitHandler(square);
+      onMouseoutSquare: square => {
+        params.mouseoverExitHandler();
       },
-      onDragStart: (source, piece, position, orientation) => {
+      onDragStart: (source, piece) => {
         if (disableGame) return false;
         return params.dragStartHandler(piece);
       },
       onDrop: (fromSquare, toSquare) => {
         if (disableGame) return "snapback";
-        if (params.dragFinishHandler(fromSquare, toSquare)) {
+        let isValidObj = params.dragFinishHandler(fromSquare, toSquare);
+        if (isValidObj.isPromotion) {
+          disableGame = true;
+        }
+        if (isValidObj.isValid) {
           return null;
         } else {
           return "snapback";
@@ -67,6 +71,22 @@ function View() {
     $("#undoBtn").on("click", params.undoHandler);
     $("#newGameBtn").on("click", params.newGameHandler);
     $("#changeSettingsBtn").on("click", params.changeSettingsHandler);
+    $("#r").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "R.png"
+    );
+    $("#n").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "N.png"
+    );
+    $("#b").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "B.png"
+    );
+    $("#q").attr(
+      "src",
+      "/img/chesspieces/wikipedia/" + params.boardOrientation + "Q.png"
+    );
 
     $(window).resize(board.resize);
     $("#board").on("touchmove", e => {
@@ -148,6 +168,22 @@ function View() {
       $("#status").text(text);
     };
 
+    this.selectPawnPromotion = (callback, fromSquare, toSquare) => {
+      /**
+       * Display pawn promotion selection window.
+       */
+      $(".gameplayBtn").hide();
+      $("#ppPopup").show();
+      $(".ppBtn").off("click");
+      this.setStatusText("Pawn promotion! Select a piece.");
+      $(".ppBtn").on("click", function(e) {
+        $(".gameplayBtn").show();
+        $("#ppPopup").hide();
+        callback(fromSquare, toSquare, this.id);
+        disableGame = false;
+      });
+    };
+
     this.changeSettings = defaultParameters => {
       /**
        * Take the settings from the change settings box and encode them.
@@ -156,6 +192,9 @@ function View() {
     };
 
     this.crashAndBurn = message => {
+      /**
+       * Display an error messsage.
+       */
       disableGame = true;
       alert(friendlyErrorMessage(message));
     };

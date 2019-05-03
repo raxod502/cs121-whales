@@ -10,7 +10,7 @@ model, so that you can easily construct models with different parameters
 substituted in.
 """
 
-import operator
+import collections
 import random
 
 import chess
@@ -49,38 +49,6 @@ def model_random():
         return whales.util.chess.board_to_pgn(board)
 
     return model
-
-
-def model_onlymax(eval_fn):
-    """
-    Return a model that uses minimax with a depth of 1/2, meaning only
-    looking at the possible next moves and not at any potential
-    countermoves.
-    """
-
-    def model(pgn):
-        board = whales.util.chess.pgn_to_board(pgn)
-        move = minimax.alt_minimax(board, eval_fn=eval_fn)
-        board.push(move)
-        return whales.util.chess.board_to_pgn(board)
-
-    return model
-
-
-def model_onlymax_with_neural_net():
-    """
-    Return a model that uses minimax with a depth of 1/2, using
-    chess_alpha_zero's value prediction as the evaluation function. The
-    neural net returns a list of floating-point numbers when given a
-    list of boards, where 1 means a sure win for the moving player and
-    -1 means a sure loss for the moving player.
-    """
-
-    def eval_fn(boards):
-        _, value = neural_net.NEURAL_NET_PREDICT["chess_alpha_zero"](boards)
-        return value
-
-    return model_onlymax(eval_fn)
 
 
 def model_minimax(depth, eval_fn):
@@ -147,26 +115,34 @@ def minimax_chess_alpha_transform(prediction, board):
     return value
 
 
-MODELS = {
-    "random": {
-        "display_name": "Easy",
-        "description": "Make random moves",
-        "callable": model_random(),
-    },
-    "new": {
-        "display_name": "Intermediate",
-        "description": "Simple evaluation with neural net with alternative minimax",
-        "callable": model_onlymax_with_neural_net(),
-    },
-    "neuralnet-depth1-chess-alpha-zero": {
-        "display_name": "Hard",
-        "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
-        "callable": model_minimax_with_neural_net(
-            depth=2,
-            nn_name="chess_alpha_zero",
-            nn_result_transform=minimax_chess_alpha_transform,
-        ),
-    },
+# NOTE: Keep models list here in sync with html/about.html!
+
+MODELS = collections.OrderedDict()
+
+MODELS["random"] = {
+    "display_name": "Easy",
+    "description": "Make random moves",
+    "callable": model_random(),
+}
+
+MODELS["new"] = {
+    "display_name": "Intermediate",
+    "description": "Simple evaluation with neural net with alternative minimax",
+    "callable": model_minimax_with_neural_net(
+        depth=1,
+        nn_name="chess_alpha_zero",
+        nn_result_transform=minimax_chess_alpha_transform,
+    ),
+}
+
+MODELS["neuralnet-depth1-chess-alpha-zero"] = {
+    "display_name": "Hard",
+    "description": "Chess-Alpha-Zero neural net evaluation function using depth 1 minimax",
+    "callable": model_minimax_with_neural_net(
+        depth=2,
+        nn_name="chess_alpha_zero",
+        nn_result_transform=minimax_chess_alpha_transform,
+    ),
 }
 
 
@@ -184,7 +160,6 @@ def get_model_info():
                 "description": info["description"],
             }
         )
-    info_list.sort(key=operator.itemgetter("internalName"))
     return info_list
 
 

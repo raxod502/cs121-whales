@@ -28,7 +28,7 @@ function Controller() {
     }
   }
 
-  function mouseoverExitHandler(square) {
+  function mouseoverExitHandler() {
     /**
      * Unhighlight squares when the mouse moves off of square.
      */
@@ -52,7 +52,25 @@ function Controller() {
     redSquare !== ""
       ? view.unhighlightAllNonredSquares(redSquare)
       : view.unhighlightAllSquares();
-    return model.tryMakingMove(fromSquare, toSquare);
+    let validObj = model.tryMakingMove(fromSquare, toSquare, null);
+    if (validObj.isPromotion) {
+      let pgn = model.getGamePGN();
+      model.removePiece(fromSquare);
+      model.putPiece({ type: "p", color: model.getTurnColor() }, toSquare);
+      view.setBoardFEN(model.getGameFEN(), { animate: false });
+      model.setGamePGN(pgn);
+      view.selectPawnPromotion(promotionHandler, fromSquare, toSquare);
+    }
+    return validObj;
+  }
+
+  function promotionHandler(fromSquare, toSquare, promotionPiece) {
+    /**
+     * Continue the game after user selects a piece for pawn promotion.
+     */
+    model.tryMakingMove(fromSquare, toSquare, promotionPiece);
+    view.setBoardFEN(model.getGameFEN(), { animate: true });
+    tryMakeComputerMove();
   }
 
   function updateViewWithMove(params) {
@@ -62,9 +80,8 @@ function Controller() {
      *   e.x. updateViewWithMove({ animate: true });
      */
     view.setBoardFEN(model.getGameFEN(), { animate: params.animate });
-    let text = model.getGameStatus();
-    maybeUpdateRedSquare(text);
-    view.setStatusText(text);
+    maybeUpdateRedSquare();
+    view.setStatusText(model.getGameStatus());
     updatePrevMoveOutline();
     view.setHash(model.toHash());
   }
@@ -84,7 +101,7 @@ function Controller() {
     }
   }
 
-  function maybeUpdateRedSquare(statusText) {
+  function maybeUpdateRedSquare() {
     /**
      *  Check to see if red square needs updating, and if so, update it.
      */
@@ -96,6 +113,21 @@ function Controller() {
       // If the model is in check
       redSquare = model.getSquareOfKing(model.getTurnColor());
       view.highlightSquare(redSquare, true);
+    }
+  }
+
+  function handleAPIError(errorMessage) {
+    /**
+     * Determine if error is a timeout, in which case randomly select
+     * legal move, or call view error display function.
+     */
+    if (errorMessage === "timeout") {
+      if (model.canComputerMove()) {
+        model.makeRandomMove();
+        updateViewWithMove({ animate: true });
+      }
+    } else {
+      view.crashAndBurn(errorMessage);
     }
   }
 
@@ -122,7 +154,7 @@ function Controller() {
           model.setGamePGN(response.pgn);
           updateViewWithMove({ animate: true });
         },
-        view.crashAndBurn
+        handleAPIError
       );
     }
   }
@@ -200,4 +232,4 @@ function Controller() {
 }
 
 // Kick everything off.
-const controller = new Controller();
+new Controller();

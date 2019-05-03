@@ -46,6 +46,21 @@ function Model(params) {
     });
   };
 
+  this.getRandomMove = () => {
+    /**
+     * Return a randomly chosen legal move.
+     */
+    let moves = game.moves({ verbose: true });
+    return moves[Math.floor(Math.random() * moves.length)];
+  };
+
+  this.makeRandomMove = () => {
+    /**
+     * Make randomly chosen legal move.
+     */
+    game.move(this.getRandomMove());
+  };
+
   this.getLastMoveSquares = () => {
     /**
      * Return start and end squares of previous move.
@@ -150,17 +165,26 @@ function Model(params) {
     }
   };
 
-  this.tryMakingMove = (fromSquare, toSquare) => {
+  this.tryMakingMove = (fromSquare, toSquare, promotePiece) => {
     /**
-     * Try making move fromSquare -> toSquare.
+     * Try making a move from fromSquare to toSquare.
      */
-    return (
-      game.move({
-        from: fromSquare,
-        to: toSquare,
-        promotion: "q"
-      }) !== null
-    );
+    let move = game.move({
+      from: fromSquare,
+      to: toSquare,
+      promotion: promotePiece === null ? "q" : promotePiece
+    });
+
+    if (move === null) {
+      return { isValid: false, isPromotion: false };
+    }
+
+    if (promotePiece === null && move.flags.includes("p")) {
+      game.undo();
+      return { isValid: true, isPromotion: true };
+    }
+
+    return { isValid: true, isPromotion: false };
   };
 
   this.getGameStatus = () => {
@@ -199,6 +223,22 @@ function Model(params) {
      * Return the color of the player who is next to move.
      */
     return game.turn();
+  };
+
+  this.putPiece = (piece, square) => {
+    /**
+     * Put a piece on the specified square.
+     * NOTE: This updates the FEN, but not the PGN.
+     */
+    return game.put(piece, square);
+  };
+
+  this.removePiece = square => {
+    /**
+     * Remove the piece on the specified square.
+     * NOTE: This updates the FEN, but not the PGN.
+     */
+    return game.remove(square);
   };
 
   this.inCheck = () => {

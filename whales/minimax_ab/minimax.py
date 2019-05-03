@@ -1,5 +1,4 @@
 import chess
-import random
 import numpy as np
 
 
@@ -30,6 +29,10 @@ def minimax_helper(board, eval_fn, max_depth, curr_depth, alpha, beta, starting_
 
     curr_agent = board.turn
 
+    # Multiply by -1 in the case that the root minimax call was Black
+    # because the evaluation function returns more positive values to
+    # represent a high probability of White winning; for Black we must
+    # flip that.
     multiplier = 1 if starting_player == chess.WHITE else -1
 
     if board.is_game_over():
@@ -37,27 +40,26 @@ def minimax_helper(board, eval_fn, max_depth, curr_depth, alpha, beta, starting_
 
         score = 0
 
-        # strongly prioritize/deprioritize checkmate boards
+        # Strongly prioritize/deprioritize checkmate boards.
 
         if result == "1-0":
-            # white has won
+            # This is the case where White has won.
             score = 100
         elif result == "0-1":
-            # black has won
+            # This is the case where Black has won.
             score = -100
         else:
-            # game is draw
-            # assign a score of 0 here because a tie is better than
-            # a black win
+            # This is the case where the game is a draw. Here, assign
+            # a score of 0 because a tie is better than a black win.
             score = 0
 
         return (multiplier * score, None)
 
     if curr_depth >= max_depth:
-        # if at a leaf node, evaluate board
+        # If at a leaf node, evaluate the board.
         return (multiplier * eval_fn(board), None)
 
-    # if it is the starting player's turn, we maximize
+    # If it is the starting player's turn, maximize.
     is_maximizing = curr_agent == starting_player
     is_minimizing = not is_maximizing
 
@@ -74,11 +76,11 @@ def minimax_helper(board, eval_fn, max_depth, curr_depth, alpha, beta, starting_
     for i in range(len(legal_actions)):
         action = legal_actions[i]
 
-        # simulate the move to pass to children
+        # Simulate the move to pass to children.
         successor = board.copy()
         successor.push(action)
 
-        # recurse with same parameters, except one level deeper
+        # Recurse with same parameters, except one level deeper.
         successor_val = minimax_helper(
             successor, eval_fn, max_depth, curr_depth + 1, alpha, beta, starting_player
         )[0]
@@ -89,29 +91,16 @@ def minimax_helper(board, eval_fn, max_depth, curr_depth, alpha, beta, starting_
             best_action = action
             v = successor_val
 
-        # pruning case, stop considering branch
-        # return value doesn't matter; we won't be using it
+        # Here is the pruning case, stop considering branch. The move
+        # chosen doesn't matter here; it will not be used.
         if (v > beta and is_maximizing) or (v < alpha and is_minimizing):
             return (v, best_action)
 
+        # Update parameters for pruning.
         if is_maximizing:
             alpha = max(alpha, v)
         else:
             beta = min(beta, v)
 
-    # return most optimized child along with action to take
+    # Return most optimized child's value along with action to take.
     return (v, best_action)
-
-
-def alt_minimax(board, eval_fn):
-    legal_actions = list(board.legal_moves)
-    all_boards = [None] * len(legal_actions)
-    for i in range(len(legal_actions)):
-        all_boards[i] = board.copy()
-        all_boards[i].push(legal_actions[i])
-
-    values = eval_fn(all_boards)
-    # Get the board that is least advantageous for opponent
-    index = np.argmin(values)
-
-    return legal_actions[index]

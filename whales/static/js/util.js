@@ -63,6 +63,7 @@ function apiRequest(request, callback, onError) {
     data: JSON.stringify(request),
     // Parse the returned response into JSON.
     dataType: "json",
+    timeout: 60000,
     success: data => {
       if (!isObject(data)) {
         onError("API response is not an object");
@@ -139,6 +140,13 @@ function decodeHash(hash) {
     }
     result[key] = value;
   }
+
+  if (result["pgn"] !== undefined) {
+    // The pgn in the hash separates moves with underscores, to look
+    // nicer, but convert back to spaces to have a valid pgn string.
+    result["pgn"] = result["pgn"].replace(/_/g, " ");
+  }
+
   return result;
 }
 
@@ -146,6 +154,13 @@ function encodeHash(hash) {
   /**
    * Encode hash.
    */
+
+  if (hash.pgn !== undefined) {
+    // Change the pgn in the hash to separate moves with underscores
+    // instead of spaces, to make the URL look nicer.
+    hash.pgn = hash.pgn.replace(/ /g, "_");
+  }
+
   return encodeURI(
     Object.entries(hash)
       .map(mapping => mapping.join(":"))

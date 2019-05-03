@@ -3,16 +3,55 @@ Module that contains our Flask app.
 """
 
 import os
+import threading
 
 import flask
+import flask.json
 import flask_talisman
 
 import whales.api
+import whales.util
 
 app = flask.Flask(__name__, static_folder=None)
 
 if os.environ.get("WHALES_NO_SSL") in (None, "", "0"):
     flask_talisman.Talisman(app, content_security_policy=None)
+
+
+def stream_json(ping_secs):
+    """
+    Wrap a view that returns a Python object so that the object is
+    JSONified before being returned. If the view takes longer than
+    ping_secs to compute its result, send a byte of whitespace to the
+    client so the connection is kept alive by Heroku.
+    """
+
+    def decorator(orig_view):
+        def new_view(*args, **kwargs):
+            def generate():
+                result = whales.util.UNSET
+                done = threading.Event()
+
+                @flask.copy_current_request_context
+                def handle():
+                    nonlocal result
+                    result = flask.json.dumps(orig_view(*args, **kwargs))
+                    done.set()
+
+                thread = threading.Thread(target=handle, daemon=True)
+                thread.start()
+                while True:
+                    if done.wait(timeout=ping_secs):
+                        yield result
+                        break
+                    yield " "
+
+            generator = flask.stream_with_context(generate())
+            return flask.Response(generator, mimetype="application/json")
+
+        return new_view
+
+    return decorator
 
 
 @app.route("/")
@@ -39,15 +78,16 @@ def page_about():
     return flask.send_from_directory("html", "about.html")
 
 
-@app.route("/<path:path>")
-def static(path):
+@app.route("/api/v1/http")
+def http_endpoint_get():
     """
-    Serve non-HTML static files.
+    Error with method not allowed.
     """
-    return flask.send_from_directory("static", path)
+    flask.abort(405)
 
 
 @app.route("/api/v1/http", methods=["POST"])
+@stream_json(20)
 def http_endpoint():
     """
     HTTP endpoint for API.
@@ -59,4 +99,12 @@ def http_endpoint():
         response = whales.api.query(request)
     else:
         response = whales.api.error_response("invalid or missing JSON")
-    return flask.jsonify(response)
+    return response
+
+
+@app.route("/<path:path>")
+def static(path):
+    """
+    Serve non-HTML static files.
+    """
+    return flask.send_from_directory("static", path)

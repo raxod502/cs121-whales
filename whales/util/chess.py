@@ -2,9 +2,10 @@
 Module containing utility functions wrapping python-chess.
 """
 
+import io
+
 import chess.pgn
 import chess
-import io
 
 
 class InvalidPGNError(Exception):
@@ -44,10 +45,3 @@ def board_to_pgn(board):
     game = chess.pgn.Game.from_board(board)
     game.headers.clear()
     return str(game)
-
-
-def convert_move(uci):
-    """
-    Convert a string of a move in UCI format into a python-chess move.
-    """
-    return chess.Move.from_uci(uci)
