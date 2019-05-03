@@ -104,17 +104,3 @@ def minimax_helper(board, eval_fn, max_depth, curr_depth, alpha, beta, starting_
 
     # Return most optimized child's value along with action to take.
     return (v, best_action)
-
-
-def alt_minimax(board, eval_fn):
-    legal_actions = list(board.legal_moves)
-    all_boards = [None] * len(legal_actions)
-    for i in range(len(legal_actions)):
-        all_boards[i] = board.copy()
-        all_boards[i].push(legal_actions[i])
-
-    values = eval_fn(all_boards)
-    # Get the board that is least advantageous for opponent
-    index = np.argmin(values)
-
-    return legal_actions[index]
