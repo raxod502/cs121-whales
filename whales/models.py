@@ -10,8 +10,8 @@ model, so that you can easily construct models with different parameters
 substituted in.
 """
 
-import random
 import collections
+import random
 
 import chess
 
