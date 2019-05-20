@@ -9,10 +9,13 @@
       Please enable JavaScript so you can be redirected to W.H.A.L.E.S.
     </noscript>
     <script>
-      "use strict";
-      const path = window.location.pathname;
-      const url = "https://cs121-whales.herokuapp.com" + path;
-      window.location = url;
+     "use strict";
+     const path = window.location.pathname.replace(/\/$/, "");
+     const query = window.location.search;
+     const hash = window.location.hash;
+     const origin = "https://cs121-whales.herokuapp.com";
+     const url = origin + path + query + hash;
+     window.location = url;
     </script>
   </body>
 </html>
