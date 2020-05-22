@@ -1,42 +1,48 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> W.H.A.L.E.S. - Home </title>
-    <meta name="viewport" content="width=device-width">
+    <title>W.H.A.L.E.S. - Home</title>
+    <meta name="viewport" content="width=device-width" />
 
-    <link rel="stylesheet" type="text/css" href="/css/shared.css">
-    <link rel="stylesheet" type="text/css" href="/css/new-game.css">
-    <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico" rel="stylesheet">
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/css/shared.css" />
+    <link rel="stylesheet" type="text/css" href="/css/new-game.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Architects+Daughter|Pacifico"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" href="/img/favicon.ico" />
   </head>
 
   <body>
     <div id="bgpic"></div>
     <div id="body">
-      <h1> Welcome to W.H.A.L.E.S. </h1>
-      <h4> (We Have A Lichess Emulation System)</h4>
-      <h2 id="slogan"> Play chess against a powerful AI! </h2>
+      <h1>Welcome to W.H.A.L.E.S.</h1>
+      <h4>(We Have A Lichess Emulation System)</h4>
+      <h2 id="slogan">Play chess against a powerful AI!</h2>
 
       <div class="custom-select" style="width:100%;">
         <h3 class="select-header">Select a difficulty:</h3>
         <select id="select-model"></select>
 
         <h3 class="select-header">Select a color:</h3>
-        <select id=select-color>
+        <select id="select-color">
           <option value="w">White</option>
           <option value="b">Black</option>
         </select>
-        <br>
+        <br />
       </div>
 
-      <input type="button" id="aboutBtn" class="gaudyBtn" value="About">
-      <input type="button" id="playBtn" class="gaudyBtn" value="Play Game">
+      <input type="button" id="aboutBtn" class="gaudyBtn" value="About" />
+      <input type="button" id="playBtn" class="gaudyBtn" value="Play Game" />
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/util.js"></script>
     <script src="/js/new-game.js"></script>
+    <script
+      src="https://cdn.usefathom.com/script.js"
+      site="TQSDQFOW"
+      defer
+    ></script>
   </body>
-
-
 </html>
