@@ -12,10 +12,12 @@ import flask_talisman
 import whales.api
 import whales.util
 
-app = flask.Flask(__name__, static_folder=None)
+app = flask.Flask(__name__, static_folder=None, template_folder="html")
 
 if os.environ.get("WHALES_NO_SSL") in (None, "", "0"):
     flask_talisman.Talisman(app, content_security_policy=None)
+
+analytics_enabled = bool(os.environ.get("WHALES_ANALYTICS"))
 
 
 def stream_json(ping_secs):
@@ -59,7 +61,7 @@ def page_new_game():
     """
     Serve HTML page for configuring new game of chess.
     """
-    return flask.send_from_directory("html", "new-game.html")
+    return flask.render_template("new-game.html", analytics_enabled=analytics_enabled)
 
 
 @app.route("/play")
@@ -67,7 +69,7 @@ def page_play():
     """
     Serve HTML page for playing chess.
     """
-    return flask.send_from_directory("html", "play.html")
+    return flask.render_template("play.html", analytics_enabled=analytics_enabled)
 
 
 @app.route("/about")
@@ -75,7 +77,7 @@ def page_about():
     """
     Serve HTML page with rules and instructions.
     """
-    return flask.send_from_directory("html", "about.html")
+    return flask.render_template("about.html", analytics_enabled=analytics_enabled)
 
 
 @app.route("/api/v1/http")
