@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "cs121-whales"
+version = "1.0.0"
+description = "Chess AI web application using minimax and deep learning on backend"
+authors = ["Ben Baral", "Shannon Collier", "Miles President", "Radon Rosborough", "Max Treutelaar"]
+
+[tool.poetry.dependencies]
+python = ">=3.7, <3.11"
+black = "^22.6.0"
+Flask = "^2.2.2"
+flask-talisman = "^1.0.0"
+gunicorn = "^20.1.0"
+keras = "^2.9.0"
+chess = "^1.9.2"
+tensorflow = "^2.9.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -8,26 +8,14 @@ Chess AI web application using minimax and deep learning on backend.
 Install the following dependencies:
 
 * [Git](https://git-scm.com/)
-* [Python 3.6](https://www.python.org/)
-* [Pipenv](https://pipenv.readthedocs.io/en/latest/)
-
-On macOS using [Homebrew](https://brew.sh/), that looks like this:
-
-    $ brew install git pyenv pipenv
-    $ pyenv install 3.6.8
+* [Git LFS](https://git-lfs.github.com/)
+* [Python 3](https://www.python.org/)
+* [Poetry](https://python-poetry.org/)
 
 Clone this repository:
 
     $ git clone https://github.com/raxod502/cs121-whales.git
     $ cd cs121-whales
-
-Create a virtual environment for the backend:
-
-    $ pipenv install --python "$(pyenv prefix 3.6.8)"/bin/python
-
-Download the models:
-
-    $ make download-models
 
 Run the server:
 
