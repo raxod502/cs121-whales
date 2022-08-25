@@ -8,7 +8,7 @@ to get the predictions of a list of boards.
 import os
 
 import numpy as np
-from keras.models import model_from_json
+import onnxruntime as ort
 
 from whales.neural_net.chess_alpha_data import board_to_arrays_alpha_chess
 
@@ -36,9 +36,7 @@ def load_neural_nets(net_names):
     for index, name in enumerate(net_names):
         file_dir = os.path.dirname(__file__)
         file_path = os.path.join(file_dir, name)
-        with open(file_path + ".json", "r") as file:
-            neural_nets.append(model_from_json(file.read()))
-            neural_nets[index].load_weights(file_path + ".h5")
+        neural_nets.append(ort.InferenceSession(file_path + ".onnx"))
     return neural_nets
 
 
@@ -65,20 +63,17 @@ def chess_alpha_zero_helper(board_input):
         array = [board_to_arrays_alpha_chess(b) for b in board_input]
 
     # Convert to numpy and feed to the neural net.
-    np_array = np.array(array, dtype=int)
-    return NEURAL_NET_DICT["chess_alpha_zero"].predict(np_array)
+    np_array = np.array(array, dtype=np.float32)
+
+    return NEURAL_NET_DICT["chess_alpha_zero"].run(None, {"input_1": np_array})
 
 
 # Hardcoded list of names of neural nets to use.
 NEURAL_NET_NAMES = ["chess_alpha_zero"]
 
-# Load every Keras neural net Model, then store them in a dictionary
-# mapping from name to neural net.
+# Load every neural net, then store them in a dictionary mapping from
+# name to neural net.
 NEURAL_NETS = load_neural_nets(NEURAL_NET_NAMES)
-# Adding a net._make_predict_function() call after every load
-# seems to stop a weird error.
-for net in NEURAL_NETS:
-    net._make_predict_function()
 
 NEURAL_NET_DICT = {}
 for i, net_name in enumerate(NEURAL_NET_NAMES):

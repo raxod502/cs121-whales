@@ -16,7 +16,7 @@ class InvalidPGNError(Exception):
     pass
 
 
-class SilentGameCreator(chess.pgn.GameCreator):
+class SilentGameCreator(chess.pgn.GameBuilder):
     """
     Visitor for chess.pgn.read_game that raises InvalidPGNError on an
     exception instead of logging the exception.

@@ -10,9 +10,9 @@ black = "^22.6.0"
 Flask = "^2.2.2"
 flask-talisman = "^1.0.0"
 gunicorn = "^20.1.0"
-keras = "^2.9.0"
 chess = "^1.9.2"
-tensorflow = "^2.9.1"
+onnxruntime = "^1.12.1"
+onnx = "^1.12.0"
 
 [tool.poetry.dev-dependencies]
 
