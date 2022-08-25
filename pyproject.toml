@@ -5,7 +5,7 @@ description = "Chess AI web application using minimax and deep learning on backe
 authors = ["Ben Baral", "Shannon Collier", "Miles President", "Radon Rosborough", "Max Treutelaar"]
 
 [tool.poetry.dependencies]
-python = ">=3.7, <3.11"
+python = ">=3.8, <3.11"
 black = "^22.6.0"
 Flask = "^2.2.2"
 flask-talisman = "^1.0.0"
