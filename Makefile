@@ -18,7 +18,3 @@ run-server-prod-test:
 .PHONY: run-server-prod
 run-server-prod:
 	WHALES_ANALYTICS=1 $(RUN_SERVER_PROD)
-
-.PHONY: hooks
-hooks:
-	@ln -sf ../../scripts/pre-commit .git/hooks/pre-commit

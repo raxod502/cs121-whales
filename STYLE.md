@@ -1,8 +1,7 @@
 ## Code style
 
 ### General Formatting
-We use a [pre-commit hook](https://githooks.com/) to automatically run
-[Black](https://github.com/ambv/black) and
+Please run [Black](https://github.com/ambv/black) and
 [Prettier](https://prettier.io/) on all code before it is checked in.
 This takes care of most disagreements about style (spacing, import
 order, etc.).
