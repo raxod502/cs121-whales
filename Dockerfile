@@ -15,3 +15,4 @@ COPY Makefile /src/
 COPY whales/ /src/whales/
 
 CMD exec make run-server-prod
+EXPOSE 5000
