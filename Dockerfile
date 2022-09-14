@@ -1,3 +1,5 @@
+FROM radiansoftware/sleeping-beauty:v1.0.0 AS sleepingd
+
 # EOL April 2027
 FROM ubuntu:22.04
 
@@ -14,5 +16,12 @@ RUN poetry install
 COPY Makefile /src/
 COPY whales/ /src/whales/
 
-CMD exec make run-server-prod
+COPY --from=sleepingd /sleepingd /usr/local/bin/sleepingd
+
+ENV SLEEPING_BEAUTY_COMMAND="make run-server-prod PORT=5001"
+ENV SLEEPING_BEAUTY_TIMEOUT_SECONDS=300
+ENV SLEEPING_BEAUTY_COMMAND_PORT=5001
+ENV SLEEPING_BEAUTY_LISTEN_PORT=5000
+
+CMD ["sleepingd"]
 EXPOSE 5000
