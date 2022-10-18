@@ -1,7 +1,7 @@
-FROM radiansoftware/sleeping-beauty:v1.0.0 AS sleepingd
+FROM radiansoftware/sleeping-beauty:v2.0.0 AS sleepingd
 
 # EOL April 2027
-FROM ubuntu:22.04
+FROM krallin/ubuntu-tini:22.04
 
 RUN apt-get update && apt-get install -y curl python3 python3-pip && rm -rf /var/lib/apt/lists/*
 RUN curl -sSL https://install.python-poetry.org | python3 -
