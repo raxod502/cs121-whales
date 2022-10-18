@@ -1,9 +1,9 @@
 FROM radiansoftware/sleeping-beauty:v2.0.0 AS sleepingd
 
 # EOL April 2027
-FROM krallin/ubuntu-tini:22.04
+FROM ubuntu:22.04
 
-RUN apt-get update && apt-get install -y curl python3 python3-pip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl python3 python3-pip tini && rm -rf /var/lib/apt/lists/*
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH=/root/.local/bin:$PATH
 ENV POETRY_VIRTUALENVS_CREATE=false
@@ -17,6 +17,7 @@ COPY Makefile /src/
 COPY whales/ /src/whales/
 
 COPY --from=sleepingd /sleepingd /usr/local/bin/sleepingd
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
 ENV SLEEPING_BEAUTY_COMMAND="make run-server-prod PORT=5001"
 ENV SLEEPING_BEAUTY_TIMEOUT_SECONDS=300
