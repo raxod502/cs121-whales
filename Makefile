@@ -4,7 +4,7 @@ all: run-server-dev
 FLASK_APP := whales.server:app
 
 # https://stackoverflow.com/a/23569003/3538165
-RUN_SERVER_PROD := gunicorn -b "0.0.0.0:$${PORT:-5000}" \
+RUN_SERVER_PROD := PYTHONUNBUFFERED=1 gunicorn -b "0.0.0.0:$${PORT:-5000}" \
 	-t 60 -w 1 --threads "$$(getconf _NPROCESSORS_ONLN)" $(FLASK_APP)
 
 .PHONY: run-server-dev
