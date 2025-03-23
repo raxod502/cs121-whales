@@ -3,6 +3,7 @@ name = "cs121-whales"
 version = "1.0.0"
 description = "Chess AI web application using minimax and deep learning on backend"
 authors = ["Ben Baral", "Shannon Collier", "Miles President", "Radon Rosborough", "Max Treutelaar"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.8, <3.11"
